@@ -30,7 +30,7 @@
             
         \vspace{0.5cm}
         \LARGE
-        A deep learning model that plays draughts using an implementation of PPO with a neural network library with auto differentiation built from scratch
+        A deep learning model that plays draughts via an implementation of PPO using a neural network library with auto differentiation built from scratch
             
         \vspace{1.5cm}
             
@@ -53,17 +53,23 @@
 
     \section{Analysis}
     \subsection{Background}
+    \textbf{TO BE WRITTIEN}
 
     \subsection{Evidence of Analysis}
+    \textbf{TO BE WRITTIEN}
 
     \subsection{Current Systems}
-
+    \textbf{TO BE WRITTIEN}
+    
     \subsection{Identification of end-user}
-
+    \textbf{TO BE WRITTIEN}
+    
     \subsection{Modelling of the problem}
-
+    \textbf{TO BE WRITTIEN}
+    
     \subsection{Set of objectives}
-
+    \textbf{TO BE WRITTIEN}
+    
     \section{Research Log}
 
     \subsection{Draughts Rules}
@@ -189,10 +195,10 @@
     Here we let
     \begin{displaymath}
         W = \begin{bmatrix}
-            w_11 & w_21 & \dots & w_j1\\
-            w_12 & w_22 & \dots & w_j2\\
+            w_{11} & w_{21} & \dots & w_{j1}\\
+            w_{12} & w_{22} & \dots & w_{j2}\\
             \vdots & \vdots & \ddots & \vdots\\
-            w_1n & w_2n & \dots & w_jn
+            w_{1n} & w_{2n} & \dots & w_{jn}
         \end{bmatrix}
     \end{displaymath}
 
@@ -210,15 +216,14 @@
             \hdots&
             x_n
         \end{bmatrix} \begin{bmatrix}
-            w_11 & w_21 & \dots & w_j1\\
-            w_12 & w_22 & \dots & w_j2\\
+            w_{11} & w_{21} & \dots & w_{j1}\\
+            w_{12} & w_{22} & \dots & w_{j2}\\
             \vdots & \vdots & \ddots & \vdots\\
-            w_1n & w_2n & \dots & w_jn
+            w_{1n} & w_{2n} & \dots & w_{jn}
         \end{bmatrix} + \begin{bmatrix}
            b_1 & b_2 & \dots & b_3
         \end{bmatrix}
     \end{displaymath}
-
 
     Again using capital letters to simplify notation, the foward pass through a dense layer looks as follows:
     \begin{displaymath}
@@ -226,9 +231,17 @@
     \end{displaymath}
 
     \subsubsection{Backwards Pass of Dense Layer}
-    Although back propogation can be solved in closed form, it comes with a large time complexity (greater than $O(n^3$)), and therefore
+    Although back propogation can be solved in closed form, it comes with a large time complexity (greater than $O(n^3)$), and therefore
     a process called gradient descent is usually employed.
 
+    Gradient descent works to minimize the error of a model by iteratively locating a minimum in the error function.
+    For example, a common cost (error) function is mean squarred error.
+    \begin{displaymath}
+        MSE(Y, \hat{Y}) = \frac{1}{n}((Y - \hat{Y})^T \cdot (Y - \hat{Y}))
+    \end{displaymath}
+
+    This function effectively calculates the absolute distance between the predicted value of one data point ($\hat{y_i}$) and the true value at that same point ($y_i$),
+    for every value in the dataset (of size $n$) and takes the mean of these distances.
 
     \pagebreak
     \noindent \url{https://www.turing.com/kb/mathematical-formulation-of-feed-forward-neural-network} Maths?

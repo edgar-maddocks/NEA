@@ -7,7 +7,7 @@
 \contentsline {subsection}{\numberline {1.6}Set of objectives}{1}{subsection.1.6}%
 \contentsline {section}{\numberline {2}Research Log}{1}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Draughts Rules}{1}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Neural Networks}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.2}Neural Networks}{3}{subsection.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.1}What is a neural network}{3}{subsubsection.2.2.1}%
 \contentsline {subsubsection}{\numberline {2.2.2}Linear Regression Unit}{3}{subsubsection.2.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.3}Vectorization of summations}{3}{subsubsection.2.2.3}%
