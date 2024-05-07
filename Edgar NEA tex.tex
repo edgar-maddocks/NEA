@@ -185,7 +185,7 @@
     \end{displaymath}
 
     $X$ here is a row vector as this is the most common format for data as an input to a network (e.g being read from a csv).
-    This computation is much faster, and can be parallelized using the GPU to further improve speed and efficiency.
+    This parallelized computation is much faster, and can be parallelized using the GPU to further improve speed and efficiency.
 
     \subsubsection{Forward Pass of Dense Layer}
     In the case of neural networks, lots of these linear regression units can be combined to form a vector of outputs.
@@ -205,46 +205,82 @@
     Where $j$ is now the number of nodes in the layer. If we rewrite our forward pass equation to use this weight matrix,
     with each node as its own regression unit:
     \begin{displaymath}
-        \begin{bmatrix}
+        Y = XW + B
+    \end{displaymath}
+
+    Where:
+    \begin{displaymath}
+        Y = \begin{bmatrix}
             \hat{y_1}&
             \hat{y_2}&
             \hdots&
             \hat{y_n}
-        \end{bmatrix} = \begin{bmatrix}
-            x_1&
-            x_2&
-            \hdots&
-            x_n
-        \end{bmatrix} \begin{bmatrix}
-            w_{11} & w_{21} & \dots & w_{j1}\\
-            w_{12} & w_{22} & \dots & w_{j2}\\
-            \vdots & \vdots & \ddots & \vdots\\
-            w_{1n} & w_{2n} & \dots & w_{jn}
-        \end{bmatrix} + \begin{bmatrix}
-           b_1 & b_2 & \dots & b_3
+        \end{bmatrix} \hspace{15mm}
+        B = \begin{bmatrix}
+           b_1 & b_2 & \dots & b_j
         \end{bmatrix}
     \end{displaymath}
 
-    Again using capital letters to simplify notation, the foward pass through a dense layer looks as follows:
-    \begin{displaymath}
-        Y = XW + B
-    \end{displaymath}
+    With $W$ and $X$ having the same definition as most recently defined.
 
-    \subsubsection{Backwards Pass of Dense Layer}
+    
+
+    \subsubsection{Gradient Descent}
     Although back propogation can be solved in closed form, it comes with a large time complexity (greater than $O(n^3)$), and therefore
     a process called gradient descent is usually employed.
 
     Gradient descent works to minimize the error of a model by iteratively locating a minimum in the error function.
     For example, a common cost (error) function is mean squarred error.
     \begin{displaymath}
-        MSE(Y, \hat{Y}) = \frac{1}{n}((Y - \hat{Y})^T \cdot (Y - \hat{Y}))
+        MSE(Y, \hat{Y}) = \frac{1}{n}\sum_{i=0}^{n}\left(y_i - \hat{y}_i\right)^2
     \end{displaymath}
 
     This function effectively calculates the absolute distance between the predicted value of one data point ($\hat{y_i}$) and the true value at that same point ($y_i$),
     for every value in the dataset (of size $n$) and takes the mean of these distances.
+    Again, this calculation can be vectorized using the equation below.
+    \begin{displaymath}
+        MSE(Y, \hat{Y}) = \frac{1}{n}((Y - \hat{Y})^T \cdot (Y - \hat{Y}))
+    \end{displaymath}
 
     \pagebreak
-    \noindent \url{https://www.turing.com/kb/mathematical-formulation-of-feed-forward-neural-network} Maths?
+    If we plot the MSE curve of different weights and biases - of a single regression unit, it looks as follows.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.5]{MSEplot.png}
+        \caption{Plot of MSE in a single regression unit}
+    \end{figure}
+
+    Here the weight has been labelled $a$, but the bias has remained as $b$. As we can see, there is a clear local minimum of this error function,
+    and the values that obtain this minimum, is what gradient descent aims to achieve. 
+    \begin{wrapfigure}[14]{l}{0.4\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{image.png}
+        \caption{MSE with respect to one parameter}
+    \end{wrapfigure}
+
+    In figure 6 we can see a representation of the MSE plot with respect to only one of the parameters. This makes understanding the process of gradient
+    descent much simpler. For example, the minimum of this function ($f(x) = \frac{x^2}{25}$) is at $x = 0$. So, if we were to have an initial $x$ value of say $-40$
+    and we calculated the gradient to be $3.2$, we could then subtract this from $40$. Resulting in a new value of $36.8$, which is closer to our optimal value of $0$.
+    This process is completed iteratively until the minimum, or near to it, is reached.
+
+    To denote this mathematically, we can say that 
+    \begin{align}
+        w_{t+1} = w_t - \alpha \frac{\partial E}{\partial w}\\
+        b_{t+1} = b_t - \alpha \frac{\partial E}{\partial b}
+    \end{align}
+
+    Where $w_{t+1}$ and $b_{t+1}$ are the parameters at the next timestep, $w_t$ and $b_t$ is the value of the parameters at the current timestep, 
+    $\frac{\partial E}{\partial w}$ and $\frac{\partial E}{\partial b}$ are the derivatives of the error with respect to each parameter, 
+    and $\alpha$ is the learning rate. This learning rate controls the size of our 'jumps' and prevents the process from beginning to spiral away
+    from the optimal values.
+
+    That is a basic overview of gradient descent in a single regression unit, but in a dense network, the process is almost identical. An error function is evaluated, 
+    the derivative with respect to the inputs calculated, and the new values updated. The main expense computation-wise is 
+
+
+
+
+    \pagebreak
 
     \noindent \url{https://en.wikipedia.org/wiki/Automatic_differentiation} Automatic differentiation
 \end{document}

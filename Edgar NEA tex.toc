@@ -12,4 +12,4 @@
 \contentsline {subsubsection}{\numberline {2.2.2}Linear Regression Unit}{3}{subsubsection.2.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.3}Vectorization of summations}{3}{subsubsection.2.2.3}%
 \contentsline {subsubsection}{\numberline {2.2.4}Forward Pass of Dense Layer}{4}{subsubsection.2.2.4}%
-\contentsline {subsubsection}{\numberline {2.2.5}Backwards Pass of Dense Layer}{4}{subsubsection.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.5}Gradient Descent}{4}{subsubsection.2.2.5}%

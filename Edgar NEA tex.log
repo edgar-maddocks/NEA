@@ -1,25 +1,25 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.1)  6 MAY 2024 22:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  7 MAY 2024 16:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"c:/Users/edgar/Documents/GitHub/NEA/Edgar NEA tex"
-(c:/Users/edgar/Documents/GitHub/NEA/Edgar NEA tex.tex
+**"c:/Users/edgar/OneDrive/Documents/CODE/GitHub/NEA/Edgar NEA tex"
+(c:/Users/edgar/OneDrive/Documents/CODE/GitHub/NEA/Edgar NEA tex.tex
 LaTeX2e <2023-11-01> patch level 1
-L3 programming layer <2024-04-11>
+L3 programming layer <2024-03-14>
 (c:/texlive/2024/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
 (c:/texlive/2024/texmf-dist/tex/latex/base/size10.clo
 File: size10.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
 )
-\c@part=\count189
-\c@section=\count190
-\c@subsection=\count191
-\c@subsubsection=\count192
-\c@paragraph=\count193
-\c@subparagraph=\count194
-\c@figure=\count195
-\c@table=\count196
+\c@part=\count188
+\c@section=\count189
+\c@subsection=\count190
+\c@subsubsection=\count191
+\c@paragraph=\count192
+\c@subparagraph=\count193
+\c@figure=\count194
+\c@table=\count195
 \abovecaptionskip=\skip48
 \belowcaptionskip=\skip49
 \bibindent=\dimen140
@@ -40,14 +40,14 @@ Package: amsbsy 1999/11/29 v1.2d Bold Symbols
 ) (c:/texlive/2024/texmf-dist/tex/latex/amsmath/amsopn.sty
 Package: amsopn 2022/04/08 v2.04 operator names
 )
-\inf@bad=\count197
+\inf@bad=\count196
 LaTeX Info: Redefining \frac on input line 234.
-\uproot@=\count198
-\leftroot@=\count199
+\uproot@=\count197
+\leftroot@=\count198
 LaTeX Info: Redefining \overline on input line 399.
 LaTeX Info: Redefining \colon on input line 410.
-\classnum@=\count266
-\DOTSCASE@=\count267
+\classnum@=\count199
+\DOTSCASE@=\count266
 LaTeX Info: Redefining \ldots on input line 496.
 LaTeX Info: Redefining \dots on input line 499.
 LaTeX Info: Redefining \cdots on input line 620.
@@ -60,20 +60,20 @@ LaTeX Info: Redefining \Bigg on input line 725.
 \big@size=\dimen143
 LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
-\macc@depth=\count268
+\macc@depth=\count267
 LaTeX Info: Redefining \bmod on input line 905.
 LaTeX Info: Redefining \pmod on input line 910.
 LaTeX Info: Redefining \smash on input line 940.
 LaTeX Info: Redefining \relbar on input line 970.
 LaTeX Info: Redefining \Relbar on input line 971.
-\c@MaxMatrixCols=\count269
+\c@MaxMatrixCols=\count268
 \dotsspace@=\muskip16
-\c@parentequation=\count270
-\dspbrk@lvl=\count271
+\c@parentequation=\count269
+\dspbrk@lvl=\count270
 \tag@help=\toks18
-\row@=\count272
-\column@=\count273
-\maxfields@=\count274
+\row@=\count271
+\column@=\count272
+\maxfields@=\count273
 \andhelp@=\toks19
 \eqnshift@=\dimen144
 \alignsep@=\dimen145
@@ -88,10 +88,10 @@ LaTeX Info: Redefining \Relbar on input line 971.
 LaTeX Info: Redefining \[ on input line 2953.
 LaTeX Info: Redefining \] on input line 2954.
 ) (c:/texlive/2024/texmf-dist/tex/latex/breqn/breqn.sty (c:/texlive/2024/texmf-dist/tex/latex/l3kernel/expl3.sty
-Package: expl3 2024-04-11 L3 programming layer (loader) 
+Package: expl3 2024-03-14 L3 programming layer (loader) 
  (c:/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-File: l3backend-pdftex.def 2024-04-11 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count275
+File: l3backend-pdftex.def 2024-03-14 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count274
 \l__pdf_internal_box=\box53
 ))
 Package: breqn 2021/10/28 v0.98l Breaking equations
@@ -109,7 +109,7 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 107.
  (c:/texlive/2024/texmf-dist/tex/latex/graphics-def/pdftex.def
-File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen150
 \Gin@req@width=\dimen151
@@ -151,19 +151,19 @@ LaTeX Info: Redefining \scriptscriptstyle on input line 101.
 LaTeX Info: Redefining \genfrac on input line 149.
 )) (c:/texlive/2024/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2023/07/08 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count276
-\calc@Bcount=\count277
+\calc@Acount=\count275
+\calc@Bcount=\count276
 \calc@Adimen=\dimen152
 \calc@Bdimen=\dimen153
 \calc@Askip=\skip53
 \calc@Bskip=\skip54
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count278
+\calc@Ccount=\count277
 \calc@Cskip=\skip55
 )
-\inf@bad=\count279
-\maxint=\count280
+\inf@bad=\count278
+\maxint=\count279
 \listwidth=\dimen154
 \eqnumsep=\dimen155
 \eqmargin=\dimen156
@@ -174,12 +174,12 @@ LaTeX Info: Redefining \addtolength on input line 81.
 \eqdelimoffset=\muskip18
 \eqindentstep=\dimen158
 \eqstyle=\toks23
-\eqbreakdepth=\count281
-\eqinterlinepenalty=\count282
-\intereqpenalty=\count283
+\eqbreakdepth=\count280
+\eqinterlinepenalty=\count281
+\intereqpenalty=\count282
 \intereqskip=\skip58
-\prerelpenalty=\count284
-\prebinoppenalty=\count285
+\prerelpenalty=\count283
+\prebinoppenalty=\count284
 \Dmedmuskip=\muskip19
 \Dthickmuskip=\muskip20
 \eqleftskip=\skip59
@@ -192,10 +192,10 @@ LaTeX Info: Redefining \addtolength on input line 81.
 \eq@wdNum=\dimen159
 \GRP@numbox=\box57
 \grp@wdNum=\dimen160
-\eq@lines=\count286
-\eq@curline=\count287
-\eq@badness=\count288
-\EQ@vims=\count289
+\eq@lines=\count285
+\eq@curline=\count286
+\eq@badness=\count287
+\EQ@vims=\count288
 \eq@dp=\dimen161
 \eq@wdL=\dimen162
 \eq@wdT=\dimen163
@@ -212,16 +212,16 @@ LaTeX Info: Redefining \addtolength on input line 81.
 \eq@hshift=\dimen174
 \eq@given@sidespace=\dimen175
 \mathindent=\dimen176
-\eq@final@linecount=\count290
+\eq@final@linecount=\count289
 \eq@wdR=\dimen177
 \EQ@continue=\toks24
-\lr@level=\count291
+\lr@level=\count290
 \GRP@queue=\toks25
 \GRP@box=\box58
 \GRP@wholebox=\box59
 \darraycolsep=\skip62
-\cur@row=\count292
-\cur@col=\count293
+\cur@row=\count291
+\cur@col=\count292
 \conditionsep=\skip63
 ) (c:/texlive/2024/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2013/01/14 v3.01 AMS font symbols
@@ -238,9 +238,9 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
  (c:/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty
 Package: iftex 2022/02/03 v1.0f TeX engine tests
 ))
-\Gm@cnth=\count294
-\Gm@cntv=\count295
-\c@Gm@tempcnt=\count296
+\Gm@cnth=\count293
+\Gm@cntv=\count294
+\c@Gm@tempcnt=\count295
 \Gm@bindingoffset=\dimen178
 \Gm@wd@mp=\dimen179
 \Gm@odd@mp=\dimen180
@@ -281,14 +281,14 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
  (c:/texlive/2024/texmf-dist/tex/latex/kvoptions/kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count297
+\c@section@level=\count296
 ) (c:/texlive/2024/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count298
+\etb@tempcnta=\count297
 )
 \@linkdim=\dimen186
-\Hy@linkcounter=\count299
-\Hy@pagecounter=\count300
+\Hy@linkcounter=\count298
+\Hy@pagecounter=\count299
  (c:/texlive/2024/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2024-01-20 v7.01h Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
@@ -296,7 +296,7 @@ Now handling font encoding PD1 ...
 ) (c:/texlive/2024/texmf-dist/tex/generic/intcalc/intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count301
+\Hy@SavedSpaceFactor=\count300
  (c:/texlive/2024/texmf-dist/tex/latex/hyperref/puenc.def
 File: puenc.def 2024-01-20 v7.01h Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -309,7 +309,7 @@ Package hyperref Info: Plain pages OFF on input line 4194.
 Package hyperref Info: Backreferencing OFF on input line 4199.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4446.
-\c@Hy@tempcnt=\count302
+\c@Hy@tempcnt=\count301
  (c:/texlive/2024/texmf-dist/tex/latex/url/url.sty
 \Urlmuskip=\muskip22
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
@@ -321,7 +321,7 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
  (c:/texlive/2024/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
 ))
-\Fld@menulength=\count303
+\Fld@menulength=\count302
 \Field@Width=\dimen188
 \Fld@charsize=\dimen189
 Package hyperref Info: Hyper figures OFF on input line 6063.
@@ -335,9 +335,9 @@ Package hyperref Info: PDF/A mode OFF on input line 6093.
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
-\Hy@abspage=\count304
-\c@Item=\count305
-\c@Hfootnote=\count306
+\Hy@abspage=\count303
+\c@Item=\count304
+\c@Hfootnote=\count305
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
  (c:/texlive/2024/texmf-dist/tex/latex/hyperref/hpdftex.def
@@ -346,8 +346,8 @@ File: hpdftex.def 2024-01-20 v7.01h Hyperref driver for pdfTeX
 Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend package
 with kernel methods
 )
-\Fld@listcount=\count307
-\c@bookmark@seq@number=\count308
+\Fld@listcount=\count306
+\c@bookmark@seq@number=\count307
  (c:/texlive/2024/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
 Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
  (c:/texlive/2024/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
@@ -361,7 +361,7 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 16.
  (c:/texlive/2024/texmf-dist/tex/latex/wrapfig/wrapfig.sty
 \wrapoverhang=\dimen190
 \WF@size=\dimen191
-\c@WF@wrappedlines=\count309
+\c@WF@wrappedlines=\count308
 \WF@box=\box60
 \WF@everypar=\toks27
 Package: wrapfig 2003/01/31  v 3.6
@@ -388,16 +388,16 @@ LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 23.
 LaTeX Font Info:    ... okay on input line 23.
  (c:/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count310
+\scratchcounter=\count309
 \scratchdimen=\dimen192
 \scratchbox=\box61
-\nofMPsegments=\count311
-\nofMParguments=\count312
+\nofMPsegments=\count310
+\nofMParguments=\count311
 \everyMPshowfont=\toks28
-\MPscratchCnt=\count313
+\MPscratchCnt=\count312
 \MPscratchDim=\dimen193
-\MPnumerator=\count314
-\makeMPintoPDFobject=\count315
+\MPnumerator=\count313
+\makeMPintoPDFobject=\count314
 \everyMPtoPDFconversion=\toks29
 ) (c:/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -497,27 +497,43 @@ Underfull \hbox (badness 10000) in paragraph at lines 145--147
 
  []
 
-[3 <./images/ConnectedNode.png>] [4] [5] (./Edgar NEA tex.aux)
+[3 <./images/ConnectedNode.png>] [4]
+<./images/MSEplot.png, id=127, 403.9893pt x 393.8715pt>
+File: ./images/MSEplot.png Graphic file (type png)
+<use ./images/MSEplot.png>
+Package pdftex.def Info: ./images/MSEplot.png  used on input line 249.
+(pdftex.def)             Requested size: 201.99416pt x 196.93526pt.
+<./images/image.png, id=128, 880.03781pt x 612.78937pt>
+File: ./images/image.png Graphic file (type png)
+<use ./images/image.png>
+Package pdftex.def Info: ./images/image.png  used on input line 257.
+(pdftex.def)             Requested size: 176.00444pt x 122.5557pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 253--259
+\OT1/cmr/m/n/10 achieve.
+ []
+
+[5 <./images/MSEplot.png> <./images/image.png>] [6] (./Edgar NEA tex.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
-L3 programming layer <2024-04-11>
+L3 programming layer <2024-03-14>
  ***********
 Package rerunfilecheck Info: File `"Edgar NEA tex".out' has not changed.
-(rerunfilecheck)             Checksum: B78EC53FE968BC97DBE38900DA2A481A;2420.
+(rerunfilecheck)             Checksum: 0870A88181BB55277BE6DDF3EE4FE15A;2346.
  ) 
 Here is how much of TeX's memory you used:
- 11076 strings out of 474049
- 167004 string characters out of 5746278
- 1941754 words of memory out of 5000000
- 33341 multiletter control sequences out of 15000+600000
+ 11099 strings out of 474104
+ 167518 string characters out of 5747502
+ 1939496 words of memory out of 5000000
+ 33304 multiletter control sequences out of 15000+600000
  562666 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,9n,86p,317b,458s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on "Edgar NEA tex.pdf" (6 pages, 256836 bytes).
+ 75i,9n,86p,321b,458s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on "Edgar NEA tex.pdf" (7 pages, 1074977 bytes).
 PDF statistics:
- 188 PDF objects out of 1000 (max. 8388607)
- 148 compressed objects within 2 object streams
- 26 named destinations out of 1000 (max. 500000)
- 141 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 207 PDF objects out of 1000 (max. 8388607)
+ 160 compressed objects within 2 object streams
+ 31 named destinations out of 1000 (max. 500000)
+ 151 words of extra memory for PDF output out of 10000 (max. 10000000)
 
