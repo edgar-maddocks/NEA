@@ -34,11 +34,11 @@
         \vspace*{1cm}
             
         \Huge
-        \textbf{Playing draughts using PPO}
+        \textbf{Playing draughts using reinforcement learning}
             
         \vspace{0.5cm}
         \LARGE
-        A deep learning model that plays draughts via an implementation of PPO using a neural network library with auto differentiation built from scratch
+        A deep learning model that plays draughts via a neural network library with auto differentiation - built from scratch
             
         \vspace{1.5cm}
             
@@ -270,10 +270,64 @@
     As mentioned, automatic differentiation tracks computation dynamically and then computes derivatives using a computational graph. This allows models to
     have much more complex forward passes, including decision branches and loops where the length of the loop is decided at runtime.
 
-    \subsubsubsection{Proximal Policy Optimisation (PPO)}
+    Automatic differentiation operates by differentiating a complex function (that we don't know the derivative of), by treating it as a composition of more elementary functions
+    (of which we do know the derivatives). Additionally, it treats each of these elementary functions as though their output is an intermediate variable when computing the
+    complex function. This becomes very useful when there are multiple inputs to the function, and we only want the derivative to one of these variables. Finally, this process
+    makes use of the chain rule to compute the derivative with respect to the inputs, as will be shown later on.
+
+    Firstly, I will walkthrough an example of the process of automatic differentiation.\\
+    \noindent Say we have a function: \begin{displaymath}
+        f(x) = ln\left(\frac{sin(x_1)}{cos(x_2)}\right)
+    \end{displaymath}
+
+    This function has two arbitrary inputs (perhaps in the case of a neural network these could be our parameters or outputs for example). At first, this is quite a complex
+    function to differentiate but we can simplify it using intermediate variables. For example \begin{align}
+        v_1 &= sin(x_1)\\
+        v_2 &= cos(x_2)\\
+        v_3 &= \frac{v_1}{v_2}\\
+        v_4 &= ln(v_3)\\
+        y &= v_4
+    \end{align}
+
+    \begin{wrapfigure}[19]{l}{0.5\linewidth}
+        \centering
+        \includegraphics[scale = 0.34]{ExampleCompGraph.png}
+        \caption{Example Computational Graph}
+    \end{wrapfigure}
+    Now that we have declared our intermediate variables, we can see how automatic differentiation splits up the original function into elementary ones.
+    This then allows use to easily take derivatives. Firstly, we can draw out the computational graph for this function, using our intermediate variables,
+    and this can be seen in Figure 7.
+    This graph visualizes the forward pass of the function, and how the intermediate varibales compose to form our original function.
+
+    Now, when we want to take the derivative with respect to one of these inputs, we can simply reverse through the graph, taking the gradient of each intermediate
+    variable, and using the chain rule to give us our final derivative.
+
+    This process would looks as follows: \begin{align}
+        \frac{\partial y}{\partial x_1} = \frac{\partial y}{\partial v_4} \cdot \frac{\partial v_4}{\partial v_3} \cdot \frac{\partial v_3}{\partial v_1} \cdot \frac{\partial v_1}{\partial x_1}
+    \end{align}
+
+    If we computed each of these derivatives:
+    \begin{align}
+        \frac{\partial y}{\partial v_4} &= 1\\
+        \frac{\partial v_4}{\partial v_3} &= \frac{1}{v_3}\\
+        \frac{\partial v_3}{\partial v_1} &= \frac{1}{v_2}\\
+        \frac{\partial v_1}{\partial x_1} &= cos(x_1)
+    \end{align}
+
+    And finally, evaluating equation $(8)$, as well as substituting our intermediate variables in terms of $x_1$, to obtain $\frac{\partial y}{\partial x_1}$:
+    \begin{align}
+        \frac{\partial y}{\partial x_1} &= \frac{cos(x_1)}{v_3 \cdot v_2}\\
+        &= \frac{cos(x_1)}{v_1}\\
+        &= \frac{cos(x_1)}{sin(x_1)}
+    \end{align}
+
+    This process of traversing through the graph backwards is known as reverse accumulation auto differentiation, and in practice each of the gradients would be
+    stored numerically at computation, rather than computing a symbolic version of the final derivative and plugging the values in.
+
+    \subsubsubsection{Reinforcement Learning (RL)}
 
     \subsubsection{Similar Systems}
-    \begin{wrapfigure}[14]{r}{0.5\linewidth}
+    \begin{wrapfigure}[13]{r}{0.5\linewidth}
         \centering
         \includegraphics[scale=0.145]{1992Tinsleymatch.jpg}
         \caption{Image of Chinook playing a game of draughts - 1992}
@@ -286,9 +340,8 @@
     Chinook managed to beat the draughts world champion at the time of 1995, and after this no longer competed, but instead was
     tasked with solving checkers. (A solved game is one where the outcome can be predicted from any position). Finally, in 2007,
     Chinook had solved checkers, and this was published.
-    \vspace{5mm}
 
-    \begin{wrapfigure}[16]{l}{0.5\linewidth}
+    \begin{wrapfigure}[12]{l}{0.5\linewidth}
         \centering
         \includegraphics[scale=0.75]{download.jpg}
         \caption{Chess champion Garry Kasparov loses to Chess engine - 1997}
@@ -340,10 +393,15 @@
     \noindent \url{https://numba.pydata.org/numba-doc/latest/extending/interval-example.html}
     Numba does not allow user-declared classes and therefore they must be explicity defined using Numba's types.
 
+    \subsection{AlphaZero}
     \noindent \url{https://ai.stackexchange.com/questions/13156/does-alphazero-use-q-learning}
     \noindent \url{https://suragnair.github.io/posts/alphazero.html}
     Explanations of AlphaZero's loss function
 
+    \noindent \url{https://liacs.leidenuniv.nl/~plaata1/papers/CoG2019.pdf}
+    AlphaZero policy explanation
+
+    \subsection{Existing Auto differentiation systems}
     \noindent \url{https://medium.com/@utsavstha/jax-vs-pytorch-a-comprehensive-comparison-for-deep-learning-10a84f934e17}
     PyTorch vs JAX
 \end{document}

@@ -10,16 +10,18 @@
 \contentsline {subparagraph}{Forward Pass of Dense Layer}{3}{section*.5}%
 \contentsline {subparagraph}{Gradient Descent}{3}{section*.6}%
 \contentsline {paragraph}{\numberline {1.2.1.3}Automatic Differentiation}{5}{paragraph.1.2.1.3}%
-\contentsline {paragraph}{\numberline {1.2.1.4}Proximal Policy Optimisation (PPO)}{5}{paragraph.1.2.1.4}%
-\contentsline {subsubsection}{\numberline {1.2.2}Similar Systems}{5}{subsubsection.1.2.2}%
-\contentsline {subsubsection}{\numberline {1.2.3}Identification of end-user}{6}{subsubsection.1.2.3}%
-\contentsline {subsection}{\numberline {1.3}Modelling of the problem}{6}{subsection.1.3}%
-\contentsline {subsubsection}{\numberline {1.3.1}Identification of Objects}{6}{subsubsection.1.3.1}%
-\contentsline {subsubsection}{\numberline {1.3.2}Identification of Data Structures}{6}{subsubsection.1.3.2}%
-\contentsline {subsection}{\numberline {1.4}Set of objectives}{6}{subsection.1.4}%
-\contentsline {section}{\numberline {2}Research Log}{6}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Draughts Rules}{6}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Neural Networks}{6}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Vectorization of summations}{6}{subsubsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.3}Automatic Differentiation}{6}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Implementing Custom Classes using Numba}{6}{subsection.2.4}%
+\contentsline {paragraph}{\numberline {1.2.1.4}Reinforcement Learning (RL)}{6}{paragraph.1.2.1.4}%
+\contentsline {subsubsection}{\numberline {1.2.2}Similar Systems}{6}{subsubsection.1.2.2}%
+\contentsline {subsubsection}{\numberline {1.2.3}Identification of end-user}{7}{subsubsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.3}Modelling of the problem}{7}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}Identification of Objects}{7}{subsubsection.1.3.1}%
+\contentsline {subsubsection}{\numberline {1.3.2}Identification of Data Structures}{7}{subsubsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.4}Set of objectives}{7}{subsection.1.4}%
+\contentsline {section}{\numberline {2}Research Log}{7}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Draughts Rules}{7}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Neural Networks}{7}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Vectorization of summations}{7}{subsubsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.3}Automatic Differentiation}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Implementing Custom Classes using Numba}{7}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}AlphaZero}{8}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Existing Auto differentiation systems}{8}{subsection.2.6}%
