@@ -19,6 +19,14 @@
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
 
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\makeatletter
+\newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
+\newcommand\subsubsubsubsection{\@startsection{subparagraph}{5}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
+\makeatother
+
 
 \begin{document}
 \begin{titlepage}
@@ -53,28 +61,13 @@
 
     \section{Analysis}
     \subsection{Background}
-    \textbf{TO BE WRITTIEN}
+    \textbf{TO BE WRITTEN}
 
     \subsection{Evidence of Analysis}
-    \textbf{TO BE WRITTIEN}
+    \textbf{TO BE WRITTEN}
+    \subsubsection{Current systems}
 
-    \subsection{Current Systems}
-    \textbf{TO BE WRITTIEN}
-    
-    \subsection{Identification of end-user}
-    \textbf{TO BE WRITTIEN}
-    
-    \subsection{Modelling of the problem}
-    \textbf{TO BE WRITTIEN}
-    
-    \subsection{Set of objectives}
-    \textbf{TO BE WRITTIEN}
-    
-    \section{Research Log}
-
-    \subsection{Draughts Rules}
-    \url{https://www.mastersofgames.com/rules/draughts-rules.htm}
-
+    \subsubsubsection{Draughts}
     Draughts is an English board game played on an 8x8 checkered board, identical to a chessboard.
     Each player begins a game with 12 pieces, usually flat round discs.
     The pieces and board are usually black and white, and will be referred to as such.
@@ -84,7 +77,7 @@
     A coin is tossed to decide who plays black, and that player has the first move. Each player places their pieces
     on the 12 black squares closest to themselves. The setup of the board can be seen in Figure 1. 
 
-    \begin{wrapfigure}{l}{0.4\linewidth}
+    \begin{wrapfigure}[11]{l}{0.4\linewidth}
         \centering
         \includegraphics[scale=0.35]{The-starting-position-for-checkers.png}
         \caption{An image showing the starting position of a game of draughts}
@@ -96,46 +89,44 @@
     of the board, the piece becomes a 'King', and another piece should be placed on top of said piece to indicate so.
 
     Unless a piece is crowned and a 'King' it may only move and take pieces diagonally forwards. Kings may move and take both forwards and backwards.
+    \begin{wrapfigure}[15]{r}{0.4\linewidth}
+        \centering
+        \includegraphics[scale=1.15]{piece being taken.png}
+        \caption{Example of a piece being taken in draughts}
+    \end{wrapfigure}
 
     If an adjacent square has an opponents piece and the square immediately beyond the oppositions piece is empty, the opponents piece may be captured.
     If the player who's go it is has the opportunity to capture one or more pieces, then they must do so. 
     A piece is taken by moving your own piece over the opposing player's, into the vacant square, and then removing the opposing piece from the board.
-    An example of this process can be seen in Figure 2.
+    An example of this process can be seen in Figure 3.
 
-    \begin{figure}[h]
-        \centering
-        \includegraphics[scale=1.15]{piece being taken.png}
-        \caption{Example of a piece being taken in draughts}
-    \end{figure}
-
-    Unlike a regular move, a capturing move may make more than one 'hop'. This is if the capture places the piece in a position where another capture.
-    In this case, the additional capture must be made. An example of this successive capturing behaviour can be seen in Figure 3. 
+    Unlike a regular move, a capturing move may make more than one 'hop'. This is if the capture places the piece in a position where another capture is possible.
+    In this case, the additional capture must be made. The capture sequence can only be made by one piece per move. i.e. You cannot make one capture with one piece, 
+    and then another capture with another piece in the same move.
     
-    \begin{figure}[h]
+    However, if more than one piece can capture, the player has free choice over which piece to move. Likewise, if one piece can capture in multiple
+    directions then the player has the choice in which direction to move. \textbf{Note:} it is not compulsory for the player to move in the direction, or with the piece,
+    that will lead to the greatest number of captures in that move.
+    
+    \begin{wrapfigure}[16]{l}{0.4\linewidth}
         \centering
         \includegraphics[scale=0.8]{double hop.png}
-        \caption{Visualization of a double hop capture}
-    \end{figure}
+        \caption{Visualization of multiple captures in one move}
+    \end{wrapfigure}
 
-    The move may only end when the position has no more captures available or an uncrowned piece reaches the opposing edge
-    of the board and becomes a King. The capture sequence can only be made by one piece per move. I.E. You cannot make on capture with one piece, and then another capture with another piece in the same move.
-
-    However, if more than one piece can capture, the player has free choice over which piece to move. Likewise, if one piece can capture in multiple
-    directions then the player has the choice in which direction to move. \textbf{Note:} it is not compulsary for the player to move in the direction, or with the piece,
-    that will lead to the greatest number of captures in that move.
+    A move may only end when the position has no more captures available or an uncrowned piece reaches the opposing edge
+    of the board and becomes a King. 
 
     If no capturing moves can be made, then any piece may be moved diagonally onto a vacant square.
 
     The game ends when all of a players piece's have been captured, or a player has no available moves.
 
-    \subsection{Neural Networks}
-    \noindent \url{https://www.ibm.com/topics/neural-networks}
-
-    \subsubsection{What is a neural network}
+    \subsubsubsection{Neural Networks}
+    \subsubsubsubsection{What is a neural Network}
     A neural network is a machine learning model which aims to mimic the processes of the human brain.
     Each network contains inputs and outputs, as well as one or more layers of hidden nodes - which act as artificial neurons.
     In a fully connected network, each node is connected once to each node in the next layer - an example of how one node connects
-    to the next layer can be seen in Figure 4.
+    to the next layer can be seen in below.
     \begin{figure}[h]
         \centering
         \includegraphics[scale=0.2]{ConnectedNode.png}
@@ -147,7 +138,7 @@
 
     Neural networks can be modelled as a collection linear regression units.
 
-    \subsubsection{Linear Regression Unit}
+    \subsubsubsubsection{Linear Regression Unit}
     A single linear regression unit output has the formula:
     \begin{displaymath}
         \hat{y} = \sum_{i=0}^{n} w_ix_i + b
@@ -159,9 +150,7 @@
         \hat{y} = w_1x_1 + w_2x_2 + w_3x_3 + b
     \end{displaymath}
 
-    \subsubsection{Vectorization of summations}
-    \noindent \url{https://courses.cs.washington.edu/courses/cse446/20wi/Lecture8/08_Regularization.pdf}
-
+    \subsubsubsubsection{Vectorization of processes}
     This calculation can be vectorized to improve efficiency and would be notated:
     \begin{displaymath}
         \hat{y} = XW + b
@@ -187,7 +176,7 @@
     $X$ here is a row vector as this is the most common format for data as an input to a network (e.g being read from a csv).
     This parallelized computation is much faster, and can be parallelized using the GPU to further improve speed and efficiency.
 
-    \subsubsection{Forward Pass of Dense Layer}
+    \subsubsubsubsection{Forward Pass of Dense Layer}
     In the case of neural networks, lots of these linear regression units can be combined to form a vector of outputs.
     Each of these regression units will have the same inputs, therefore $X$ can have the same definition. However, $W$ will now be
     composed of multiple vectors of weights, instead of just one.
@@ -223,10 +212,9 @@
 
     With $W$ and $X$ having the same definition as most recently defined.
 
-    
+    \subsubsubsubsection{Gradient Descent}
 
-    \subsubsection{Gradient Descent}
-    Although back propogation can be solved in closed form, it comes with a large time complexity (greater than $O(n^3)$), and therefore
+    Now, to update the weights of our model, we can compute these values in closed form, however, it comes with a large time complexity (greater than $O(n^3)$), and therefore
     a process called gradient descent is usually employed.
 
     Gradient descent works to minimize the error of a model by iteratively locating a minimum in the error function.
@@ -242,7 +230,6 @@
         MSE(Y, \hat{Y}) = \frac{1}{n}((Y - \hat{Y})^T \cdot (Y - \hat{Y}))
     \end{displaymath}
 
-    \pagebreak
     If we plot the MSE curve of different weights and biases - of a single regression unit, it looks as follows.
     \begin{figure}[h]
         \centering
@@ -277,10 +264,55 @@
     That is a basic overview of gradient descent in a single regression unit, but in a dense network, the process is almost identical. An error function is evaluated, 
     the derivative with respect to the inputs calculated, and the new values updated. The main expense computation-wise is 
 
+    \subsubsubsection{Automatic Differentiation}
 
+    \subsubsubsection{Proximal Policy Optimisation (PPO)}
 
+    \subsubsection{Similar Systems}
+    \begin{wrapfigure}[14]{r}{0.5\linewidth}
+        \centering
+        \includegraphics[scale=0.145]{1992Tinsleymatch.jpg}
+        \caption{Image of Chinook playing a game of draughts - 1992}
+    \end{wrapfigure}
 
-    \pagebreak
+    Chinook is a checkers playing computer program that was developed at the University of Alberta between
+    1989 and 2007. The program utilises an opening book, deep-search algorithms alongside a position evaluation function
+    and a solved endgame database for positions with 8 pieces or fewer.
+    All of Chinook's knowledge has been programmed in by humans, with no use of an artificial intelligence model. Despite this,
+    Chinook managed to beat the draughts world champion at the time of 1995, and after this no longer competed, but instead was
+    tasked with solving checkers. (A solved game is one where the outcome can be predicted from any position). Finally, in 2007,
+    Chinook had solved checkers, and this was published.
+    
+    \vspace{5mm}
 
-    \noindent \url{https://en.wikipedia.org/wiki/Automatic_differentiation} Automatic differentiation
+    Other similar systems include chess engines - of which there is a multitude.
+
+    \subsubsection{Identification of end-user}
+    \textbf{TO BE WRITTEN}
+    
+    \subsection{Modelling of the problem}
+    \textbf{TO BE WRITTEN}
+    
+    \subsubsection{Identification of Objects}
+    \textbf{TO BE WRITTEN}
+
+    \subsubsection{Identification of Data Structures}
+    \textbf{TO BE WRITTEN}
+
+    \subsection{Set of objectives}
+    \textbf{TO BE WRITTEN}
+    
+    \section{Research Log}
+
+    \subsection{Draughts Rules}
+    \url{https://www.mastersofgames.com/rules/draughts-rules.htm}
+
+    \subsection{Neural Networks}
+    \noindent \url{https://www.ibm.com/topics/neural-networks}
+
+    \subsubsection{Vectorization of summations}
+    \noindent \url{https://courses.cs.washington.edu/courses/cse446/20wi/Lecture8/08_Regularization.pdf}
+    
+    \subsection{Automatic Differentiation}
+    \noindent \url{https://en.wikipedia.org/wiki/Automatic_differentiation}
 \end{document}
