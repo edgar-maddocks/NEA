@@ -325,7 +325,18 @@
     stored numerically at computation, rather than computing a symbolic version of the final derivative and plugging the values in.
 
     \subsubsubsection{Reinforcement Learning (RL)}
+    Reinforcement learning aims to capitalize on learning through an environment (similar to how infants learn by playing), without a teacher, to improve computer's
+    ability at a given task. Simply put, problems in reinforcement learning involve learning how to map certain situations to certain actions to maximize a reward signal.
+    The models are not told what actions to take and instead must explore the environment and available actions to learn what yields the most rewards. In some cases, actions
+    may not only affect immediate rewards, but also the possibility and/or size of future rewards.
+    
+    One challenge that becomes in apparent in reinforcement learning, that is not present in other machine learning methods (supervised and unsupervised), is that of \textit{exploration}
+    vs \textit{exploitation}. This problem comes from the fact that to maximize any given reward signal, an agent must take the action which gains the most reward i.e. it must
+    \textit{exploit} what it knows, and choose the best action. However, to have knowledge of which action is best at any given state, the agent must have \textit{explored} many different
+    actions - in many different states. This challenge will be addressed in more depth later on, during the design of the agent.
 
+    
+    
     \subsubsection{Similar Systems}
     \begin{wrapfigure}[13]{r}{0.5\linewidth}
         \centering
@@ -341,7 +352,7 @@
     tasked with solving checkers. (A solved game is one where the outcome can be predicted from any position). Finally, in 2007,
     Chinook had solved checkers, and this was published.
 
-    \begin{wrapfigure}[12]{l}{0.5\linewidth}
+    \begin{wrapfigure}[16]{l}{0.5\linewidth}
         \centering
         \includegraphics[scale=0.75]{download.jpg}
         \caption{Chess champion Garry Kasparov loses to Chess engine - 1997}
@@ -360,7 +371,7 @@
     the linear algebra using its XLA backend. This backend optimizes operations for CPU's GPU's and TPU's as well as using a just-in-time compiler
     to increase computation speeds.
 
-    \subsubsection{Identification of end-user}
+    \subsubsection{Interview of end-user(s)}
     \textbf{TO BE WRITTEN}
     
     \subsection{Modelling of the problem}
@@ -370,6 +381,9 @@
     \textbf{TO BE WRITTEN}
 
     \subsubsection{Identification of Data Structures}
+    \textbf{TO BE WRITTEN}
+
+    \subsubsection{Identification of algorithms}
     \textbf{TO BE WRITTEN}
 
     \subsection{Set of objectives}
@@ -404,4 +418,7 @@
     \subsection{Existing Auto differentiation systems}
     \noindent \url{https://medium.com/@utsavstha/jax-vs-pytorch-a-comprehensive-comparison-for-deep-learning-10a84f934e17}
     PyTorch vs JAX
+
+    \subsection{Reinforcement Learning}
+    \noindent \url{https://web.stanford.edu/class/psych209/Readings/SuttonBartoIPRLBook2ndEd.pdf} What is reinforcement learning?
 \end{document}
