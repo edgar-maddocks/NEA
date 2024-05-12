@@ -17,6 +17,8 @@
 
 \usepackage{wrapfig}
 \usepackage{graphicx}
+
+\usepackage{array}
 \graphicspath{ {./images/} }
 
 \setcounter{secnumdepth}{4}
@@ -78,24 +80,22 @@
     A coin is tossed to decide who plays black, and that player has the first move. Each player places their pieces
     on the 12 black squares closest to themselves. The setup of the board can be seen in Figure 1. 
 
-    \begin{wrapfigure}[11]{l}{0.4\linewidth}
+    \begin{wrapfigure}[15]{l}{0.3\linewidth}
         \centering
         \includegraphics[scale=0.35]{The-starting-position-for-checkers.png}
         \caption{An image showing the starting position of a game of draughts}
     \end{wrapfigure}
-
     The pieces only move diagonally (so will always be on black squares)
     and the aim is to take all of the opposing players pieces, or to put the opposing player in a position with no possible moves.
     Players take turns moving their shade of pieces. If at any point of the game, a player's piece reaches the opposing players edge
     of the board, the piece becomes a 'King', and another piece should be placed on top of said piece to indicate so.
-
     Unless a piece is crowned and a 'King' it may only move and take pieces diagonally forwards. Kings may move and take both forwards and backwards.
+    
     \begin{wrapfigure}[15]{r}{0.4\linewidth}
         \centering
         \includegraphics[scale=1.15]{piece being taken.png}
         \caption{Example of a piece being taken in draughts}
     \end{wrapfigure}
-
     If an adjacent square has an opponents piece and the square immediately beyond the oppositions piece is empty, the opponents piece may be captured.
     If the player who's go it is has the opportunity to capture one or more pieces, then they must do so. 
     A piece is taken by moving your own piece over the opposing player's, into the vacant square, and then removing the opposing piece from the board.
@@ -109,7 +109,7 @@
     directions then the player has the choice in which direction to move. \textbf{Note:} it is not compulsory for the player to move in the direction, or with the piece,
     that will lead to the greatest number of captures in that move.
     
-    \begin{wrapfigure}[16]{l}{0.4\linewidth}
+    \begin{wrapfigure}[10]{l}{0.4\linewidth}
         \centering
         \includegraphics[scale=0.8]{double hop.png}
         \caption{Visualization of multiple captures in one move}
@@ -240,12 +240,13 @@
 
     Here the weight has been labelled $a$, but the bias has remained as $b$. As we can see, there is a clear local minimum of this error function,
     and the values that obtain this minimum, is what gradient descent aims to achieve. 
+    
+    \pagebreak
     \begin{wrapfigure}[14]{l}{0.4\linewidth}
         \centering
         \includegraphics[scale=0.2]{image.png}
         \caption{MSE with respect to one parameter}
     \end{wrapfigure}
-
     In figure 6 we can see a representation of the MSE plot with respect to only one of the parameters. This makes understanding the process of gradient
     descent much simpler. For example, the minimum of this function ($f(x) = \frac{x^2}{25}$) is at $x = 0$. So, if we were to have an initial $x$ value of say $-40$
     and we calculated the gradient to be $3.2$, we could then subtract this from $40$. Resulting in a new value of $36.8$, which is closer to our optimal value of $0$.
@@ -290,7 +291,7 @@
         y &= v_4
     \end{align}
 
-    \begin{wrapfigure}[19]{l}{0.5\linewidth}
+    \begin{wrapfigure}[23]{l}{0.5\linewidth}
         \centering
         \includegraphics[scale = 0.34]{ExampleCompGraph.png}
         \caption{Example Computational Graph}
@@ -330,32 +331,59 @@
     ability at a given task. Simply put, problems in reinforcement learning involve learning how to map certain situations to certain actions to maximize a reward signal.
     The models are not told what actions to take and instead must explore the environment and available actions to learn what yields the most rewards. In some cases, actions
     may not only affect immediate rewards, but also the possibility and/or size of future rewards.
+
+    \begin{wrapfigure}{l}{0.5\linewidth}
+        \centering
+        \includegraphics[scale =0.5]{markovprocess.png}
+        \caption{Diagram of Markov Decision Process}
+    \end{wrapfigure}
+    The solution to reinforcement learning problems can be modelled using a markov decision process (A diagram of which can be seen in Figure _). This diagram shows the process of
+    one iteration of training. The agent will recieve a state ($S_t$) and then decide on an action to take ($A_t$). This action is sent to the environment, which process the action,
+    evaluates the reward gained from that action ($R_t$), and then returns that reward and the next state ($S_{t+1}$).
     
     One challenge that becomes in apparent in reinforcement learning, that is not present in other machine learning methods (supervised and unsupervised), is that of \textit{exploration}
     vs \textit{exploitation}. This problem comes from the fact that to maximize any given reward signal, an agent must take the action which gains the most reward i.e. it must
     \textit{exploit} what it knows, and choose the best action. However, to have knowledge of which action is best at any given state, the agent must have \textit{explored} many different
     actions - in many different states. This challenge will be addressed in more depth later on, during the design of the agent.
 
-    
+    There are two main approaches to reinforcement learning problems, a model-free solution or model solution. Within model-free solutions there is another two categories of policy optimization
+    and Q-learning. In policy optimization, the agent learns a policy which maps states to actions. There are two types of these policies - deterministic and stochastic. A deterministic policy
+    maps without uncertainty i.e. the agent will take the same action given the same state. Stochastic policies on the other hand output a distribution which maps a state to the probability of 
+    each action.
+
+    \begin{wrapfigure}[18]{l}{0.4\linewidth}
+        \centering
+        \includegraphics[scale=0.5]{qlearning.PNG}
+        \caption{Representation of Q-learning process}
+    \end{wrapfigure}
+    Q-learning can be represented as a tabular learning method, and works by learning the value of a function - usually $Q(s, a)$ - which represents how successful an action was at
+    a certain state. Each of these values is stored in the 'table' and when the model next observes a given state it consolidates the table and chooses the action which was most
+    successful in its past experience.
+
+    For model-based solutions, the models 'know' the rules of the games and learn from planning and construct a functional representation of the environment. This is different to non-model
+    based which aims to learn by trial-and-error and experience. AlphaZero for example would be defined as a model-based agent. To better define this, if the agent is able to forecast the reward
+    of an action given any state, allowing it to plan what actions to take, it is model-based.
+
+    Model-based solutions are best when trying to optimize the reward for a task - such as playing chess. Whereas model-free solutions are best for tasks such as self-driving cars (as a model-based
+    approach may run over a pedestrian just to try and complete the journey in the shortest time).
+
     
     \subsubsection{Similar Systems}
-    \begin{wrapfigure}[13]{r}{0.5\linewidth}
+    \begin{wrapfigure}[12]{r}{0.5\linewidth}
         \centering
         \includegraphics[scale=0.145]{1992Tinsleymatch.jpg}
         \caption{Image of Chinook playing a game of draughts - 1992}
     \end{wrapfigure}
-
     Chinook is a checkers playing computer program that was developed at the University of Alberta between
     1989 and 2007. The program utilises an opening book, deep-search algorithms alongside a position evaluation function
     and a solved endgame database for positions with 8 pieces or fewer.
     All of Chinook's knowledge has been programmed in by humans, with no use of an artificial intelligence model. Despite this,
     Chinook managed to beat the draughts world champion at the time of 1995, and after this no longer competed, but instead was
-    tasked with solving checkers. (A solved game is one where the outcome can be predicted from any position). Finally, in 2007,
-    Chinook had solved checkers, and this was published.
+    tasked with solving checkers. (A solved game is one where the outcome can be predicted from any position) - and this was achieved in 2007.
 
     \begin{wrapfigure}[16]{l}{0.5\linewidth}
         \centering
-        \includegraphics[scale=0.75]{download.jpg}
+        \includegraphics[scale=0.7]{download.jpg}
         \caption{Chess champion Garry Kasparov loses to Chess engine - 1997}
     \end{wrapfigure}
     Other similar systems include chess engines - of which there is a multitude. Chess engines operate similarly to Chinook, creating trees
@@ -364,30 +392,111 @@
     such as Go and Shogi. AlphaZero is trained mainly using self-play, where the AI plays against itself and then learns from those games.
     In a 100 game match against StockFish (one of the most popular chess engines) AlphaZero won 28 games, lost 0 and drew the remaining 72.
     This shows the power of reinforcement learning as a tool for board games and its possibility to be used for draughts.
-    \vspace{5mm}
 
     For automatic differentiation, some of the most popular systems include PyTorch's autograd, as well as autodiff by JAX. PyTorch has a very
     well developed library for deep-learning alongside it's autograd, as well as extensive documentation. Additionally, autograd is more similar
     to regular python than JAX and may be easier to use when first delving into the area. However, JAX builds on top of autograd and accelerates
-    the linear algebra using its XLA backend. This backend optimizes operations for CPU's GPU's and TPU's as well as using a just-in-time compiler
-    to increase computation speeds.
+    the linear algebra using an XLA backend. This backend optimizes operations for CPU's GPU's and TPU's as well as using a just-in-time compiler
+    to decrease runtimes.
 
     \subsubsection{Interview of end-user(s)}
     \textbf{TO BE WRITTEN}
+    \subsubsubsection{Interview of 3rd-party}
+    \subsubsubsection{Interview with end-user}
     
     \subsection{Modelling of the problem}
 
     \subsubsection{Identification of Objects}
+    \textbf{ADD SOME UML DIAGRAMS}
     \subsubsubsection{Draughts}
-    For draughts, we will need only one, an environment. The environment will be used for training the reinforcement learning agent
-    and will inherit from the gymnasium library's base environment class. This will provide virtual methods of initialization, a step function,
-    a reset function, and a render function - which will have to be implmented.
+    For draughts, we will need only one, an environment. The environment will be used for training the reinforcement learning agent as well
+    as allowing a user to play against the agent. It will require methods that reset the environment, execute an action in the environment, as
+    well as functions to compute the available moves and check for a win.
+
+    \subsubsubsection{Automatic Differentiation Engine}
+    The automatic differentiation engine will be based off of the 'Tensor' object. This object will be similar to a matrix but have some additonal
+    attrributes, such as its gradient and respective gradient function, if it's gradient requires computing and the tensors it depends on to compute
+    said gradient.
+
+    Additionally, all operators for the tensor object will have to overridden to allow for gradient computation if the tensor requires it.
+    The tensor class will also have functions to zero out the gradient as well as begin the backwards traversal through the computational graph.
+
+    \subsubsubsection{Neural Network Library}
+    Their will be a large collection of objects inside of the neural network library, all basesd around the functionality provided by the tensor object.
+    Firstly, the parameter class will allow for tensors of a given shape to be created and act as parameters for a network - this will also help with backpropogation.
+    The module object will have a parameters property which yields every parameter related to that module. This module class is what all layers will inherit from. It will also
+    have methods to zero out the gradients of all parameters.
+
+    Secondly, their will be classes for each different type of layer (dense and activations). The dense layer will have attributes which store the parameters required
+    for computation as well as a method to complete the forward pass through the layer. Activation functions will compute the forward pass, as well as store the gradient function
+    for any tensors which require it. The activation layers will not need any attributes as the have no parameters.
+
+    The optimizer class is the base class for any optimizers such as stochastic gradient descent or momentum-based gradient descent. This class will have attributes which store
+    the learning rate as well as any parameters the optimizer is related to. It will also have virtual methods - which will be overriden by the specific optimizer classes - of
+    a step (which updates all parameters), a function to zero the gradient of all parameters and finally a function to add parameters.
+
+    The final class in the library will be the Sequential class. This class will represent a model (collection of layers) and abstract some complexity of working with individual layers.
+    The class will have a list of layers which make up the model, a loss function to use and an optimizer. It will abstract away training of the model via a train function, with default
+    values of some hyperparameters.
+
+    \subsubsubsection{Reinforcement Learning Solution}
+    The final solution will also require a large set of classes including: a model class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
+    a search of available actions to train the network towards - and a node class to make up this tree; an agent class which abstracts the processes of the previous classes. \\
+    \textbf{Unfinished on deciding structure}
 
     \subsubsection{Identification of Data Structures}
     \textbf{TO BE WRITTEN}
+    \subsubsubsection{Draughts}
+    \begin{tabular}{ | m{4cm} | m{4cm}| m{7cm} | } 
+        \hline
+        Item& Data Structure & Reasoning \\ 
+        \hline
+        \hline
+        example & example & example \\ 
+        \hline
+        example & example & example \\
+        \hline
+      \end{tabular}
+    \subsubsubsection{Automatic Differentiation Engine}
+    \begin{tabular}{ | m{4cm} | m{4cm}| m{7cm} | } 
+        \hline
+        Item& Data Structure & Reasoning \\ 
+        \hline
+        \hline
+        example & example & example \\ 
+        \hline
+        example & example & example \\
+        \hline
+      \end{tabular}
+    \subsubsubsection{Neural Network Library}
+    \begin{tabular}{ | m{4cm} | m{4cm}| m{7cm} | } 
+        \hline
+        Item& Data Structure & Reasoning \\ 
+        \hline
+        \hline
+        example & example & example \\ 
+        \hline
+        example & example & example \\
+        \hline
+      \end{tabular}
+    \subsubsubsection{Reinforcement Learning Solution}
+    \begin{tabular}{ | m{4cm} | m{4cm}| m{7cm} | } 
+        \hline
+        Item& Data Structure & Reasoning \\ 
+        \hline
+        \hline
+        example & example & example \\ 
+        \hline
+        example & example & example \\
+        \hline
+      \end{tabular}
 
     \subsubsection{Identification of algorithms}
     \textbf{TO BE WRITTEN}
+    \subsubsubsection{Draughts}
+    \subsubsubsection{Automatic Differentiation Engine}
+    \subsubsubsection{Neural Network Library}
+    \subsubsubsection{Reinforcement Learning Solution}
 
     \subsection{Set of objectives}
     \textbf{TO BE WRITTEN}
@@ -423,5 +532,8 @@
     PyTorch vs JAX
 
     \subsection{Reinforcement Learning}
-    \noindent \url{https://web.stanford.edu/class/psych209/Readings/SuttonBartoIPRLBook2ndEd.pdf} What is reinforcement learning?
+    \noindent \url{https://web.stanford.edu/class/psych209/Readings/SuttonBartoIPRLBook2ndEd.pdf} What is reinforcement learning?\\
+    \noindent \url{https://smartlabai.medium.com/reinforcement-learning-algorithms-an-intuitive-overview-904e2dff5bbc} Intro to reinforcement learning\\
+    \noindent \url{https://medium.com/the-official-integrate-ai-blog/understanding-reinforcement-learning-93d4e34e5698} Different types of reinforcement learning\\
+    \noindent \url{https://neptune.ai/blog/model-based-and-model-free-reinforcement-learning-pytennis-case-study} Model-based vs Model-free learning\\
 \end{document}

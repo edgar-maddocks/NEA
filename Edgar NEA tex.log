@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.1)  10 MAY 2024 21:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.5.1)  12 MAY 2024 21:50
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -365,40 +365,49 @@ Package hyperref Info: Option `colorlinks' set `true' on input line 16.
 \WF@box=\box60
 \WF@everypar=\toks27
 Package: wrapfig 2003/01/31  v 3.6
+) (c:/texlive/2024/texmf-dist/tex/latex/tools/array.sty
+Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen192
+\ar@mcellbox=\box61
+\extrarowheight=\dimen193
+\NC@list=\toks28
+\extratabsurround=\skip65
+\backup@length=\skip66
+\ar@cellbox=\box62
 ) (./Edgar NEA tex.aux)
 \openout1 = `"Edgar NEA tex.aux"'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 33.
+LaTeX Font Info:    ... okay on input line 33.
  (c:/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count310
-\scratchdimen=\dimen192
-\scratchbox=\box61
+\scratchdimen=\dimen194
+\scratchbox=\box63
 \nofMPsegments=\count311
 \nofMParguments=\count312
-\everyMPshowfont=\toks28
+\everyMPshowfont=\toks29
 \MPscratchCnt=\count313
-\MPscratchDim=\dimen193
+\MPscratchDim=\dimen195
 \MPnumerator=\count314
 \makeMPintoPDFobject=\count315
-\everyMPtoPDFconversion=\toks29
+\everyMPtoPDFconversion=\toks30
 ) (c:/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -446,7 +455,7 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 )
 Package color Info: Driver file: pdftex.def on input line 149.
  (c:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 31.
+Package hyperref Info: Link coloring ON on input line 33.
  (./Edgar NEA tex.out) (./Edgar NEA tex.out)
 \@outlinefile=\write3
 \openout3 = `"Edgar NEA tex.out"'.
@@ -465,140 +474,139 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write4
 \openout4 = `"Edgar NEA tex.toc"'.
 
-<./images/The-starting-position-for-checkers.png, id=132, 308.15125pt x 309.155pt>
-File: ./images/The-starting-position-for-checkers.png Graphic file (type png)
-<use ./images/The-starting-position-for-checkers.png>
-Package pdftex.def Info: ./images/The-starting-position-for-checkers.png  used on input line 83.
-(pdftex.def)             Requested size: 107.85454pt x 108.20586pt.
-
-
-Package wrapfig Warning: Collision between wrapping environments on input line 93.
-
-<./images/piece being taken.png, id=133, 114.4275pt x 113.67468pt>
-File: ./images/piece being taken.png Graphic file (type png)
-<use ./images/piece being taken.png>
-Package pdftex.def Info: ./images/piece being taken.png  used on input line 95.
-(pdftex.def)             Requested size: 131.59059pt x 130.72485pt.
-
-Overfull \hbox (22.8499pt too wide) in paragraph at lines 95--96
- [][] 
- []
-
-
-Underfull \hbox (badness 1226) in paragraph at lines 96--96
-[]\OT1/cmr/m/n/10 Figure 2: []Example of
- []
-
-
-Underfull \hbox (badness 5374) in paragraph at lines 92--97
-[]\OT1/cmr/m/n/10 Unless a piece is crowned and a 'King' it may
- []
-
-
-Underfull \hbox (badness 1418) in paragraph at lines 92--97
-\OT1/cmr/m/n/10 only move and take pieces di-ag-o-nally for-wards. Kings
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 92--97
-\OT1/cmr/m/n/10 may move and take both for-wards and back-wards.
- []
-
 
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.97     \end{wrapfigure}
-                          [1 <./images/The-starting-position-for-checkers.png>]
+l.79 
+      [1]
+<./images/The-starting-position-for-checkers.png, id=209, 308.15125pt x 309.155pt>
+File: ./images/The-starting-position-for-checkers.png Graphic file (type png)
+<use ./images/The-starting-position-for-checkers.png>
+Package pdftex.def Info: ./images/The-starting-position-for-checkers.png  used on input line 85.
+(pdftex.def)             Requested size: 107.85454pt x 108.20586pt.
 
-Package wrapfig Warning: Stationary wrapfigure forced to float on input line 97.
 
-<./images/double hop.png, id=143, 171.13937pt x 171.13937pt>
+Package wrapfig Warning: Collision between wrapping environments on input line 94.
+
+<./images/piece being taken.png, id=210, 114.4275pt x 113.67468pt>
+File: ./images/piece being taken.png Graphic file (type png)
+<use ./images/piece being taken.png>
+Package pdftex.def Info: ./images/piece being taken.png  used on input line 96.
+(pdftex.def)             Requested size: 131.59059pt x 130.72485pt.
+
+Overfull \hbox (4.0617pt too wide) in paragraph at lines 96--97
+ [][] 
+ []
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 99.
+
+
+Package wrapfig Warning: Collision between wrapping environments on input line 112.
+
+<./images/double hop.png, id=212, 171.13937pt x 171.13937pt>
 File: ./images/double hop.png Graphic file (type png)
 <use ./images/double hop.png>
 Package pdftex.def Info: ./images/double hop.png  used on input line 114.
 (pdftex.def)             Requested size: 136.91167pt x 136.91167pt.
-<./images/ConnectedNode.png, id=144, 548.80031pt x 545.03625pt>
+
+Overfull \hbox (4.02325pt too wide) in paragraph at lines 114--115
+ [][] 
+ []
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 118.
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 121.
+
+<./images/ConnectedNode.png, id=213, 548.80031pt x 545.03625pt>
 File: ./images/ConnectedNode.png Graphic file (type png)
 <use ./images/ConnectedNode.png>
 Package pdftex.def Info: ./images/ConnectedNode.png  used on input line 133.
 (pdftex.def)             Requested size: 109.7581pt x 109.00531pt.
 
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
 Underfull \hbox (badness 10000) in paragraph at lines 137--139
 
  []
 
-[2 <./images/piece being taken.png> <./images/double hop.png> <./images/ConnectedNode.png>] [3]
-<./images/MSEplot.png, id=169, 403.9893pt x 393.8715pt>
+[2 <./images/The-starting-position-for-checkers.png> <./images/piece being taken.png> <./images/double hop.png>] [3 <./images/ConnectedNode.png>]
+<./images/MSEplot.png, id=238, 403.9893pt x 393.8715pt>
 File: ./images/MSEplot.png Graphic file (type png)
 <use ./images/MSEplot.png>
 Package pdftex.def Info: ./images/MSEplot.png  used on input line 237.
 (pdftex.def)             Requested size: 201.99416pt x 196.93526pt.
-<./images/image.png, id=170, 880.03781pt x 612.78937pt>
+ [4 <./images/MSEplot.png>]
+<./images/image.png, id=247, 880.03781pt x 612.78937pt>
 File: ./images/image.png Graphic file (type png)
 <use ./images/image.png>
-Package pdftex.def Info: ./images/image.png  used on input line 245.
+Package pdftex.def Info: ./images/image.png  used on input line 247.
 (pdftex.def)             Requested size: 176.00444pt x 122.5557pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 241--247
-\OT1/cmr/m/n/10 achieve.
- []
-
-[4 <./images/MSEplot.png> <./images/image.png>]
-<./images/ExampleCompGraph.png, id=183, 415.5525pt x 684.5575pt>
+<./images/ExampleCompGraph.png, id=248, 415.5525pt x 684.5575pt>
 File: ./images/ExampleCompGraph.png Graphic file (type png)
 <use ./images/ExampleCompGraph.png>
-Package pdftex.def Info: ./images/ExampleCompGraph.png  used on input line 295.
+Package pdftex.def Info: ./images/ExampleCompGraph.png  used on input line 296.
 (pdftex.def)             Requested size: 141.28598pt x 232.74646pt.
- [5 <./images/ExampleCompGraph.png>]
-<./images/1992Tinsleymatch.jpg, id=196, 1303.87125pt x 719.68875pt>
+ [5 <./images/image.png>]
+<./images/markovprocess.png, id=263, 413.545pt x 122.4575pt>
+File: ./images/markovprocess.png Graphic file (type png)
+<use ./images/markovprocess.png>
+Package pdftex.def Info: ./images/markovprocess.png  used on input line 337.
+(pdftex.def)             Requested size: 206.77199pt x 61.22859pt.
+ [6 <./images/ExampleCompGraph.png>]
+<./images/qlearning.PNG, id=279, 390.70969pt x 346.29375pt>
+File: ./images/qlearning.PNG Graphic file (type png)
+<use ./images/qlearning.PNG>
+Package pdftex.def Info: ./images/qlearning.PNG  used on input line 356.
+(pdftex.def)             Requested size: 195.35435pt x 173.14644pt.
+
+Overfull \hbox (7.45522pt too wide) in paragraph at lines 356--357
+ [][] 
+ []
+
+<./images/1992Tinsleymatch.jpg, id=280, 1303.87125pt x 719.68875pt>
 File: ./images/1992Tinsleymatch.jpg Graphic file (type jpg)
 <use ./images/1992Tinsleymatch.jpg>
-Package pdftex.def Info: ./images/1992Tinsleymatch.jpg  used on input line 344.
+Package pdftex.def Info: ./images/1992Tinsleymatch.jpg  used on input line 374.
 (pdftex.def)             Requested size: 189.06644pt x 104.35768pt.
-<./images/download.jpg, id=197, 290.08376pt x 174.6525pt>
+[7 <./images/markovprocess.png> <./images/qlearning.PNG> <./images/1992Tinsleymatch.jpg>]
+<./images/download.jpg, id=291, 290.08376pt x 174.6525pt>
 File: ./images/download.jpg Graphic file (type jpg)
 <use ./images/download.jpg>
-Package pdftex.def Info: ./images/download.jpg  used on input line 358.
-(pdftex.def)             Requested size: 217.56227pt x 130.98904pt.
- [6 <./images/1992Tinsleymatch.jpg>] [7 <./images/download.jpg>]
-Overfull \hbox (17.46298pt too wide) in paragraph at lines 414--417
+Package pdftex.def Info: ./images/download.jpg  used on input line 386.
+(pdftex.def)             Requested size: 203.05724pt x 122.2559pt.
+ [8 <./images/download.jpg>] [9]
+Overfull \hbox (17.46298pt too wide) in paragraph at lines 523--526
 [][]$\OT1/cmtt/m/n/10 https : / / ai . stackexchange . com / questions / 13156 / does-[]alphazero-[]use-[]q-[]learning$[][] [][]$https : / / suragnair .
  []
 
 
-Overfull \hbox (70.24031pt too wide) in paragraph at lines 422--424
+Overfull \hbox (70.24031pt too wide) in paragraph at lines 531--533
 [][]$\OT1/cmtt/m/n/10 https : / / medium . com / @utsavstha / jax-[]vs-[]pytorch-[]a-[]comprehensive-[]comparison-[]for-[]deep-[]learning-[]10a84f934e17$[][]
  []
 
-[8] (./Edgar NEA tex.aux)
- ***********
-LaTeX2e <2023-11-01> patch level 1
-L3 programming layer <2024-04-11>
- ***********
+
+Overfull \hbox (47.7405pt too wide) in paragraph at lines 535--539
+[][]$\OT1/cmtt/m/n/10 https : / / smartlabai . medium . com / reinforcement-[]learning-[]algorithms-[]an-[]intuitive-[]overview-[]904e2dff5bbc$[][]
+ []
 
 
-Package rerunfilecheck Warning: File `"Edgar NEA tex".out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
+Overfull \hbox (53.49045pt too wide) in paragraph at lines 535--539
+[][]$\OT1/cmtt/m/n/10 https : / / medium . com / the-[]official-[]integrate-[]ai-[]blog / understanding-[]reinforcement-[]learning-[]93d4e34e5698$[][]
+ []
 
-Package rerunfilecheck Info: Checksums for `"Edgar NEA tex".out':
-(rerunfilecheck)             Before: B22C8738A6A57A477F229ADB4396D913;4067
-(rerunfilecheck)             After:  94543396C05D27E45753806C3B576D5F;4178.
- ) 
-Here is how much of TeX's memory you used:
- 11172 strings out of 474049
- 168948 string characters out of 5746278
- 1942754 words of memory out of 5000000
- 33398 multiletter control sequences out of 15000+600000
- 563012 words of font info for 55 fonts, out of 8000000 for 9000
- 1141 hyphenation exceptions out of 8191
- 75i,10n,86p,352b,483s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on "Edgar NEA tex.pdf" (9 pages, 1805290 bytes).
-PDF statistics:
- 306 PDF objects out of 1000 (max. 8388607)
- 250 compressed objects within 3 object streams
- 64 named destinations out of 1000 (max. 500000)
- 238 words of extra memory for PDF output out of 10000 (max. 10000000)
 
+Overfull \hbox (22.99072pt too wide) in paragraph at lines 535--539
+[][]$\OT1/cmtt/m/n/10 https : / / neptune . ai / blog / model-[]based-[]and-[]model-[]free-[]reinforcement-[]learning-[]pytennis-[]case-[]study$[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 535--539
+
+ []
+
+[10] [11] (./Ed
