@@ -11,9 +11,11 @@ class Window:
 
 
 class Piece:
-    def __init__(self, colour) -> None:
+    def __init__(self, row: int, col: int, colour) -> None:
         self.colour = colour
         self.king = False
+        self.row = row
+        self.col = col
 
     def crown(self) -> None:
         self.king = True
@@ -25,10 +27,15 @@ class Square:
         self.row = row
         self.col = col
 
-    def place(self, piece: Piece) -> None:
+    def place(self, piece: Piece, row: int, col: int) -> None:
         self.piece = piece
+        self.piece.row = row
+        self.piece.col = col
 
-    def __repr__(self):
+    def clear(self) -> None:
+        self.piece = None
+
+    def __repr__(self) -> str:
         return f"Square - Piece: {self.piece is not None}; Row: {self.row}; Col: {self.col}"
 
 
@@ -48,7 +55,7 @@ class Board:
 
         return board
 
-    def _init_pieces(self, board) -> None:
+    def _init_pieces(self, board) -> List[Square]:
         assert isinstance(board[0, 0], Square), "Squares have not been intialized"
         for row in range(board.shape[0]):
             if row == 3 or row == 4:
@@ -57,12 +64,12 @@ class Board:
             for col in range(board.shape[1]):
                 if (row + 1) % 2 == 1:
                     if col % 2 == 1:
-                        board[row, col].place(Piece(colour))
+                        board[row, col].place(Piece(row, col, colour), row, col)
                 else:
                     if col % 2 == 0:
-                        board[row, col].place(Piece(colour))
+                        board[row, col].place(Piece(row, col, colour), row, col)
 
-    def _init_board(self):
+    def _init_board(self) -> List[Square]:
         board = np.empty((SIZE, SIZE), dtype=Square)
         self._init_squares(board)
         self._init_pieces(board)
@@ -108,7 +115,7 @@ class Board:
                 SQ_SIZE - CROWN_PADDING,
             )
 
-    def render(self, WINDOW: Window):
+    def render(self, WINDOW: Window) -> None:
         self.render_background(WINDOW)
         for row in range(self.board.shape[0]):
             for col in range(self.board.shape[1]):
@@ -118,7 +125,15 @@ class Board:
                     self.draw_square(WINDOW, square)
 
     def move(self, piece: Piece, row: int, col: int) -> None:
-        self.board[row, col].place(piece)
+        assert isinstance(self.board[row, col], Square), "Squares not initialized"
+        assert self.board[row, col].piece == None, "Square is not empty"
+        self.board[piece.row, piece.col].clear()
+        self.board[row, col].place(piece, row, col)
+
+        if piece.colour == BLACK and row == 7:
+            piece.crown()
+        elif piece.colour == WHITE and row == 0:
+            piece.crown()
 
 
 if __name__ == "__main__":
@@ -126,7 +141,13 @@ if __name__ == "__main__":
     w = Window()
     play = True
 
+    ticks = 0
+    clock = pygame.time.Clock()
     while play:
+
+        clock.tick(FPS)
+        ticks += 1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 play = False
