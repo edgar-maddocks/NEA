@@ -6,8 +6,7 @@ from consts import *
 from typing import List
 
 
-class Window:
-    WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
+WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
 class Piece:
@@ -45,8 +44,7 @@ class Board:
 
         self.black_remain = self.white_remain = 12
         self.black_kings = self.white_kings = 0
-
-        self.selected_piece = None
+        self.pieces: List[Piece] = []
 
     def _init_squares(self, board) -> List[Square]:
         for row in range(SIZE):
@@ -76,7 +74,7 @@ class Board:
 
         return board
 
-    def render_background(self, WINDOW: Window) -> None:
+    def render_background(self, WINDOW) -> None:
         WINDOW.fill(BROWN)
         for row in range(SIZE):
             for col in range(row % 2, SIZE, 2):
@@ -84,7 +82,7 @@ class Board:
                     WINDOW, IVORY, (row * SQ_SIZE, col * SQ_SIZE, SQ_SIZE, SQ_SIZE)
                 )
 
-    def draw_square(self, WINDOW: Window, square: Square) -> None:
+    def draw_square(self, WINDOW, square: Square) -> None:
         if square.piece.king is False:
             pygame.draw.circle(
                 WINDOW,
@@ -115,7 +113,7 @@ class Board:
                 SQ_SIZE - CROWN_PADDING,
             )
 
-    def render(self, WINDOW: Window) -> None:
+    def render(self, WINDOW) -> None:
         self.render_background(WINDOW)
         for row in range(self.board.shape[0]):
             for col in range(self.board.shape[1]):
@@ -135,10 +133,63 @@ class Board:
         elif piece.colour == WHITE and row == 0:
             piece.crown()
 
+    def get_valid_moves(self, piece: Piece):
+        pass
+
+    def get_winner(self):
+        if self.white_remain <= 0:
+            return WHITE
+        elif self.black_remain <= 0:
+            return WHITE
+
+        return None
+
+    def get_square(self, row, col):
+        return self.board[row, col]
+
+    def get_piece(self, row, col):
+        return self.board[row, col].piece
+
+
+class Checkers:
+    def __init__(self, WINDOW) -> None:
+        self._init()
+        self.WINDOW = WINDOW
+
+    def render(self) -> None:
+        self.board.render(WINDOW)
+        pygame.display.update()
+
+    def _init(self) -> None:
+        self.selected_piece = None
+        self.board = Board()
+        self.player = WHITE
+        self.valid_moves = []
+
+    def reset(self) -> None:
+        self._init()
+
+    def select(self, row: int, col: int):
+        if self.selected:
+            result = self._move(row, col)
+            if not result:
+                self.selected = None
+                self.select(row, col)
+
+        piece = self.board.get_piece(row, col)
+        if piece != None and piece.color == self.player:
+            self.selected = piece
+            self.valid_moves = self.board.get_valid_moves(piece)
+            return True
+
+        return False
+
+    def _move(self, row, col):
+        pass
+
 
 if __name__ == "__main__":
-    b = Board()
-    w = Window()
+    checkers = Checkers(WINDOW)
     play = True
 
     ticks = 0
@@ -153,5 +204,4 @@ if __name__ == "__main__":
                 play = False
                 pygame.quit()
 
-        b.render(w.WINDOW)
-        pygame.display.update()
+        checkers.render()
