@@ -1,4 +1,5 @@
 import numpy as np
+import time
 from typing import Tuple, List
 
 from consts import *
@@ -68,33 +69,18 @@ class Checkers:
             return False
 
     def get_all_valid_moves(self):
-        valid_simple = []
-        valid_takes = []
+        moves = {"simple": [], "takes": []}
         for row in range(SIZE):
             for col in range(SIZE):
                 piece = self.board[row, col]
                 if piece in WHITES and self.player == WHITE:
-                    valid_simple += self._get_valid_simple_moves(row, col)
-                    valid_takes += self._get_valid_take_moves(row, col)
+                    moves["simple"] += self._get_valid_simple_moves(row, col)
+                    moves["takes"] += self._get_valid_take_moves(row, col)
                 elif piece in BLACKS and self.player == BLACK:
-                    valid_simple += self._get_valid_simple_moves(row, col)
-                    valid_takes += self._get_valid_take_moves(row, col)
+                    moves["simple"] += self._get_valid_simple_moves(row, col)
+                    moves["takes"] += self._get_valid_take_moves(row, col)
 
-        if len(valid_takes) > 0:
-            return valid_takes
-
-        return valid_simple
-
-    def _get_valid_moves(self, row: int, col: int):
-        valid_simple = []
-        valid_takes = []
-        valid_simple += self._get_valid_simple_moves(row, col)
-        valid_takes += self._get_valid_take_moves(row, col)
-
-        if len(valid_takes) > 0:
-            return valid_takes
-
-        return valid_simple
+        return moves
 
     def _get_valid_simple_moves(self, row: int, col: int):
         piece = self.board[row, col]
@@ -255,24 +241,43 @@ class Checkers:
     def move(self):
         valid_selection = False
         row, col = None, None
+        valid_moves = self.get_all_valid_moves()
+        valid_simples, valid_takes = valid_moves["simple"], valid_moves["takes"]
+        valid_selections = (
+            [x[0] for x in valid_takes]
+            if len(valid_takes) > 0
+            else [x[0] for x in valid_simples]
+        )
+
+        if len(valid_simples) == 0 and len(valid_takes) == 0:
+            print("GAME OVER")
+            print(f"PLAYER {self.opposite_player} WON")
+            time.sleep(5)
+            quit()
+
         while valid_selection is False:
             print(
-                f"Valid pieces to move are {set([Checkers.convert_rowcol_to_user(*x[0]) for x in self.get_all_valid_moves()])}"
+                f"Valid pieces to move are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_selections])}"
             )
 
             row, col = self.select_piece()
-            if (row, col) not in [x[0] for x in self.get_all_valid_moves()]:
-                print("Please select a piece with a valid move")
+            if (row, col) not in valid_selections:
+                print("Please select a valid piece")
                 continue
             valid_selection = True
 
         valid_move = False
+        valid_moves = (
+            [x[1] for x in valid_takes]
+            if len(valid_takes) > 0
+            else [x[1] for x in valid_simples if x[0] == (row, col)]
+        )
         while valid_move is False:
             print(
-                f"Valid moves for this piece are {set([Checkers.convert_rowcol_to_user(*x[1]) for x in self._get_valid_moves(row, col)])}"
+                f"Valid moves for this piece are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_moves])}"
             )
             new_row, new_col = self.select_move()
-            if (new_row, new_col) not in [x[1] for x in self.get_all_valid_moves()]:
+            if (new_row, new_col) not in valid_moves:
                 print("Please select a valid move")
                 continue
             valid_move = True
@@ -281,10 +286,11 @@ class Checkers:
         self.clear(row, col)
 
         if abs(new_row - row) == 2:
-            one = 0.5 * (new_row - row)
-            self.clear(int(row + one), int(col + one))
-
-        self.player = self.opposite_player
+            one_row = 0.5 * (new_row - row)
+            one_col = 0.5 * (new_col - col)
+            self.clear(int(row + one_row), int(col + one_col))
+        else:
+            self.player = self.opposite_player
 
 
 game = Checkers()
