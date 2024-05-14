@@ -1,15 +1,21 @@
 import numpy as np
-import time
+import os
 from typing import Tuple, List
 
 from consts import *
 
 
+def clear_window():
+    os.system("cls")
+
+
 class Checkers:
     def __init__(self) -> None:
         self.board = self._init_board()
+        self.last_piece_moved = None
         self.player = WHITE
 
+    # FUNCTIONS FOR LETTING USERS PLAY
     def _init_board(self) -> np.ndarray:
         board = np.empty((SIZE, SIZE))
         board.fill(0)
@@ -174,6 +180,7 @@ class Checkers:
         return valid_moves
 
     def render(self) -> None:
+        clear_window()
         cols = ["X", "A", "B", "C", "D", "E", "F", "G", "H"]
         print(str.join(" | ", cols))
         for row in range(SIZE):
@@ -238,66 +245,122 @@ class Checkers:
     def opposite_player(self):
         return WHITE if self.player == BLACK else BLACK
 
-    def move(self):
-        print(f"It is {game.player}s turn")
-        valid_selection = False
-        row, col = None, None
-        valid_moves = self.get_all_valid_moves()
-        valid_simples, valid_takes = valid_moves["simple"], valid_moves["takes"]
-        valid_selections = (
-            [x[0] for x in valid_takes]
-            if len(valid_takes) > 0
-            else [x[0] for x in valid_simples]
-        )
-
-        if len(valid_simples) == 0 and len(valid_takes) == 0:
+    def check_winner(self, all_valid_moves: List[Tuple]) -> bool:
+        if len(all_valid_moves) == 0:
+            print(f"Player {self.opposite_player} WON")
             print("GAME OVER")
-            print(f"PLAYER {self.opposite_player} WON")
             return True
 
-        while valid_selection is False:
-            print(
-                f"Valid pieces to move are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_selections])}"
+    def move2(self):
+        print(f"It is {self.player}'s move")
+        all_valid_moves = self.get_all_valid_moves()
+        if self.check_winner(all_valid_moves):
+            return True
+        elif self.last_piece_moved is not None:
+            all_valid_moves = self._get_valid_take_moves(*self.last_piece_moved)
+            if len(all_valid_moves) == 0:
+                self.player = self.opposite_player
+                self.last_piece_moved = None
+                return False
+            else:
+                valid_move = False
+
+                valid_moves = [x[1] for x in all_valid_moves]
+
+                row, col = self.last_piece_moved
+                new_row, new_col = None, None
+
+                print(f"Piece {self.last_piece_moved} has been auto selected")
+
+                while valid_move is False:
+                    print(
+                        f"Valid moves for this piece are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_moves])}"
+                    )
+                    new_row, new_col = self.select_move()
+                    if (new_row, new_col) not in valid_moves:
+                        print("Please select a valid move")
+                        continue
+                    valid_move = True
+
+            self.board[new_row, new_col] = self.board[row, col]
+            self.clear(row, col)
+
+            if abs(new_row - row) == 2:
+                one_row = 0.5 * (new_row - row)
+                one_col = 0.5 * (new_col - col)
+                self.clear(int(row + one_row), int(col + one_col))
+                self.last_piece_moved = (new_row, new_col)
+            else:
+                self.player = self.opposite_player
+                self.last_piece_moved = None
+                return False
+        else:
+            row, col = None, None
+            new_row, col = None, None
+            valid_selection, valid_move = False, False
+
+            valid_simples, valid_takes = (
+                all_valid_moves["simple"],
+                all_valid_moves["takes"],
             )
 
-            row, col = self.select_piece()
-            if (row, col) not in valid_selections:
-                print("Please select a valid piece")
-                continue
-            valid_selection = True
-
-        valid_move = False
-        valid_moves = (
-            [x[1] for x in valid_takes]
-            if len(valid_takes) > 0
-            else [x[1] for x in valid_simples if x[0] == (row, col)]
-        )
-        while valid_move is False:
-            print(
-                f"Valid moves for this piece are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_moves])}"
+            valid_selections = (
+                [x[0] for x in valid_takes]
+                if len(valid_takes) > 0
+                else [x[0] for x in valid_simples]
             )
-            new_row, new_col = self.select_move()
-            if (new_row, new_col) not in valid_moves:
-                print("Please select a valid move")
-                continue
-            valid_move = True
 
-        self.board[new_row, new_col] = self.board[row, col]
-        self.clear(row, col)
+            while valid_selection is False:
+                print(
+                    f"Valid pieces to move are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_selections])}"
+                )
+
+                row, col = self.select_piece()
+                if (row, col) not in valid_selections:
+                    print("Please select a valid piece")
+                    continue
+                valid_selection = True
+
+            valid_moves = (
+                [x[1] for x in valid_takes]
+                if len(valid_takes) > 0
+                else [x[1] for x in valid_simples if x[0] == (row, col)]
+            )
+
+            while valid_move is False:
+                print(
+                    f"Valid moves for this piece are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_moves])}"
+                )
+                new_row, new_col = self.select_move()
+                if (new_row, new_col) not in valid_moves:
+                    print("Please select a valid move")
+                    continue
+                valid_move = True
+
+            self.board[new_row, new_col] = self.board[row, col]
+            self.clear(row, col)
 
         if abs(new_row - row) == 2:
             one_row = 0.5 * (new_row - row)
             one_col = 0.5 * (new_col - col)
             self.clear(int(row + one_row), int(col + one_col))
+            self.last_piece_moved = (new_row, new_col)
         else:
             self.player = self.opposite_player
+            self.last_piece_moved = None
+            return False
 
     def play(self):
         done = False
         game.render()
         while not done:
-            done = game.move()
+            done = game.move2()
             game.render()
+
+    # FUNCTIONS FOR RL
+    def reset(self):
+        self.board = self._init_board()
+        self.player = WHITE
 
 
 game = Checkers()
