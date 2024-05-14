@@ -239,6 +239,7 @@ class Checkers:
         return WHITE if self.player == BLACK else BLACK
 
     def move(self):
+        print(f"It is {game.player}s turn")
         valid_selection = False
         row, col = None, None
         valid_moves = self.get_all_valid_moves()
@@ -252,8 +253,7 @@ class Checkers:
         if len(valid_simples) == 0 and len(valid_takes) == 0:
             print("GAME OVER")
             print(f"PLAYER {self.opposite_player} WON")
-            time.sleep(5)
-            quit()
+            return True
 
         while valid_selection is False:
             print(
@@ -292,10 +292,13 @@ class Checkers:
         else:
             self.player = self.opposite_player
 
+    def play(self):
+        done = False
+        game.render()
+        while not done:
+            done = game.move()
+            game.render()
+
 
 game = Checkers()
-game.render()
-while True:
-    print(f"It is {game.player}s turn")
-    game.move()
-    game.render()
+game.play()
