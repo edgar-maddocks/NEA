@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Tuple
+from typing import Tuple, List
 
 from consts import *
 
@@ -67,18 +67,34 @@ class Checkers:
         else:
             return False
 
-    def get_valid_moves(self, row: int, col: int):
-        piece = self.board[row, col]
-        assert self.square_is_empty(row, col) == False, "square is empty"
-        if piece in WHITES:
-            assert self.player == WHITE, "cannot move opposing player's piece"
-        else:
-            assert self.player == BLACK, "cannot move opposing player's piece"
+    def get_all_valid_moves(self):
+        valid_simple = []
+        valid_takes = []
+        for row in range(SIZE):
+            for col in range(SIZE):
+                piece = self.board[row, col]
+                if piece in WHITES and self.player == WHITE:
+                    valid_simple += self._get_valid_simple_moves(row, col)
+                    valid_takes += self._get_valid_take_moves(row, col)
+                elif piece in BLACKS and self.player == BLACK:
+                    valid_simple += self._get_valid_simple_moves(row, col)
+                    valid_takes += self._get_valid_take_moves(row, col)
 
-        valid_simple_moves = self._get_valid_simple_moves(row, col)
-        valid_take_moves = self._get_valid_take_moves(row, col)
+        if len(valid_takes) > 0:
+            return valid_takes
 
-        return valid_simple_moves + valid_take_moves
+        return valid_simple
+
+    def _get_valid_moves(self, row: int, col: int):
+        valid_simple = []
+        valid_takes = []
+        valid_simple += self._get_valid_simple_moves(row, col)
+        valid_takes += self._get_valid_take_moves(row, col)
+
+        if len(valid_takes) > 0:
+            return valid_takes
+
+        return valid_simple
 
     def _get_valid_simple_moves(self, row: int, col: int):
         piece = self.board[row, col]
@@ -236,11 +252,37 @@ class Checkers:
     def opposite_player(self):
         return WHITE if self.player == BLACK else BLACK
 
-    def move(self, row: int, col: int):
-        new_row, new_col = self.select_move()
-        if (new_row, new_col) in [x[1] for x in self.get_valid_moves(row, col)]:
-            self.board[new_row, new_col] = self.board[row, col]
-            self.clear(row, col)
+    def move(self):
+        valid_selection = False
+        row, col = None, None
+        while valid_selection is False:
+            print(
+                f"Valid pieces to move are {set([Checkers.convert_rowcol_to_user(*x[0]) for x in self.get_all_valid_moves()])}"
+            )
+
+            row, col = self.select_piece()
+            if (row, col) not in [x[0] for x in self.get_all_valid_moves()]:
+                print("Please select a piece with a valid move")
+                continue
+            valid_selection = True
+
+        valid_move = False
+        while valid_move is False:
+            print(
+                f"Valid moves for this piece are {set([Checkers.convert_rowcol_to_user(*x[1]) for x in self._get_valid_moves(row, col)])}"
+            )
+            new_row, new_col = self.select_move()
+            if (new_row, new_col) not in [x[1] for x in self.get_all_valid_moves()]:
+                print("Please select a valid move")
+                continue
+            valid_move = True
+
+        self.board[new_row, new_col] = self.board[row, col]
+        self.clear(row, col)
+
+        if abs(new_row - row) == 2:
+            one = 0.5 * (new_row - row)
+            self.clear(int(row + one), int(col + one))
 
         self.player = self.opposite_player
 
@@ -249,6 +291,5 @@ game = Checkers()
 game.render()
 while True:
     print(f"It is {game.player}s turn")
-    row, col = game.select_piece()
-    game.move(row, col)
+    game.move()
     game.render()
