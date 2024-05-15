@@ -213,6 +213,42 @@
 
     With $W$ and $X$ having the same definition as most recently defined.
 
+    \subsubsubsubsection{Forward Pass of Convolutional Layer}
+    A convolutional layer is normally used to extract and summarize information from an image. However, this can be transferred to understanding a checkers board as a 2D array.
+    To do this the layer holds filters (also known as kernels) and passes them over the input while completing a process called cross-correlation. Mathematically this process
+    is denoted $\star$. An example of cross-correlation can be seen below.
+    \begin{align}
+        \begin{bmatrix}
+            1 & 6 & 2\\
+            5 & 3 & 1\\
+            7 & 0 & 4
+        \end{bmatrix} \star 
+        \begin{bmatrix}
+            1 & 2\\
+            -1 & 0
+        \end{bmatrix} &= 
+        \begin{bmatrix}
+            1 \cdot 1 + 2 \cdot 6 + -1 \cdot 5 + 0 \cdot 3& 1\cdot6 + 2\cdot2 + -1\cdot3 + 0\cdot1\\
+            1 \cdot 5 + 2 \cdot 3 + -1 \cdot 7 + 0 \cdot 0& 1\cdot3 + 2\cdot1 + -1\cdot0 + 0\cdot4
+        \end{bmatrix}\\
+        &= \begin{bmatrix}
+            8 & 7\\
+            4 & 5
+        \end{bmatrix}
+    \end{align}
+
+    To visualize this process, imagine laying the filter (the second matrix in the operation) on top of the input. So that the two ones
+    in the top left lay upon each other, the two in the top right of the filter lies on top of the 6 in the input and so forth. To then compute the value
+    for the top left of the output matrix, sum the products of the numbers which lay on top of each other (e.g. $1 \cdot 1 + 2 \cdot 6 + \hdots$). To then compute the value
+    in the top right of the output matrix, slide the filter over the input so that now the top right corners align and the 2 lies on top the two, the one in the top left lies
+    on top of the 6 etc. Continue this process of summing the products and to produce the final output.
+
+    As shown in the previous equations, we had an input size of 3, a filter size of 2 and an output size of 2. This output size can be determined using the following formula:
+    \begin{displaymath}
+        Y = I - K + 1
+    \end{displaymath}
+    Where $Y$ is the output size, $I$ is the input size and $K$ is the filter/kernel size.
+
     \subsubsubsubsection{Gradient Descent}
 
     Now, to update the weights of our model, we can compute these values in closed form, however, it comes with a large time complexity (greater than $O(n^3)$), and therefore
@@ -481,6 +517,10 @@
 
     \subsubsection{Vectorization of summations}
     \noindent \url{https://courses.cs.washington.edu/courses/cse446/20wi/Lecture8/08_Regularization.pdf}
+
+    \subsubsection{Convolutional Layer}
+    \noindent \url{https://www.youtube.com/watch?v=Lakz2MoHy6o}
+
     
     \subsection{Automatic Differentiation}
     \noindent \url{https://en.wikipedia.org/wiki/Automatic_differentiation}
