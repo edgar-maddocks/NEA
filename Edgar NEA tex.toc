@@ -18,23 +18,23 @@
 \contentsline {subsection}{\numberline {1.3}Modelling of the problem}{8}{subsection.1.3}%
 \contentsline {subsubsection}{\numberline {1.3.1}Identification of Objects}{8}{subsubsection.1.3.1}%
 \contentsline {paragraph}{\numberline {1.3.1.1}Draughts}{8}{paragraph.1.3.1.1}%
-\contentsline {paragraph}{\numberline {1.3.1.2}Automatic Differentiation Engine}{8}{paragraph.1.3.1.2}%
-\contentsline {paragraph}{\numberline {1.3.1.3}Neural Network Library}{8}{paragraph.1.3.1.3}%
+\contentsline {paragraph}{\numberline {1.3.1.2}Automatic Differentiation Engine}{9}{paragraph.1.3.1.2}%
+\contentsline {paragraph}{\numberline {1.3.1.3}Neural Network Library}{9}{paragraph.1.3.1.3}%
 \contentsline {paragraph}{\numberline {1.3.1.4}Reinforcement Learning Solution}{9}{paragraph.1.3.1.4}%
 \contentsline {subsubsection}{\numberline {1.3.2}Identification of Data Structures}{9}{subsubsection.1.3.2}%
 \contentsline {paragraph}{\numberline {1.3.2.1}Draughts}{9}{paragraph.1.3.2.1}%
-\contentsline {paragraph}{\numberline {1.3.2.2}Automatic Differentiation Engine}{9}{paragraph.1.3.2.2}%
-\contentsline {paragraph}{\numberline {1.3.2.3}Neural Network Library}{9}{paragraph.1.3.2.3}%
-\contentsline {paragraph}{\numberline {1.3.2.4}Reinforcement Learning Solution}{9}{paragraph.1.3.2.4}%
-\contentsline {subsubsection}{\numberline {1.3.3}Identification of algorithms}{9}{subsubsection.1.3.3}%
-\contentsline {paragraph}{\numberline {1.3.3.1}Draughts}{9}{paragraph.1.3.3.1}%
-\contentsline {paragraph}{\numberline {1.3.3.2}Automatic Differentiation Engine}{9}{paragraph.1.3.3.2}%
-\contentsline {paragraph}{\numberline {1.3.3.3}Neural Network Library}{9}{paragraph.1.3.3.3}%
-\contentsline {paragraph}{\numberline {1.3.3.4}Reinforcement Learning Solution}{9}{paragraph.1.3.3.4}%
-\contentsline {subsection}{\numberline {1.4}Set of objectives}{9}{subsection.1.4}%
-\contentsline {section}{\numberline {2}Research Log}{9}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Draughts Rules}{9}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Neural Networks}{9}{subsection.2.2}%
+\contentsline {paragraph}{\numberline {1.3.2.2}Automatic Differentiation Engine}{10}{paragraph.1.3.2.2}%
+\contentsline {paragraph}{\numberline {1.3.2.3}Neural Network Library}{10}{paragraph.1.3.2.3}%
+\contentsline {paragraph}{\numberline {1.3.2.4}Reinforcement Learning Solution}{10}{paragraph.1.3.2.4}%
+\contentsline {subsubsection}{\numberline {1.3.3}Identification of algorithms}{10}{subsubsection.1.3.3}%
+\contentsline {paragraph}{\numberline {1.3.3.1}Draughts}{10}{paragraph.1.3.3.1}%
+\contentsline {paragraph}{\numberline {1.3.3.2}Automatic Differentiation Engine}{10}{paragraph.1.3.3.2}%
+\contentsline {paragraph}{\numberline {1.3.3.3}Neural Network Library}{10}{paragraph.1.3.3.3}%
+\contentsline {paragraph}{\numberline {1.3.3.4}Reinforcement Learning Solution}{10}{paragraph.1.3.3.4}%
+\contentsline {subsection}{\numberline {1.4}Set of objectives}{10}{subsection.1.4}%
+\contentsline {section}{\numberline {2}Research Log}{10}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Draughts Rules}{10}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Neural Networks}{10}{subsection.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.1}Vectorization of summations}{10}{subsubsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.3}Automatic Differentiation}{10}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}Implementing Custom Classes using Numba}{10}{subsection.2.4}%

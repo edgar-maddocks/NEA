@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  15 MAY 2024 15:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  15 MAY 2024 16:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -579,37 +579,47 @@ File: ./images/download.jpg Graphic file (type jpg)
 <use ./images/download.jpg>
 Package pdftex.def Info: ./images/download.jpg  used on input line 387.
 (pdftex.def)             Requested size: 203.05724pt x 122.2559pt.
- [8 <./images/download.jpg>] [9]
-Overfull \hbox (17.46298pt too wide) in paragraph at lines 489--492
+<./images/DraughtsUML.png, id=292, 332.24126pt x 335.2525pt>
+File: ./images/DraughtsUML.png Graphic file (type png)
+<use ./images/DraughtsUML.png>
+Package pdftex.def Info: ./images/DraughtsUML.png  used on input line 417.
+(pdftex.def)             Requested size: 99.67314pt x 100.57652pt.
+ [8 <./images/download.jpg> <./images/DraughtsUML.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 448--450
+
+ []
+
+[9]
+Overfull \hbox (17.46298pt too wide) in paragraph at lines 494--497
 [][]$\OT1/cmtt/m/n/10 https : / / ai . stackexchange . com / questions / 13156 / does-[]alphazero-[]use-[]q-[]learning$[][] [][]$https : / / suragnair .
  []
 
 
-Overfull \hbox (70.24031pt too wide) in paragraph at lines 497--499
+Overfull \hbox (70.24031pt too wide) in paragraph at lines 502--504
 [][]$\OT1/cmtt/m/n/10 https : / / medium . com / @utsavstha / jax-[]vs-[]pytorch-[]a-[]comprehensive-[]comparison-[]for-[]deep-[]learning-[]10a84f934e17$[][]
  []
 
 
-Overfull \hbox (47.7405pt too wide) in paragraph at lines 501--505
+Overfull \hbox (47.7405pt too wide) in paragraph at lines 506--510
 [][]$\OT1/cmtt/m/n/10 https : / / smartlabai . medium . com / reinforcement-[]learning-[]algorithms-[]an-[]intuitive-[]overview-[]904e2dff5bbc$[][]
  []
 
 
-Overfull \hbox (53.49045pt too wide) in paragraph at lines 501--505
+Overfull \hbox (53.49045pt too wide) in paragraph at lines 506--510
 [][]$\OT1/cmtt/m/n/10 https : / / medium . com / the-[]official-[]integrate-[]ai-[]blog / understanding-[]reinforcement-[]learning-[]93d4e34e5698$[][]
  []
 
 
-Overfull \hbox (22.99072pt too wide) in paragraph at lines 501--505
+Overfull \hbox (22.99072pt too wide) in paragraph at lines 506--510
 [][]$\OT1/cmtt/m/n/10 https : / / neptune . ai / blog / model-[]based-[]and-[]model-[]free-[]reinforcement-[]learning-[]pytennis-[]case-[]study$[][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 501--505
+Underfull \hbox (badness 10000) in paragraph at lines 506--510
 
  []
 
-[10] (./Edgar NEA tex.aux)
+[10] [11] (./Edgar NEA tex.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-03-14>
@@ -618,18 +628,18 @@ Package rerunfilecheck Info: File `"Edgar NEA tex".out' has not changed.
 (rerunfilecheck)             Checksum: D298A772F67549B448797591FA9C4085;6747.
  ) 
 Here is how much of TeX's memory you used:
- 11284 strings out of 474104
- 170914 string characters out of 5747502
+ 11295 strings out of 474104
+ 171188 string characters out of 5747502
  1943496 words of memory out of 5000000
- 33436 multiletter control sequences out of 15000+600000
+ 33445 multiletter control sequences out of 15000+600000
  563012 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,10n,86p,366b,462s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on "Edgar NEA tex.pdf" (11 pages, 1853481 bytes).
+Output written on "Edgar NEA tex.pdf" (12 pages, 1861063 bytes).
 PDF statistics:
- 397 PDF objects out of 1000 (max. 8388607)
- 334 compressed objects within 4 object streams
- 81 named destinations out of 1000 (max. 500000)
- 360 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 404 PDF objects out of 1000 (max. 8388607)
+ 338 compressed objects within 4 object streams
+ 83 named destinations out of 1000 (max. 500000)
+ 365 words of extra memory for PDF output out of 10000 (max. 10000000)
 

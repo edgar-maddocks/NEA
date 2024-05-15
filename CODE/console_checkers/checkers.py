@@ -11,9 +11,9 @@ def clear_window():
 
 class Checkers:
     def __init__(self) -> None:
-        self.board = self._init_board()
-        self.last_piece_moved = None
-        self.player = WHITE
+        self._board = self._init_board()
+        self._last_piece_moved = None
+        self._player = WHITE
 
     # FUNCTIONS FOR LETTING USERS PLAY
     def _init_board(self) -> np.ndarray:
@@ -69,7 +69,7 @@ class Checkers:
         return row, col
 
     def square_is_empty(self, row: int, col: int) -> bool:
-        if self.board[row, col] == 0:
+        if self._board[row, col] == 0:
             return True
         else:
             return False
@@ -78,20 +78,20 @@ class Checkers:
         moves = {"simple": [], "takes": []}
         for row in range(SIZE):
             for col in range(SIZE):
-                piece = self.board[row, col]
-                if piece in WHITES and self.player == WHITE:
+                piece = self._board[row, col]
+                if piece in WHITES and self._player == WHITE:
                     moves["simple"] += self._get_valid_simple_moves(row, col)
                     moves["takes"] += self._get_valid_take_moves(row, col)
-                elif piece in BLACKS and self.player == BLACK:
+                elif piece in BLACKS and self._player == BLACK:
                     moves["simple"] += self._get_valid_simple_moves(row, col)
                     moves["takes"] += self._get_valid_take_moves(row, col)
 
         return moves
 
     def _get_valid_simple_moves(self, row: int, col: int):
-        piece = self.board[row, col]
+        piece = self._board[row, col]
         valid_moves = []
-        if self.player == BLACK:
+        if self._player == BLACK:
             if piece == 2:
                 for dir in LEGAL_DIRS[BLACK]["king"]:
                     if (
@@ -108,7 +108,7 @@ class Checkers:
                         and self.square_is_empty(row + dir[0], col + dir[1])
                     ):
                         valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
-        elif self.player == WHITE:
+        elif self._player == WHITE:
             if piece == 4:
                 for dir in LEGAL_DIRS[WHITE]["king"]:
                     if (
@@ -129,15 +129,15 @@ class Checkers:
         return valid_moves
 
     def _get_valid_take_moves(self, row: int, col: int):
-        piece = self.board[row, col]
+        piece = self._board[row, col]
         valid_moves = []
-        if self.player == BLACK:
+        if self._player == BLACK:
             if piece == 2:
                 for dir in LEGAL_DIRS[BLACK]["king"]:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and self.board[row + dir[0], col + dir[1]] in WHITES
+                        and self._board[row + dir[0], col + dir[1]] in WHITES
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -148,18 +148,18 @@ class Checkers:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and self.board[row + dir[0], col + dir[1]] in WHITES
+                        and self._board[row + dir[0], col + dir[1]] in WHITES
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
                             ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
                         )
-        elif self.player == WHITE:
+        elif self._player == WHITE:
             if piece == 4:
                 if (
                     row + 2 * dir[0] in range(8)
                     and col + 2 * dir[1] in range(8)
-                    and self.board[row + dir[0], col + dir[1]] in BLACKS
+                    and self._board[row + dir[0], col + dir[1]] in BLACKS
                     and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                 ):
                     valid_moves.append(
@@ -170,7 +170,7 @@ class Checkers:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and self.board[row + dir[0], col + dir[1]] in BLACKS
+                        and self._board[row + dir[0], col + dir[1]] in BLACKS
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -188,7 +188,7 @@ class Checkers:
             print(
                 str(8 - row),
                 "|",
-                str.join(" | ", [NUM_TO_STR[int(x)] for x in self.board[row, :]]),
+                str.join(" | ", [NUM_TO_STR[int(x)] for x in self._board[row, :]]),
             )
         print("----------------------------------")
 
@@ -239,11 +239,11 @@ class Checkers:
         return row, col
 
     def clear(self, row: int, col: int) -> None:
-        self.board[row, col] = 0
+        self._board[row, col] = 0
 
     @property
-    def opposite_player(self):
-        return WHITE if self.player == BLACK else BLACK
+    def opposite_player(self) -> str:
+        return WHITE if self._player == BLACK else BLACK
 
     def check_winner(self, all_valid_moves: List[Tuple]) -> bool:
         if len(all_valid_moves) == 0:
@@ -251,26 +251,26 @@ class Checkers:
             print("GAME OVER")
             return True
 
-    def move2(self):
-        print(f"It is {self.player}'s move")
+    def move2(self) -> bool:
+        print(f"It is {self._player}'s move")
         all_valid_moves = self.get_all_valid_moves()
         if self.check_winner(all_valid_moves):
             return True
-        elif self.last_piece_moved is not None:
-            all_valid_moves = self._get_valid_take_moves(*self.last_piece_moved)
+        elif self._last_piece_moved is not None:
+            all_valid_moves = self._get_valid_take_moves(*self._last_piece_moved)
             if len(all_valid_moves) == 0:
-                self.player = self.opposite_player
-                self.last_piece_moved = None
+                self._player = self.opposite_player
+                self._last_piece_moved = None
                 return False
             else:
                 valid_move = False
 
                 valid_moves = [x[1] for x in all_valid_moves]
 
-                row, col = self.last_piece_moved
+                row, col = self._last_piece_moved
                 new_row, new_col = None, None
 
-                print(f"Piece {self.last_piece_moved} has been auto selected")
+                print(f"Piece {self._last_piece_moved} has been auto selected")
 
                 while valid_move is False:
                     print(
@@ -282,17 +282,17 @@ class Checkers:
                         continue
                     valid_move = True
 
-            self.board[new_row, new_col] = self.board[row, col]
+            self._board[new_row, new_col] = self._board[row, col]
             self.clear(row, col)
 
             if abs(new_row - row) == 2:
                 one_row = 0.5 * (new_row - row)
                 one_col = 0.5 * (new_col - col)
                 self.clear(int(row + one_row), int(col + one_col))
-                self.last_piece_moved = (new_row, new_col)
+                self._last_piece_moved = (new_row, new_col)
             else:
-                self.player = self.opposite_player
-                self.last_piece_moved = None
+                self._player = self.opposite_player
+                self._last_piece_moved = None
                 return False
         else:
             row, col = None, None
@@ -337,20 +337,20 @@ class Checkers:
                     continue
                 valid_move = True
 
-            self.board[new_row, new_col] = self.board[row, col]
+            self._board[new_row, new_col] = self._board[row, col]
             self.clear(row, col)
 
         if abs(new_row - row) == 2:
             one_row = 0.5 * (new_row - row)
             one_col = 0.5 * (new_col - col)
             self.clear(int(row + one_row), int(col + one_col))
-            self.last_piece_moved = (new_row, new_col)
+            self._last_piece_moved = (new_row, new_col)
         else:
-            self.player = self.opposite_player
-            self.last_piece_moved = None
+            self._player = self.opposite_player
+            self._last_piece_moved = None
             return False
 
-    def play(self):
+    def play(self) -> None:
         done = False
         game.render()
         while not done:
@@ -359,8 +359,8 @@ class Checkers:
 
     # FUNCTIONS FOR RL
     def reset(self):
-        self.board = self._init_board()
-        self.player = WHITE
+        self._board = self._init_board()
+        self._player = WHITE
 
 
 game = Checkers()

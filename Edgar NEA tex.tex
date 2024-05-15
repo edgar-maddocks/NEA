@@ -410,7 +410,13 @@
     \subsubsubsection{Draughts}
     For draughts, we will need only one, an environment. The environment will be used for training the reinforcement learning agent as well
     as allowing a user to play against the agent. It will require methods that reset the environment, execute an action in the environment, as
-    well as functions to compute the available moves and check for a win.
+    well as functions to compute the available moves and check for a win. UML can be seen below.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale = 0.3]{DraughtsUML.png}
+        \caption{UML for draughts/checkers game}
+    \end{figure}
 
     \subsubsubsection{Automatic Differentiation Engine}
     The automatic differentiation engine will be based off of the 'Tensor' object. This object will be similar to a matrix but have some additonal
@@ -440,8 +446,7 @@
 
     \subsubsubsection{Reinforcement Learning Solution}
     The final solution will also require a large set of classes including: a model class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
-    a search of available actions to train the network towards - and a node class to make up this tree; an agent class which abstracts the processes of the previous classes. \\
-    \textbf{Unfinished on deciding structure}
+    a search of available actions to train the network towards - composed of a node class to make up this tree and an agent class which abstracts the processes of the previous classes. \\
 
     \subsubsection{Identification of Data Structures}
     \subsubsubsection{Draughts}
