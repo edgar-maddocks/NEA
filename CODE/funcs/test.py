@@ -6,7 +6,7 @@ import correlate
 
 import time
 
-arr1 = np.random.randn(1000)
+arr1 = np.random.randn(100000)
 arr2 = np.random.randn(5)
 
 scipytime = time.time()
