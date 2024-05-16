@@ -214,6 +214,28 @@
 
     With $W$ and $X$ having the same definition as most recently defined.
 
+    \subsubsubsubsection{Forward Pass of a 1D Convolutional Layer}
+    The main function of a convolutional layer is to extract key features and are often used in image recognition and classification solutions.
+
+    The input to a 1D convolutional layer is a 1 dimensional matrix which then has a cross-correlation operation completed with a filter.
+    The forward pass is quite simple and consists of sliding the filter across the input and taking the dot product. An example of this
+    can be seen below.
+
+    \begin{align}
+        \begin{bmatrix}
+            1 & 2 & 3
+        \end{bmatrix} \star \begin{bmatrix}
+            2 & -1
+        \end{bmatrix} &= \begin{bmatrix}
+            2 \cdot 1 + -1 \cdot 2 & 2 \cdot 2 + -1 \cdot 3
+        \end{bmatrix}\\
+        &= \begin{bmatrix}
+            0 & 1
+        \end{bmatrix}
+    \end{align}
+
+    The star here denotes the cross-correlation operation. 
+
     \subsubsubsubsection{Gradient Descent}
 
     Now, to update the weights of our model, we can compute these values in closed form, however, it comes with a large time complexity (greater than $O(n^3)$), and therefore
