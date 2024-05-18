@@ -499,7 +499,7 @@
     The auto-diff engine will use a recursive DFS of the computational graph to calculate gradients. It uses a DFS as any of the computational graphs that built are directed acyclical graphs,
     and therefore DFS provides a way to search the whole graph in O(n) time. Some pseudocode for this search can be seen below.
 
-    \begin{algorithm}
+    \begin{algorithm} 
         \caption{Backward Function of Tensor}\label{alg:cap}
         \begin{algorithmic}
         \Function{Backward}{Tensor self, Array grad, Tensor out}

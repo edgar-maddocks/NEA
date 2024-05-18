@@ -1,8 +1,8 @@
 import numpy as np
 import os
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 
-from consts import *
+from console_checkers.consts import *
 
 
 def clear_window():
@@ -251,7 +251,7 @@ class Checkers:
             print("GAME OVER")
             return True
 
-    def move2(self) -> bool:
+    def move(self) -> bool:
         print(f"It is {self._player}'s move")
         all_valid_moves = self.get_all_valid_moves()
         if self.check_winner(all_valid_moves):
@@ -352,16 +352,103 @@ class Checkers:
 
     def play(self) -> None:
         done = False
-        game.render()
+        self.render()
         while not done:
-            done = game.move2()
-            game.render()
+            done = self.move()
+            self.render()
 
     # FUNCTIONS FOR RL
     def reset(self):
         self._board = self._init_board()
         self._player = WHITE
 
+    def get_state(self):
+        return self._board
 
-game = Checkers()
-game.play()
+    def turn(self):
+        return self._player
+
+    def step(
+        self, state: np.ndarray, action: Tuple, colour: str = None
+    ) -> Tuple[bool, np.ndarray, bool, float, Dict]:
+        """
+        Return Arg is (valid_move, next_obs, done, reward, info)
+        """
+        if colour != self._player:
+            info["fail_cause"] = "wrong player"
+            return False, self._board, False, None, info
+        info = {}
+        piece_to_move, place_to_move_to = action[0], action[1]
+        all_valid_moves = self.get_all_valid_moves()
+
+        if self.check_winner(all_valid_moves):
+            return True, self._board, True, -1, info
+        elif self._last_piece_moved is not None:
+            all_valid_moves = self._get_valid_take_moves(*self._last_piece_moved)
+            if len(all_valid_moves) == 0:
+                self._player = self.opposite_player
+                self._last_piece_moved = None
+                return True, self._board, False, None, info
+            else:
+                row, col = self._last_piece_moved
+                valid_moves = [x[1] for x in all_valid_moves]
+                new_row, new_col = place_to_move_to[0], place_to_move_to[1]
+
+                info["fail_cause"] = "invalid move"
+
+                if ((row, col) != piece_to_move) or (
+                    (new_row, new_col) not in valid_moves
+                ):
+                    return False, self._board, False, None, info
+
+            self._board[new_row, new_col] = self._board[row, col]
+            self.clear(row, col)
+
+            if abs(new_row - row) == 2:
+                one_row = 0.5 * (new_row - row)
+                one_col = 0.5 * (new_col - col)
+                self.clear(int(row + one_row), int(col + one_col))
+                self._last_piece_moved = (new_row, new_col)
+            else:
+                self._player = self.opposite_player
+                self._last_piece_moved = None
+                return True, self._board, False, None, info
+        else:
+            row, col = piece_to_move[0], piece_to_move[1]
+            new_row, col = place_to_move_to[0], place_to_move_to[1]
+            valid_selection, valid_move = False, False
+
+            valid_simples, valid_takes = (
+                all_valid_moves["simple"],
+                all_valid_moves["takes"],
+            )
+
+            valid_selections = (
+                [x[0] for x in valid_takes]
+                if len(valid_takes) > 0
+                else [x[0] for x in valid_simples]
+            )
+
+            valid_moves = (
+                [x[1] for x in valid_takes]
+                if len(valid_takes) > 0
+                else [x[1] for x in valid_simples if x[0] == (row, col)]
+            )
+
+            info["fail_cause"] = "invalid move"
+
+            if ((row, col) != piece_to_move) or ((new_row, new_col) not in valid_moves):
+                return False, self._board, False, None, info
+
+            self._board[new_row, new_col] = self._board[row, col]
+            self.clear(row, col)
+
+        if abs(new_row - row) == 2:
+            one_row = 0.5 * (new_row - row)
+            one_col = 0.5 * (new_col - col)
+            self.clear(int(row + one_row), int(col + one_col))
+            self._last_piece_moved = (new_row, new_col)
+        else:
+            self._player = self.opposite_player
+            self._last_piece_moved = None
+            return (True, self._board, False, None, info)
