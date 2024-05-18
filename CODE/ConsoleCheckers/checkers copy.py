@@ -2,20 +2,20 @@ import numpy as np
 import os
 from typing import Tuple, List, Dict
 
-from console_checkers.consts import *
+from ConsoleCheckers.consts import *
 
 
 def clear_window():
     os.system("cls")
 
 
-class Checkers:
+class CheckersBoard:
     def __init__(self) -> None:
-        self._board = self._init_board()
         self._last_piece_moved = None
         self._player = WHITE
 
     # FUNCTIONS FOR LETTING USERS PLAY
+    @staticmethod
     def _init_board(self) -> np.ndarray:
         board = np.empty((SIZE, SIZE))
         board.fill(0)
@@ -68,17 +68,17 @@ class Checkers:
 
         return row, col
 
-    def square_is_empty(self, row: int, col: int) -> bool:
-        if self._board[row, col] == 0:
+    def square_is_empty(self, state: np.ndarray, row: int, col: int) -> bool:
+        if state[row, col] == 0:
             return True
         else:
             return False
 
-    def get_all_valid_moves(self):
+    def get_all_valid_moves(self, state: np.ndarray):
         moves = {"simple": [], "takes": []}
         for row in range(SIZE):
             for col in range(SIZE):
-                piece = self._board[row, col]
+                piece = state[row, col]
                 if piece in WHITES and self._player == WHITE:
                     moves["simple"] += self._get_valid_simple_moves(row, col)
                     moves["takes"] += self._get_valid_take_moves(row, col)
@@ -88,8 +88,8 @@ class Checkers:
 
         return moves
 
-    def _get_valid_simple_moves(self, row: int, col: int):
-        piece = self._board[row, col]
+    def _get_valid_simple_moves(self, state: np.ndarray, row: int, col: int):
+        piece = state[row, col]
         valid_moves = []
         if self._player == BLACK:
             if piece == 2:
@@ -128,8 +128,8 @@ class Checkers:
 
         return valid_moves
 
-    def _get_valid_take_moves(self, row: int, col: int):
-        piece = self._board[row, col]
+    def _get_valid_take_moves(self, state: np.ndarray, row: int, col: int):
+        piece = state[row, col]
         valid_moves = []
         if self._player == BLACK:
             if piece == 2:
@@ -137,7 +137,7 @@ class Checkers:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and self._board[row + dir[0], col + dir[1]] in WHITES
+                        and state[row + dir[0], col + dir[1]] in WHITES
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -148,7 +148,7 @@ class Checkers:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and self._board[row + dir[0], col + dir[1]] in WHITES
+                        and state[row + dir[0], col + dir[1]] in WHITES
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -159,7 +159,7 @@ class Checkers:
                 if (
                     row + 2 * dir[0] in range(8)
                     and col + 2 * dir[1] in range(8)
-                    and self._board[row + dir[0], col + dir[1]] in BLACKS
+                    and state[row + dir[0], col + dir[1]] in BLACKS
                     and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                 ):
                     valid_moves.append(
@@ -170,7 +170,7 @@ class Checkers:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and self._board[row + dir[0], col + dir[1]] in BLACKS
+                        and state[row + dir[0], col + dir[1]] in BLACKS
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -179,7 +179,7 @@ class Checkers:
 
         return valid_moves
 
-    def render(self) -> None:
+    def render(self, state: np.ndarray) -> None:
         clear_window()
         cols = ["X", "A", "B", "C", "D", "E", "F", "G", "H"]
         print(str.join(" | ", cols))
@@ -188,7 +188,7 @@ class Checkers:
             print(
                 str(8 - row),
                 "|",
-                str.join(" | ", [NUM_TO_STR[int(x)] for x in self._board[row, :]]),
+                str.join(" | ", [NUM_TO_STR[int(x)] for x in state[row, :]]),
             )
         print("----------------------------------")
 
@@ -238,8 +238,8 @@ class Checkers:
 
         return row, col
 
-    def clear(self, row: int, col: int) -> None:
-        self._board[row, col] = 0
+    def clear(self, state: np.ndarray, row: int, col: int) -> None:
+        state[row, col] = 0
 
     @property
     def opposite_player(self) -> str:
@@ -251,7 +251,7 @@ class Checkers:
             print("GAME OVER")
             return True
 
-    def move(self) -> bool:
+    def move(self, state: np.ndarray) -> bool:
         print(f"It is {self._player}'s move")
         all_valid_moves = self.get_all_valid_moves()
         if self.check_winner(all_valid_moves):
@@ -274,7 +274,7 @@ class Checkers:
 
                 while valid_move is False:
                     print(
-                        f"Valid moves for this piece are {set([Checkers.convert_rowcol_to_user(*x) for x in valid_moves])}"
+                        f"Valid moves for this piece are {set([CheckersBoard.convert_rowcol_to_user(*x) for x in valid_moves])}"
                     )
                     new_row, new_col = self.select_move()
                     if (new_row, new_col) not in valid_moves:
@@ -282,7 +282,7 @@ class Checkers:
                         continue
                     valid_move = True
 
-            self._board[new_row, new_col] = self._board[row, col]
+            state[new_row, new_col] = state[row, col]
             self.clear(row, col)
 
             if abs(new_row - row) == 2:
@@ -337,7 +337,7 @@ class Checkers:
                     continue
                 valid_move = True
 
-            self._board[new_row, new_col] = self._board[row, col]
+            state[new_row, new_col] = state[row, col]
             self.clear(row, col)
 
         if abs(new_row - row) == 2:

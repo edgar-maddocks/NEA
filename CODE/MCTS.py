@@ -1,4 +1,4 @@
-from console_checkers import Checkers
+from ConsoleCheckers import CheckersBoard
 
 import numpy as np
 from typing import Dict, List, Tuple
@@ -7,7 +7,7 @@ from typing import Dict, List, Tuple
 class Node:
     def __init__(
         self,
-        game: Checkers,
+        game: CheckersBoard,
         state: np.ndarray,
         parent: "Node" = None,
         action_taken: Tuple = None,
@@ -47,26 +47,48 @@ class Node:
     def get_q(self):
         return ((self._value_sum / self._visit_count) + 1) / 2
 
+    def _populate_available_moves(self):
+        self._available_moves_left = self._game.get_all_valid_moves(self._state)
+
+    def expand(self):
+        action = np.random.choice(self._available_moves_left)
+        self._available_moves_left.remove(action)
+
+        child_state = self._state.copy()
+        valid, next_obs, done, reward, info = self._game.step(self._state, action)
+        child_state = next_obs
+
+        child = Node(self._game, child_state, self, action, self._args)
+        self._children.append(child)
+
+        return child
+
+    def simulate(self):
+        raise NotImplementedError
+
 
 class MCTS:
-    def __init__(self, game: Checkers, max_depth: int = 3, args: Dict = None):
+    def __init__(self, game: CheckersBoard, max_depth: int = 3, args: Dict = None):
         self._game = game
         self._max_depth = max_depth
         if args is not None:
             self._args = args
 
-        self._root = Node(game, game.get_state())
-
-    def search(self):
-        node = self._root
+    def search(self, state):
+        node = Node(self._game, state)
         for search in range(self._max_depth):
             while node.no_branches_left():
                 node = node.select_child()
 
-                result = self.game.step()
+                valid, next_obs, done, reward, info = node._game.step(
+                    node._state, node._action_taken
+                )
+                if valid and not done:
+                    node.expand()
+                    reward = node.simulate()
 
 
-game = Checkers()
+game = CheckersBoard()
 mcts = MCTS(game)
 
 print(mcts.root)

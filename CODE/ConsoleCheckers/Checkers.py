@@ -1,0 +1,291 @@
+from ConsoleCheckers.consts import *
+
+import numpy as np
+import os
+
+from typing import Tuple, Dict, List
+
+
+def clear_window():
+    os.system("cls")
+
+
+class CheckersBoard:
+    def __init__(self) -> None:
+        self._last_piece_moved = None
+        self._player = WHITE
+
+    @property
+    def opposite_player(self) -> str:
+        return WHITE if self._player == BLACK else BLACK
+
+    @staticmethod
+    def _init_board(self) -> np.ndarray:
+        """Method which returns intial state of the board
+
+        Returns:
+            np.ndarray: initial board
+        """
+        board = np.empty((SIZE, SIZE))
+        board.fill(0)
+        for row in range(SIZE):
+            if row == 3 or row == 4:
+                continue
+            for col in range(SIZE):
+                if (row + 1) % 2 == 1:
+                    if col % 2 == 1:
+                        board[row, col] = BLACK_R if row <= 2 else WHITE_R
+                else:
+                    if col % 2 == 0:
+                        board[row, col] = BLACK_R if row <= 2 else WHITE_R
+
+        return board
+
+    @staticmethod
+    def square_is_empty(state: np.ndarray, row: int, col: int) -> bool:
+        """Function to check if a square is empty
+
+        Args:
+            state (np.ndarray): board state
+            row (int): row to check
+            col (int): column to check
+
+        Returns:
+            bool: True if empty False otherwise
+        """
+        if state[row, col] == 0:
+            return True
+        else:
+            return False
+
+    def get_all_valid_moves(self, state: np.ndarray):
+        moves = {"simple": [], "takes": []}
+        for row in range(SIZE):
+            for col in range(SIZE):
+                piece = state[row, col]
+                if piece in WHITES and self._player == WHITE:
+                    moves["simple"] += self._get_valid_simple_moves(row, col)
+                    moves["takes"] += self._get_valid_take_moves(row, col)
+                elif piece in BLACKS and self._player == BLACK:
+                    moves["simple"] += self._get_valid_simple_moves(row, col)
+                    moves["takes"] += self._get_valid_take_moves(row, col)
+
+        return moves
+
+    def _get_valid_simple_moves(self, state: np.ndarray, row: int, col: int):
+        piece = state[row, col]
+        valid_moves = []
+        if self._player == BLACK:
+            if piece == 2:
+                for dir in LEGAL_DIRS[BLACK]["king"]:
+                    if (
+                        row + dir[0] in range(8)
+                        and col + dir[1] in range(8)
+                        and self.square_is_empty(row + dir[0], col + dir[1])
+                    ):
+                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+            elif piece == 1:
+                for dir in LEGAL_DIRS[BLACK]["regular"]:
+                    if (
+                        row + dir[0] in range(8)
+                        and col + dir[1] in range(8)
+                        and self.square_is_empty(row + dir[0], col + dir[1])
+                    ):
+                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+        elif self._player == WHITE:
+            if piece == 4:
+                for dir in LEGAL_DIRS[WHITE]["king"]:
+                    if (
+                        row + dir[0] in range(8)
+                        and col + dir[1] in range(8)
+                        and self.square_is_empty(row + dir[0], col + dir[1])
+                    ):
+                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+            elif piece == 3:
+                for dir in LEGAL_DIRS[WHITE]["regular"]:
+                    if (
+                        row + dir[0] in range(8)
+                        and col + dir[1] in range(8)
+                        and self.square_is_empty(row + dir[0], col + dir[1])
+                    ):
+                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+
+        return valid_moves
+
+    def _get_valid_take_moves(self, state: np.ndarray, row: int, col: int):
+        piece = state[row, col]
+        valid_moves = []
+        if self._player == BLACK:
+            if piece == 2:
+                for dir in LEGAL_DIRS[BLACK]["king"]:
+                    if (
+                        row + 2 * dir[0] in range(8)
+                        and col + 2 * dir[1] in range(8)
+                        and state[row + dir[0], col + dir[1]] in WHITES
+                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                    ):
+                        valid_moves.append(
+                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                        )
+            elif piece == 1:
+                for dir in LEGAL_DIRS[BLACK]["regular"]:
+                    if (
+                        row + 2 * dir[0] in range(8)
+                        and col + 2 * dir[1] in range(8)
+                        and state[row + dir[0], col + dir[1]] in WHITES
+                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                    ):
+                        valid_moves.append(
+                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                        )
+        elif self._player == WHITE:
+            if piece == 4:
+                if (
+                    row + 2 * dir[0] in range(8)
+                    and col + 2 * dir[1] in range(8)
+                    and state[row + dir[0], col + dir[1]] in BLACKS
+                    and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                ):
+                    valid_moves.append(
+                        ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                    )
+            elif piece == 3:
+                for dir in LEGAL_DIRS[WHITE]["regular"]:
+                    if (
+                        row + 2 * dir[0] in range(8)
+                        and col + 2 * dir[1] in range(8)
+                        and state[row + dir[0], col + dir[1]] in BLACKS
+                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                    ):
+                        valid_moves.append(
+                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                        )
+
+        return valid_moves
+
+    @staticmethod
+    def render(state: np.ndarray) -> None:
+        clear_window()
+        cols = ["X", "A", "B", "C", "D", "E", "F", "G", "H"]
+        print(str.join(" | ", cols))
+        for row in range(SIZE):
+            print("----------------------------------")
+            print(
+                str(8 - row),
+                "|",
+                str.join(" | ", [NUM_TO_STR[int(x)] for x in state[row, :]]),
+            )
+        print("----------------------------------")
+
+    @staticmethod
+    def convert_rowcol_to_user(row: int, col: int) -> Tuple[int, str]:
+        row = 8 - row
+        return row, NUMS_TO_COLS[col]
+
+    @staticmethod
+    def convert_rowcol_to_game(row: int, col: str) -> Tuple[int, int]:
+        row = 8 - row
+        return row, COLS_TO_NUMS[col]
+
+    def clear(self, state: np.ndarray, row: int, col: int) -> None:
+        state[row, col] = 0
+
+    def check_winner(self, state: np.ndarray) -> bool:
+        if len(self.get_all_valid_moves(state)) == 0:
+            return True
+        else:
+            return False
+
+    def step(
+        self, state: np.ndarray, action: Tuple, colour: str = None
+    ) -> Tuple[bool, np.ndarray, bool, float, Dict]:
+        """
+        Return Arg is (valid_move, next_obs, done, reward, info)
+        """
+        if colour != self._player:
+            info["fail_cause"] = "wrong player"
+            return False, state, False, None, info
+        info = {}
+        piece_to_move, place_to_move_to = action[0], action[1]
+        all_valid_moves = self.get_all_valid_moves()
+
+        if self.check_winner(all_valid_moves):
+            return True, state, True, -1, info
+        elif self._last_piece_moved is not None:
+            all_valid_moves = self._get_valid_take_moves(*self._last_piece_moved)
+            if len(all_valid_moves) == 0:
+                self._player = self.opposite_player
+                self._last_piece_moved = None
+                return True, state, False, None, info
+            else:
+                row, col = self._last_piece_moved
+                valid_moves = [x[1] for x in all_valid_moves]
+                new_row, new_col = place_to_move_to[0], place_to_move_to[1]
+
+                info["fail_cause"] = "invalid move"
+
+                if ((row, col) != piece_to_move) or (
+                    (new_row, new_col) not in valid_moves
+                ):
+                    return False, state, False, None, info
+
+            state[new_row, new_col] = state[row, col]
+            self.clear(row, col)
+
+            if abs(new_row - row) == 2:
+                one_row = 0.5 * (new_row - row)
+                one_col = 0.5 * (new_col - col)
+                self.clear(int(row + one_row), int(col + one_col))
+                self._last_piece_moved = (new_row, new_col)
+            else:
+                self._player = self.opposite_player
+                self._last_piece_moved = None
+                return True, state, False, None, info
+        else:
+            row, col = piece_to_move[0], piece_to_move[1]
+            new_row, col = place_to_move_to[0], place_to_move_to[1]
+
+            valid_simples, valid_takes = (
+                all_valid_moves["simple"],
+                all_valid_moves["takes"],
+            )
+
+            valid_selections = (
+                [x[0] for x in valid_takes]
+                if len(valid_takes) > 0
+                else [x[0] for x in valid_simples]
+            )
+
+            valid_moves = (
+                [x[1] for x in valid_takes]
+                if len(valid_takes) > 0
+                else [x[1] for x in valid_simples if x[0] == (row, col)]
+            )
+
+            info["fail_cause"] = "invalid move"
+
+            if ((row, col) != piece_to_move) or ((new_row, new_col) not in valid_moves):
+                return False, state, False, None, info
+
+            state[new_row, new_col] = state[row, col]
+            self.clear(row, col)
+
+        if abs(new_row - row) == 2:
+            one_row = 0.5 * (new_row - row)
+            one_col = 0.5 * (new_col - col)
+            self.clear(int(row + one_row), int(col + one_col))
+            self._last_piece_moved = (new_row, new_col)
+        else:
+            self._player = self.opposite_player
+            self._last_piece_moved = None
+            return (True, state, False, None, info)
+
+    def get_reward_done(self, state: np.ndarray, action: np.ndarray):
+        if self.check_winner(state):
+            return -1, True
+        else:
+            return 0, False
+
+
+class CheckersGame:
+    raise NotImplementedError
