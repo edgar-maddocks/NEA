@@ -3,6 +3,10 @@
 \usepackage{breqn}
 \usepackage{amssymb}
 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+
 \usepackage{geometry}
 \geometry{margin=1in}
 
@@ -491,12 +495,52 @@
     a search of available actions to train the network towards - composed of a node class to make up this tree and an agent class which abstracts the processes of the previous classes. \\
 
     \subsubsection{Identification of algorithms}
-    \subsubsubsection{Draughts}
     \subsubsubsection{Automatic Differentiation Engine}
+    The auto-diff engine will use a recursive DFS of the computational graph to calculate gradients. It uses a DFS as any of the computational graphs that built are directed acyclical graphs,
+    and therefore DFS provides a way to search the whole graph in O(n) time. Some pseudocode for this search can be seen below.
+
+    \begin{algorithm}
+        \caption{Backward Function of Tensor}\label{alg:cap}
+        \begin{algorithmic}
+        \Function{Backward}{Tensor self, Array grad, Tensor out}
+        \Ensure t.requiresGrad is True \Comment{t is the tensor being called to start DFS}
+        \If{t.Grad is None}
+            \State grad $\gets \begin{bmatrix}
+                1 & 1 & 1 & \hdots
+            \end{bmatrix}$ in shape of t.data
+        \EndIf
+        
+        \State t.Grad += grad
+
+        \If{t.Operation is not None}
+            \State t.Operation.backward(t.Grad, t)
+        \EndIf
+
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+        \caption{General Backward Function of a Tensor Operation}\label{alg:cap}
+        \begin{algorithmic}
+        \Function{backward}{Operation self, Array grad, Tensor t}
+        \State savedTensors $\gets$ self.cache.0
+        
+        \For{tensor in savedTensors}
+        \If{tensor.requiresGrad is True}
+        \State newGrad $\gets \frac{\partial output}{\partial tensor}$ \Comment{Computed by chain rule, specific for each operation}
+        \State Remove broadcasted dims from newGrad \Comment{newGrad.shape should equal tensor.shape}
+        \State tensor.backward(newGrad, t)
+        \EndIf
+        \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
     \subsubsubsection{Neural Network Library}
     \subsubsubsection{Reinforcement Learning Solution}
 
-    \subsubsection{Mathematical Forumla}
+    \subsubsection{Mathematical Formula}
     \subsubsubsection{Automatic Differentiation}
 
     \subsubsubsection{Neural Network Library}
