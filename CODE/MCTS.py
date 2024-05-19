@@ -180,7 +180,7 @@ class MCTS:
 if __name__ == "__main__":
     import time
 
-    mcts = MCTS(args={"eec": 1.41, "n_searches": 100000})
+    mcts = MCTS(args={"eec": 1.41, "n_searches": 250000})
     game = CheckersBoard()
 
     done = False
@@ -193,13 +193,15 @@ if __name__ == "__main__":
                 mcts.build_tree(game)
                 action = mcts.get_action()
                 valid, next_obs, done, reward, info = game.step(action)
-                print("WHITE MADE MOVE", action)
-                time.sleep(3)
+                print(
+                    f"WHITE'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                )
         else:
             valid = False
             while not valid:
                 mcts.build_tree(game)
                 action = mcts.get_action()
                 valid, next_obs, done, reward, info = game.step(action)
-                print("BLACK MADE MOVE", action)
-                time.sleep(3)
+                print(
+                    f"BLACK'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                )

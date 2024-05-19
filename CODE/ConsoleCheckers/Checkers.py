@@ -172,15 +172,16 @@ class CheckersBoard:
                         )
         elif colour == WHITE:
             if piece == 4:
-                if (
-                    row + 2 * dir[0] in range(8)
-                    and col + 2 * dir[1] in range(8)
-                    and self._board[row + dir[0], col + dir[1]] in BLACKS
-                    and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
-                ):
-                    valid_moves.append(
-                        ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
-                    )
+                for dir in LEGAL_DIRS[WHITE]["king"]:
+                    if (
+                        row + 2 * dir[0] in range(8)
+                        and col + 2 * dir[1] in range(8)
+                        and self._board[row + dir[0], col + dir[1]] in BLACKS
+                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                    ):
+                        valid_moves.append(
+                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                        )
             elif piece == 3:
                 for dir in LEGAL_DIRS[WHITE]["regular"]:
                     if (
@@ -259,7 +260,16 @@ class CheckersBoard:
         else:
             return False
 
-    def step(self, action: Tuple) -> Tuple[bool, np.ndarray, bool, float, Dict]:
+    def crown(self, row: int, col: int) -> None:
+        piece = self._board[row, col]
+        if piece == 1:
+            self._board[row, col] = 2
+        elif piece == 3:
+            self._board[row, col] = 4
+
+    def step(
+        self, action: Tuple, verbose: int = 0
+    ) -> Tuple[bool, np.ndarray, bool, float, Dict]:
         """
         Return Arg is (valid_move, next_obs, done, reward, info)
         """
@@ -294,12 +304,17 @@ class CheckersBoard:
             one_col = 0.5 * (new_col - col)
             self.clear(int(row + one_row), int(col + one_col))
             self._player = self.opposite_player
+        if self._board[new_row, new_col] in WHITES and new_row == 0:
+            self.crown(new_row, new_col)
+        if self._board[new_row, new_col] in BLACKS and new_row == 7:
+            self.crown(new_row, new_col)
 
-        else:
-            self._player = self.opposite_player
+        self._player = self.opposite_player
 
         if self.check_winner():
-            return (True, self._board, True, -1, info)
+            if verbose:
+                print(f"{self._player} HAS WON")
+            return (True, self._board, True, 1, info)
         else:
             return (True, self._board, False, 0, info)
 
