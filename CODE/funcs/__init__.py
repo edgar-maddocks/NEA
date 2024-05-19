@@ -1,1 +1,1 @@
-from correlate import correlate1d
+from funcs.correlate import correlate1d
