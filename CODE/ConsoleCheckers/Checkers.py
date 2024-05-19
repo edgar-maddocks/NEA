@@ -263,6 +263,7 @@ class CheckersBoard:
         """
         Return Arg is (valid_move, next_obs, done, reward, info)
         """
+        # TODO: ADD IN CROWNING
         info = {}
         piece_to_move, place_to_move_to = action[0], action[1]
         all_valid_moves = self.get_all_valid_moves()
