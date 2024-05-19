@@ -3,26 +3,27 @@ from ConsoleCheckers import CheckersBoard
 import numpy as np
 from typing import Dict, List, Tuple
 
+from copy import deepcopy
+
 
 class Node:
     def __init__(
         self,
         game: CheckersBoard,
-        state: np.ndarray,
         parent: "Node" = None,
         action_taken: Tuple = None,
         args: Dict = None,
     ):
-        self._game = game
-        self._state = state
+        self._game = deepcopy(game)
+        self._state = self._game.board
         self._parent = parent
         self._children: List[Node] = []
         self._action_taken = action_taken
-        self._available_moves_left: List[Tuple] = []
+        self._populate_available_moves()
 
         self._args = args
 
-        self._visit_count, self._value_sum = 0, 0
+        self._visit_count, self._win_count = 0, 0
 
     def no_branches_left(self):
         return len(self._available_moves_left) == 0 and len(self._children) > 0
@@ -47,48 +48,51 @@ class Node:
     def get_q(self):
         return ((self._value_sum / self._visit_count) + 1) / 2
 
-    def _populate_available_moves(self):
-        self._available_moves_left = self._game.get_all_valid_moves(self._state)
-
-    def expand(self):
-        action = np.random.choice(self._available_moves_left)
-        self._available_moves_left.remove(action)
-
-        child_state = self._state.copy()
-        valid, next_obs, done, reward, info = self._game.step(self._state, action)
-        child_state = next_obs
-
-        child = Node(self._game, child_state, self, action, self._args)
-        self._children.append(child)
-
-        return child
-
-    def simulate(self):
-        raise NotImplementedError
-
 
 class MCTS:
-    def __init__(self, game: CheckersBoard, max_depth: int = 3, args: Dict = None):
+    def __init__(self, game: CheckersBoard, args: Dict = None):
         self._game = game
-        self._max_depth = max_depth
         if args is not None:
             self._args = args
 
-    def search(self, state):
-        node = Node(self._game, state)
-        for search in range(self._max_depth):
-            while node.no_branches_left():
-                node = node.select_child()
-
-                valid, next_obs, done, reward, info = node._game.step(
-                    node._state, node._action_taken
-                )
-                if valid and not done:
-                    node.expand()
-                    reward = node.simulate()
+    def search(self):
+        pass
 
 
 game = CheckersBoard()
-mcts = MCTS(game)
+mcts = MCTS(game, args={"n_searches": 1})
 
-print(mcts.root)
+mcts.search()
+
+"""class MCTS:",
+    "    def __init__(self, game, args):",
+    "        self.game = game",
+    "        self.args = args",
+    "        ",
+    "    def search(self, state):",
+    "        root = Node(self.game, self.args, state)",
+    "        ",
+    "        for search in range(self.args['num_searches']):",
+    "            node = root",
+    "            ",
+    "            while node.is_fully_expanded():",
+    "                node = node.select()",
+    "                ",
+    "            value, is_terminal = self.game.get_value_and_terminated(node.state, node.action_taken)",
+    "            value = self.game.get_opponent_value(value)",
+    "            ",
+    "            if not is_terminal:",
+    "                node = node.expand()",
+    "                value = node.simulate()",
+    "                ",
+    "            node.backpropagate(value)    ",
+    "            ",
+    "            ",
+    "        action_probs = np.zeros(self.game.action_size)",
+    "        for child in root.children:",
+    "            action_probs[child.action_taken] = child.visit_count",
+    "        action_probs /= np.sum(action_probs)",
+    "        return action_probs",
+    "        ",
+    "        ",
+    "        """

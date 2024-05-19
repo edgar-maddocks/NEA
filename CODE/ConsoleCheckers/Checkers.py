@@ -12,6 +12,7 @@ def clear_window():
 
 class CheckersBoard:
     def __init__(self) -> None:
+        self._board = self._init_board()
         self._last_piece_moved = None
         self._player = WHITE
 
@@ -19,7 +20,6 @@ class CheckersBoard:
     def opposite_player(self) -> str:
         return WHITE if self._player == BLACK else BLACK
 
-    @staticmethod
     def _init_board(self) -> np.ndarray:
         """Method which returns intial state of the board
 
@@ -41,8 +41,7 @@ class CheckersBoard:
 
         return board
 
-    @staticmethod
-    def square_is_empty(state: np.ndarray, row: int, col: int) -> bool:
+    def square_is_empty(self, row: int, col: int) -> bool:
         """Function to check if a square is empty
 
         Args:
@@ -53,16 +52,16 @@ class CheckersBoard:
         Returns:
             bool: True if empty False otherwise
         """
-        if state[row, col] == 0:
+        if self._board[row, col] == 0:
             return True
         else:
             return False
 
-    def get_all_valid_moves(self, state: np.ndarray):
+    def get_all_valid_moves(self):
         moves = {"simple": [], "takes": []}
         for row in range(SIZE):
             for col in range(SIZE):
-                piece = state[row, col]
+                piece = self._board[row, col]
                 if piece in WHITES and self._player == WHITE:
                     moves["simple"] += self._get_valid_simple_moves(row, col)
                     moves["takes"] += self._get_valid_take_moves(row, col)
@@ -72,8 +71,8 @@ class CheckersBoard:
 
         return moves
 
-    def _get_valid_simple_moves(self, state: np.ndarray, row: int, col: int):
-        piece = state[row, col]
+    def _get_valid_simple_moves(self, row: int, col: int):
+        piece = self._board[row, col]
         valid_moves = []
         if self._player == BLACK:
             if piece == 2:
@@ -112,8 +111,8 @@ class CheckersBoard:
 
         return valid_moves
 
-    def _get_valid_take_moves(self, state: np.ndarray, row: int, col: int):
-        piece = state[row, col]
+    def _get_valid_take_moves(self, row: int, col: int):
+        piece = self._board[row, col]
         valid_moves = []
         if self._player == BLACK:
             if piece == 2:
@@ -121,7 +120,7 @@ class CheckersBoard:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and state[row + dir[0], col + dir[1]] in WHITES
+                        and self._board[row + dir[0], col + dir[1]] in WHITES
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -132,7 +131,7 @@ class CheckersBoard:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and state[row + dir[0], col + dir[1]] in WHITES
+                        and self._board[row + dir[0], col + dir[1]] in WHITES
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -143,7 +142,7 @@ class CheckersBoard:
                 if (
                     row + 2 * dir[0] in range(8)
                     and col + 2 * dir[1] in range(8)
-                    and state[row + dir[0], col + dir[1]] in BLACKS
+                    and self._board[row + dir[0], col + dir[1]] in BLACKS
                     and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                 ):
                     valid_moves.append(
@@ -154,7 +153,7 @@ class CheckersBoard:
                     if (
                         row + 2 * dir[0] in range(8)
                         and col + 2 * dir[1] in range(8)
-                        and state[row + dir[0], col + dir[1]] in BLACKS
+                        and self._board[row + dir[0], col + dir[1]] in BLACKS
                         and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
                     ):
                         valid_moves.append(
@@ -163,8 +162,7 @@ class CheckersBoard:
 
         return valid_moves
 
-    @staticmethod
-    def render(state: np.ndarray) -> None:
+    def render(self) -> None:
         clear_window()
         cols = ["X", "A", "B", "C", "D", "E", "F", "G", "H"]
         print(str.join(" | ", cols))
@@ -173,50 +171,43 @@ class CheckersBoard:
             print(
                 str(8 - row),
                 "|",
-                str.join(" | ", [NUM_TO_STR[int(x)] for x in state[row, :]]),
+                str.join(" | ", [NUM_TO_STR[int(x)] for x in self._board[row, :]]),
             )
         print("----------------------------------")
 
-    @staticmethod
     def convert_rowcol_to_user(row: int, col: int) -> Tuple[int, str]:
         row = 8 - row
         return row, NUMS_TO_COLS[col]
 
-    @staticmethod
     def convert_rowcol_to_game(row: int, col: str) -> Tuple[int, int]:
         row = 8 - row
         return row, COLS_TO_NUMS[col]
 
-    def clear(self, state: np.ndarray, row: int, col: int) -> None:
-        state[row, col] = 0
+    def clear(self, row: int, col: int) -> None:
+        self._board[row, col] = 0
 
-    def check_winner(self, state: np.ndarray) -> bool:
-        if len(self.get_all_valid_moves(state)) == 0:
+    def check_winner(self) -> bool:
+        if len(self.get_all_valid_moves()) == 0:
             return True
         else:
             return False
 
-    def step(
-        self, state: np.ndarray, action: Tuple, colour: str = None
-    ) -> Tuple[bool, np.ndarray, bool, float, Dict]:
+    def step(self, action: Tuple) -> Tuple[bool, np.ndarray, bool, float, Dict]:
         """
         Return Arg is (valid_move, next_obs, done, reward, info)
         """
-        if colour != self._player:
-            info["fail_cause"] = "wrong player"
-            return False, state, False, None, info
         info = {}
         piece_to_move, place_to_move_to = action[0], action[1]
         all_valid_moves = self.get_all_valid_moves()
 
-        if self.check_winner(all_valid_moves):
-            return True, state, True, -1, info
+        if self.check_winner():
+            return True, self._board, True, -1, info
         elif self._last_piece_moved is not None:
             all_valid_moves = self._get_valid_take_moves(*self._last_piece_moved)
             if len(all_valid_moves) == 0:
                 self._player = self.opposite_player
                 self._last_piece_moved = None
-                return True, state, False, None, info
+                return True, self._board, False, None, info
             else:
                 row, col = self._last_piece_moved
                 valid_moves = [x[1] for x in all_valid_moves]
@@ -227,9 +218,9 @@ class CheckersBoard:
                 if ((row, col) != piece_to_move) or (
                     (new_row, new_col) not in valid_moves
                 ):
-                    return False, state, False, None, info
+                    return False, self._board, False, None, info
 
-            state[new_row, new_col] = state[row, col]
+            self._board[new_row, new_col] = self._board[row, col]
             self.clear(row, col)
 
             if abs(new_row - row) == 2:
@@ -240,7 +231,7 @@ class CheckersBoard:
             else:
                 self._player = self.opposite_player
                 self._last_piece_moved = None
-                return True, state, False, None, info
+                return True, self._board, False, None, info
         else:
             row, col = piece_to_move[0], piece_to_move[1]
             new_row, col = place_to_move_to[0], place_to_move_to[1]
@@ -265,9 +256,9 @@ class CheckersBoard:
             info["fail_cause"] = "invalid move"
 
             if ((row, col) != piece_to_move) or ((new_row, new_col) not in valid_moves):
-                return False, state, False, None, info
+                return False, self._board, False, None, info
 
-            state[new_row, new_col] = state[row, col]
+            self._board[new_row, new_col] = self._board[row, col]
             self.clear(row, col)
 
         if abs(new_row - row) == 2:
@@ -278,14 +269,13 @@ class CheckersBoard:
         else:
             self._player = self.opposite_player
             self._last_piece_moved = None
-            return (True, state, False, None, info)
+            return (True, self._board, False, None, info)
 
-    def get_reward_done(self, state: np.ndarray, action: np.ndarray):
-        if self.check_winner(state):
-            return -1, True
-        else:
-            return 0, False
+    @property
+    def board(self):
+        return self._board
 
 
 class CheckersGame:
-    raise NotImplementedError
+    def __init__(self):
+        raise NotImplementedError
