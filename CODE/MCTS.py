@@ -246,28 +246,28 @@ def no_threading_sim_games(
 
 
 if __name__ == "__main__":
-    games = no_threading_sim_games(10, 100000, 1.41, 1000, 1.41, 1)
+    """games = no_threading_sim_games(10, 100000, 1.41, 1000, 1.41, 1)
 
     res = {"mcts1": 0, "mcts2": 0, "draw": 0}
 
     for x in games:
         res[x] += 1
 
-    print(res)
-    """from concurrent.futures import ThreadPoolExecutor
+    print(res)"""
+    from concurrent.futures import ThreadPoolExecutor
 
-    max_workers = 10
+    max_workers = 25
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [
-            executor.submit(no_threading_sim_games, 1, 100000, 1.41, 100, 1.41, 0)
+            executor.submit(no_threading_sim_games, 1, 100000, 1.41, 1000, 1.41, 0)
             for i in range(max_workers)
         ]
         result = [f.result() for f in futures]
 
-    res = {"white": 0, "black": 0, "draw": 0}
+    res = {"mcts1": 0, "mcts2": 0, "draw": 0}
 
     for x in result:
         for out in x:
             res[out] += 1
 
-    print(res)"""
+    print(res)
