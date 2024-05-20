@@ -148,7 +148,7 @@ class MCTS:
             row_change = moved_to[0] - piece_moved[0]
             col_change = moved_to[1] - piece_moved[1]
             direc_idx = ACTION_TO_IDX[(row_change, col_change)]
-            p[piece_moved[0], piece_moved[1], direc_idx] = child._visit_count
+            p[piece_moved[0], piece_moved[1], direc_idx] = child._value_count
 
         p /= np.sum(p)
         return p
@@ -196,12 +196,14 @@ def no_threading_sim_games(
         game = CheckersBoard()
 
         done = False
+
+        mcts1_player = np.random.choice(["white", "black"], 1)
         while not done:
             if verbose == 1:
                 game.render()
                 print("GAME: ", gamen)
 
-            if game._player == "white":
+            if game._player == mcts1_player:
                 valid = False
                 while not valid:
                     if verbose:
@@ -216,7 +218,7 @@ def no_threading_sim_games(
                     if not valid and verbose:
                         print("TRIED TO MAKE INVALID MOVE")
                     if done and reward == 1:
-                        games.append("white")
+                        games.append("mcts1")
                     elif done and reward == 0:
                         games.append("draw")
             else:
@@ -232,7 +234,7 @@ def no_threading_sim_games(
                     if not valid and verbose:
                         print("TRIED TO MAKE INVALID MOVE")
                     if done and reward == 1:
-                        games.append("black")
+                        games.append("mcts2")
                     elif done and reward == 0:
                         games.append("draw")
 
@@ -240,12 +242,20 @@ def no_threading_sim_games(
 
 
 if __name__ == "__main__":
-    from concurrent.futures import ThreadPoolExecutor
+    games = no_threading_sim_games(10, 100000, 1.41, 1000, 1.41, 1)
 
-    max_workers = 5
+    res = {"mcts1": 0, "mcts2": 0, "draw": 0}
+
+    for x in games:
+        res[x] += 1
+
+    print(res)
+    """from concurrent.futures import ThreadPoolExecutor
+
+    max_workers = 10
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [
-            executor.submit(no_threading_sim_games, 5, 10000, 1.41, 100, 1.41, 0)
+            executor.submit(no_threading_sim_games, 1, 100000, 1.41, 100, 1.41, 0)
             for i in range(max_workers)
         ]
         result = [f.result() for f in futures]
@@ -256,4 +266,4 @@ if __name__ == "__main__":
         for out in x:
             res[out] += 1
 
-    print(res)
+    print(res)"""
