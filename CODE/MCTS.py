@@ -180,9 +180,14 @@ class MCTS:
 
 
 def no_threading_sim_games(
-    n_games: int, n_searches1: int, eec1: float, n_searches2: int, eec2: float
+    n_games: int,
+    n_searches1: int,
+    eec1: float,
+    n_searches2: int,
+    eec2: float,
+    verbose: int = 1,
 ):
-    games = {"white": 0, "black": 0, "draw": 0}
+    games = []
     for gamen in range(n_games):
 
         mcts1 = MCTS(args={"eec": eec1, "n_searches": n_searches1})
@@ -192,46 +197,63 @@ def no_threading_sim_games(
 
         done = False
         while not done:
-            game.render()
-            print("GAME: ", gamen)
+            if verbose == 1:
+                game.render()
+                print("GAME: ", gamen)
 
             if game._player == "white":
                 valid = False
                 while not valid:
-                    print("Building Tree...")
+                    if verbose:
+                        print("Building Tree...")
                     mcts1.build_tree(game)
                     action = mcts1.get_action()
-                    print(
-                        f"WHITE'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
-                    )
+                    if verbose:
+                        print(
+                            f"WHITE'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                        )
                     valid, next_obs, done, reward, info = game.step(action, verbose=1)
-                    if not valid:
+                    if not valid and verbose:
                         print("TRIED TO MAKE INVALID MOVE")
                     if done and reward == 1:
-                        games["white"] += 1
+                        games.append("white")
                     elif done and reward == 0:
-                        games["draw"] += 1
+                        games.append("draw")
             else:
                 valid = False
                 while not valid:
                     mcts2.build_tree(game)
                     action = mcts2.get_action()
-                    print(
-                        f"BLACK'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
-                    )
+                    if verbose:
+                        print(
+                            f"BLACK'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                        )
                     valid, next_obs, done, reward, info = game.step(action, verbose=1)
-                    if not valid:
+                    if not valid and verbose:
                         print("TRIED TO MAKE INVALID MOVE")
                     if done and reward == 1:
-                        games["black"] += 1
+                        games.append("black")
                     elif done and reward == 0:
-                        games["draw"] += 1
+                        games.append("draw")
 
     return games
 
 
 if __name__ == "__main__":
-    games = no_threading_sim_games(20, 10000, 1.41, 5, 1.41)
-    print("WHITE WON: ", games["white"])
-    print("BLACK WON: ", games["black"])
-    print(games["draw"], " DRAWS")
+    from concurrent.futures import ThreadPoolExecutor
+
+    max_workers = 5
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [
+            executor.submit(no_threading_sim_games, 5, 10000, 1.41, 100, 1.41, 0)
+            for i in range(max_workers)
+        ]
+        result = [f.result() for f in futures]
+
+    res = {"white": 0, "black": 0, "draw": 0}
+
+    for x in result:
+        for out in x:
+            res[out] += 1
+
+    print(res)
