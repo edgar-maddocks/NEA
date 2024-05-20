@@ -1,1 +1,1 @@
-from ConsoleCheckers.Checkers import CheckersBoard, CheckersGame
+from ConsoleCheckers.Checkers import CheckersBoard

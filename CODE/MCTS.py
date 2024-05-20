@@ -148,7 +148,7 @@ class MCTS:
             row_change = moved_to[0] - piece_moved[0]
             col_change = moved_to[1] - piece_moved[1]
             direc_idx = ACTION_TO_IDX[(row_change, col_change)]
-            p[piece_moved[0], piece_moved[1], direc_idx] = child._value_count
+            p[piece_moved[0], piece_moved[1], direc_idx] = child._visit_count
 
         p /= np.sum(p)
         return p
@@ -221,6 +221,8 @@ def no_threading_sim_games(
                         games.append("mcts1")
                     elif done and reward == 0:
                         games.append("draw")
+                    elif done and reward == -1:
+                        games.append("mcts2")
             else:
                 valid = False
                 while not valid:
@@ -237,6 +239,8 @@ def no_threading_sim_games(
                         games.append("mcts2")
                     elif done and reward == 0:
                         games.append("draw")
+                    elif done and reward == -1:
+                        games.append("mcts1")
 
     return games
 

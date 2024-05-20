@@ -82,9 +82,7 @@ class CheckersBoard:
         else:
             return False
 
-    def get_all_valid_moves(
-        self, colour: str = None
-    ) -> Dict[str, List[Tuple[Tuple, Tuple]]]:
+    def get_all_valid_moves(self) -> Dict[str, List[Tuple[Tuple, Tuple]]]:
         """Returns dict of all available moves on the board
         "takes": List of take moves
         "simple": List of simple moves
@@ -92,22 +90,26 @@ class CheckersBoard:
         Returns:
             Dict: List[Tup[Tup, Tup]] -> (piece_to_select, piece_to_move)
         """
-        if colour is None:
-            colour = self._player
         moves = {"simple": [], "takes": []}
+
+        if self._last_piece_moved is not None:
+            moves["simple"] += []
+            moves["takes"] += self._get_valid_take_moves(*self._last_piece_moved)
+            if len(moves["takes"]) > 0:
+                return moves
         for row in range(SIZE):
             for col in range(SIZE):
                 piece = self._board[row, col]
-                if piece in WHITES and colour == WHITE:
-                    moves["simple"] += self._get_valid_simple_moves(row, col, colour)
-                    moves["takes"] += self._get_valid_take_moves(row, col, colour)
-                elif piece in BLACKS and colour == BLACK:
-                    moves["simple"] += self._get_valid_simple_moves(row, col, colour)
-                    moves["takes"] += self._get_valid_take_moves(row, col, colour)
+                if piece in WHITES and self._player == WHITE:
+                    moves["simple"] += self._get_valid_simple_moves(row, col)
+                    moves["takes"] += self._get_valid_take_moves(row, col)
+                elif piece in BLACKS and self._player == BLACK:
+                    moves["simple"] += self._get_valid_simple_moves(row, col)
+                    moves["takes"] += self._get_valid_take_moves(row, col)
 
         return moves
 
-    def _get_valid_simple_moves(self, row: int, col: int, colour: str = None) -> List:
+    def _get_valid_simple_moves(self, row: int, col: int) -> List:
         """Gets all valid simple moves available for a given square
 
         Args:
@@ -117,11 +119,9 @@ class CheckersBoard:
         Returns:
             List: tuple of tuples
         """
-        if colour is None:
-            colour = self._player
         piece = self._board[row, col]
         valid_moves = []
-        if colour == BLACK:
+        if self._player == BLACK:
             if piece == 2:
                 for dir in LEGAL_DIRS[BLACK]["king"]:
                     if (
@@ -138,7 +138,7 @@ class CheckersBoard:
                         and self.square_is_empty(row + dir[0], col + dir[1])
                     ):
                         valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
-        elif colour == WHITE:
+        elif self._player == WHITE:
             if piece == 4:
                 for dir in LEGAL_DIRS[WHITE]["king"]:
                     if (
@@ -158,7 +158,7 @@ class CheckersBoard:
 
         return valid_moves
 
-    def _get_valid_take_moves(self, row: int, col: int, colour: str = None):
+    def _get_valid_take_moves(self, row: int, col: int):
         """Gets all valid take moves available for a given square
 
         Args:
@@ -168,11 +168,9 @@ class CheckersBoard:
         Returns:
             List: tuple of tuples
         """
-        if colour is None:
-            colour = self._player
         piece = self._board[row, col]
         valid_moves = []
-        if colour == BLACK:
+        if self._player == BLACK:
             if piece == 2:
                 for dir in LEGAL_DIRS[BLACK]["king"]:
                     if (
@@ -195,7 +193,7 @@ class CheckersBoard:
                         valid_moves.append(
                             ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
                         )
-        elif colour == WHITE:
+        elif self._player == WHITE:
             if piece == 4:
                 for dir in LEGAL_DIRS[WHITE]["king"]:
                     if (
@@ -281,12 +279,9 @@ class CheckersBoard:
         Returns:
             bool: if game is over
         """
-        valid_moves = self.get_all_valid_moves(self.opposite_player)
         if self._player == BLACK and self.n_white_pieces == 0:
             return True
         elif self._player == WHITE and self.n_black_pieces == 0:
-            return True
-        elif len(valid_moves["takes"]) == 0 and len(valid_moves["simple"]) == 0:
             return True
         else:
             return False
@@ -308,6 +303,12 @@ class CheckersBoard:
         info = {}
         piece_to_move, place_to_move_to = action[0], action[1]
         all_valid_moves = self.get_all_valid_moves()
+
+        if len(all_valid_moves["takes"]) == 0 and len(all_valid_moves["simple"]) == 0:
+            if verbose:
+                print(f"{self.opposite_player} HAS WON")
+            return (True, self._board, True, -1, info)
+
         row, col = piece_to_move[0], piece_to_move[1]
         new_row, new_col = place_to_move_to[0], place_to_move_to[1]
 
@@ -343,11 +344,21 @@ class CheckersBoard:
             one_col = 0.5 * (new_col - col)
             self.clear(int(row + one_row), int(col + one_col))
             self._moves_no_capture = 0
+            self._last_piece_moved = (new_row, new_col)
+        else:
+            self._last_piece_moved = None
 
         if self._board[new_row, new_col] in WHITES and new_row == 0:
             self.crown(new_row, new_col)
         if self._board[new_row, new_col] in BLACKS and new_row == 7:
             self.crown(new_row, new_col)
+
+        if self._last_piece_moved is not None:
+            if len(self._get_valid_take_moves(*self._last_piece_moved)) <= 0:
+                self._player = self.opposite_player
+                self._last_piece_moved = None
+        else:
+            self._player = self.opposite_player
 
         if self._moves_no_capture == 40:
             if verbose:
@@ -362,41 +373,7 @@ class CheckersBoard:
                 print(f"{self._player} HAS WON")
             return (True, self._board, True, 1, info)
 
-        self._player = self.opposite_player
         return (True, self._board, False, 0, info)
-
-        """elif self._last_piece_moved is not None:
-            all_valid_moves = self._get_valid_take_moves(*self._last_piece_moved)
-            if len(all_valid_moves) == 0:
-                self._player = self.opposite_player
-                self._last_piece_moved = None
-                return (True, self._board, False, 0, info)
-            else:
-                row, col = self._last_piece_moved
-                valid_moves = [x[1] for x in all_valid_moves]
-                new_row, new_col = place_to_move_to[0], place_to_move_to[1]
-
-                info["fail_cause"] = "invalid move"
-
-                if ((row, col) != piece_to_move) or (
-                    (new_row, new_col) not in valid_moves
-                ):
-                    return (False, self._board, False, 0, info)
-
-            self._board[new_row, new_col] = self._board[row, col]
-            self.clear(row, col)
-
-            if abs(new_row - row) == 2:
-                one_row = 0.5 * (new_row - row)
-                one_col = 0.5 * (new_col - col)
-                self.clear(int(row + one_row), int(col + one_col))
-                self._last_piece_moved = (new_row, new_col)
-                return (True, self._board, False, 0, info)
-
-            else:
-                self._player = self.opposite_player
-                self._last_piece_moved = None
-                return (True, self._board, False, 0, info)"""
 
     @property
     def board(self) -> np.ndarray:
@@ -406,8 +383,3 @@ class CheckersBoard:
             np.ndarray: current board state
         """
         return self._board
-
-
-class CheckersGame:
-    def __init__(self):
-        raise NotImplementedError
