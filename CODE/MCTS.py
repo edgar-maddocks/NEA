@@ -16,7 +16,6 @@ class Node:
         action_taken: Tuple = None,
         terminal: bool = None,
         reward: int = None,
-        colour: str = "white",
         args: Dict = None,
     ):
         self._game = deepcopy(game)
@@ -32,7 +31,7 @@ class Node:
 
         self.is_terminal = terminal
         self.reward = reward
-        self.colour = colour
+        self.colour = self._game.player
 
     def _init_available_moves(self):
         valid_moves = self._game.get_all_valid_moves()
@@ -67,9 +66,7 @@ class Node:
         child_game = deepcopy(self._game)
         valid, child_state, done, reward, info = child_game.step(action)
 
-        child = Node(
-            child_game, self, action, done, reward, child_game.player, self._args
-        )
+        child = Node(child_game, self, action, done, reward, self._args)
         self.children.append(child)
 
         return child
@@ -120,7 +117,7 @@ class MCTS:
         Args:
             root (CheckersBoard): Board to search from
         """
-        self._root = Node(root, terminal=False, colour=root.player, args=self._args)
+        self._root = Node(root, terminal=False, args=self._args)
         for search in tqdm(range(self._args["n_searches"])):
             node = self._root
             if node.n_branches_available == 0:
@@ -131,7 +128,7 @@ class MCTS:
             while node.is_terminal is False and node.n_branches_available > 0:
                 node = node.d_expand()
 
-            node.backprop(node.reward)
+            node.backprop(node.reward * -1)
 
     def get_action_probs(self) -> np.ndarray:
         """Gets array of probabilities of action based on tree
@@ -181,37 +178,50 @@ class MCTS:
 if __name__ == "__main__":
     import time
 
-    mcts = MCTS(args={"eec": 1, "n_searches": 500000})
-    game = CheckersBoard()
+    n_games = 5
+    games = np.empty(n_games, dtype=str)
+    for gamen in range(n_games):
 
-    done = False
-    while not done:
-        game.render()
+        mcts1 = MCTS(args={"eec": 1.41, "n_searches": 100000})
+        mcts2 = MCTS(args={"eec": 1.41, "n_searches": 5})
 
-        if game._player == "white":
-            valid = False
-            while not valid:
-                print("Building Tree...")
-                mcts.build_tree(game)
-                action = mcts.get_action()
-                print(
-                    f"WHITE'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
-                )
-                valid, next_obs, done, reward, info = game.step(action, verbose=1)
-                if not valid:
-                    print("TRIED TO MAKE INVALID MOVE")
+        game = CheckersBoard()
 
-                time.sleep(1)
-        else:
-            valid = False
-            while not valid:
-                mcts.build_tree(game)
-                action = mcts.get_action()
-                print(
-                    f"BLACK'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
-                )
-                valid, next_obs, done, reward, info = game.step(action, verbose=1)
-                if not valid:
-                    print("TRIED TO MAKE INVALID MOVE")
+        done = False
+        while not done:
+            game.render()
+            print("GAME: ", gamen)
 
-                time.sleep(1)
+            if game._player == "white":
+                valid = False
+                while not valid:
+                    print("Building Tree...")
+                    mcts1.build_tree(game)
+                    action = mcts1.get_action()
+                    print(
+                        f"WHITE'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                    )
+                    valid, next_obs, done, reward, info = game.step(action, verbose=1)
+                    if not valid:
+                        print("TRIED TO MAKE INVALID MOVE")
+                    if done and reward == 1:
+                        games[gamen] = "white"
+                    elif done and reward == 0:
+                        games[gamen] = "draw"
+            else:
+                valid = False
+                while not valid:
+                    mcts2.build_tree(game)
+                    action = mcts2.get_action()
+                    print(
+                        f"BLACK'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                    )
+                    valid, next_obs, done, reward, info = game.step(action, verbose=1)
+                    if not valid:
+                        print("TRIED TO MAKE INVALID MOVE")
+                    if done and reward == 1:
+                        games[gamen] = "black"
+                    elif done and reward == 0:
+                        games[gamen] = "draw"
+
+    print(games)
