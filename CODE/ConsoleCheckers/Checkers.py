@@ -15,10 +15,35 @@ class CheckersBoard:
         self._board = self._init_board()
         self._last_piece_moved = None
         self._player = WHITE
+        self._moves_no_capture = 0
 
     @property
     def opposite_player(self) -> str:
         return WHITE if self._player == BLACK else BLACK
+
+    @property
+    def player(self):
+        return self._player
+
+    @property
+    def n_black_pieces(self):
+        n = 0
+        for row in range(SIZE):
+            for col in range(SIZE):
+                if self._board[row, col] in BLACKS:
+                    n += 1
+
+        return n
+
+    @property
+    def n_white_pieces(self):
+        n = 0
+        for row in range(SIZE):
+            for col in range(SIZE):
+                if self._board[row, col] in WHITES:
+                    n += 1
+
+        return n
 
     def _init_board(self) -> np.ndarray:
         """Method which returns intial state of the board
@@ -209,6 +234,8 @@ class CheckersBoard:
                 str.join(" | ", [NUM_TO_STR[int(x)] for x in self._board[row, :]]),
             )
         print("----------------------------------")
+        print("TURN: ", self._player)
+        print("MOVES NO CAPTURE: ", self._moves_no_capture)
 
     @staticmethod
     def convert_rowcol_to_user(row: int, col: int) -> Tuple[int, str]:
@@ -255,7 +282,11 @@ class CheckersBoard:
             bool: if game is over
         """
         valid_moves = self.get_all_valid_moves(self.opposite_player)
-        if len(valid_moves["takes"]) == 0 and len(valid_moves["simple"]) == 0:
+        if self._player == BLACK and self.n_white_pieces == 0:
+            return True
+        elif self._player == WHITE and self.n_black_pieces == 0:
+            return True
+        elif len(valid_moves["takes"]) == 0 and len(valid_moves["simple"]) == 0:
             return True
         else:
             return False
@@ -285,6 +316,12 @@ class CheckersBoard:
             all_valid_moves["takes"],
         )
 
+        valid_selections = (
+            [x[0] for x in valid_takes]
+            if len(valid_takes) > 0
+            else [x[0] for x in valid_simples]
+        )
+
         valid_moves = (
             [x[1] for x in valid_takes]
             if len(valid_takes) > 0
@@ -293,41 +330,40 @@ class CheckersBoard:
 
         info["fail_cause"] = "invalid move"
 
-        if ((row, col) != piece_to_move) or ((new_row, new_col) not in valid_moves):
+        if ((row, col) not in valid_selections) or (
+            (new_row, new_col) not in valid_moves
+        ):
             return (False, self._board, False, 0, info)
-
         self._board[new_row, new_col] = self._board[row, col]
         self.clear(row, col)
+        self._moves_no_capture += 1
 
         if abs(new_row - row) == 2:
             one_row = 0.5 * (new_row - row)
             one_col = 0.5 * (new_col - col)
             self.clear(int(row + one_row), int(col + one_col))
-            self._player = self.opposite_player
+            self._moves_no_capture = 0
+
         if self._board[new_row, new_col] in WHITES and new_row == 0:
             self.crown(new_row, new_col)
         if self._board[new_row, new_col] in BLACKS and new_row == 7:
             self.crown(new_row, new_col)
 
-        self._player = self.opposite_player
-
-        if self.check_winner():
+        if self._moves_no_capture == 40:
+            if verbose:
+                print("DRAW - 40 MOVES WITH NO CAPTURE")
+            return (True, self._board, True, 0, info)
+        elif self.n_black_pieces == 1 and self.n_white_pieces == 1:
+            if verbose:
+                print("DRAW")
+            return (True, self._board, True, 0, info)
+        elif self.check_winner():
             if verbose:
                 print(f"{self._player} HAS WON")
             return (True, self._board, True, 1, info)
-        else:
-            return (True, self._board, False, 0, info)
 
-            """if abs(new_row - row) == 2:
-                one_row = 0.5 * (new_row - row)
-                one_col = 0.5 * (new_col - col)
-                self.clear(int(row + one_row), int(col + one_col))
-                self._last_piece_moved = (new_row, new_col)
-                return (True, self._board, False, 0, info)
-            else:
-                self._player = self.opposite_player
-                self._last_piece_moved = None
-                return (True, self._board, False, 0, info)"""
+        self._player = self.opposite_player
+        return (True, self._board, False, 0, info)
 
         """elif self._last_piece_moved is not None:
             all_valid_moves = self._get_valid_take_moves(*self._last_piece_moved)
