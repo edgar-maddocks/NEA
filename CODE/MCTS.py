@@ -1,8 +1,11 @@
+import concurrent.futures
 from ConsoleCheckers import CheckersBoard
 from consts import *
 
 import numpy as np
 from tqdm import tqdm
+import concurrent
+
 from typing import Dict, List, Tuple, Iterator
 
 from copy import deepcopy
@@ -19,6 +22,8 @@ class Node:
         args: Dict = None,
     ):
         self._game = deepcopy(game)
+        self.colour = self._game.player
+
         self._state = self._game.board
         self._parent = parent
         self.children: List[Node] = []
@@ -31,7 +36,6 @@ class Node:
 
         self.is_terminal = terminal
         self.reward = reward
-        self.colour = self._game.player
 
     def _init_available_moves(self):
         valid_moves = self._game.get_all_valid_moves()
@@ -175,15 +179,14 @@ class MCTS:
         return self.convert_probs_to_action(p)
 
 
-if __name__ == "__main__":
-    import time
-
-    n_games = 5
-    games = np.empty(n_games, dtype=str)
+def no_threading_sim_games(
+    n_games: int, n_searches1: int, eec1: float, n_searches2: int, eec2: float
+):
+    games = {"white": 0, "black": 0, "draw": 0}
     for gamen in range(n_games):
 
-        mcts1 = MCTS(args={"eec": 1.41, "n_searches": 100000})
-        mcts2 = MCTS(args={"eec": 1.41, "n_searches": 5})
+        mcts1 = MCTS(args={"eec": eec1, "n_searches": n_searches1})
+        mcts2 = MCTS(args={"eec": eec2, "n_searches": n_searches2})
 
         game = CheckersBoard()
 
@@ -205,9 +208,9 @@ if __name__ == "__main__":
                     if not valid:
                         print("TRIED TO MAKE INVALID MOVE")
                     if done and reward == 1:
-                        games[gamen] = "white"
+                        games["white"] += 1
                     elif done and reward == 0:
-                        games[gamen] = "draw"
+                        games["draw"] += 1
             else:
                 valid = False
                 while not valid:
@@ -220,8 +223,15 @@ if __name__ == "__main__":
                     if not valid:
                         print("TRIED TO MAKE INVALID MOVE")
                     if done and reward == 1:
-                        games[gamen] = "black"
+                        games["black"] += 1
                     elif done and reward == 0:
-                        games[gamen] = "draw"
+                        games["draw"] += 1
 
-    print(games)
+    return games
+
+
+if __name__ == "__main__":
+    games = no_threading_sim_games(20, 10000, 1.41, 5, 1.41)
+    print("WHITE WON: ", games["white"])
+    print("BLACK WON: ", games["black"])
+    print(games["draw"], " DRAWS")
