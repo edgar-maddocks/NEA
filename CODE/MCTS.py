@@ -128,7 +128,7 @@ class MCTS:
                 node = node.select_child()
 
             if node is None:
-                break
+                continue
             while node.is_terminal is False and node.n_branches_available > 0:
                 node = node.d_expand()
 
@@ -246,7 +246,7 @@ def no_threading_sim_games(
 
 
 if __name__ == "__main__":
-    """games = no_threading_sim_games(10, 100000, 1.41, 1000, 1.41, 1)
+    """games = no_threading_sim_games(5, 1000000, 1.41, 1000, 1.41, 1)
 
     res = {"mcts1": 0, "mcts2": 0, "draw": 0}
 
@@ -254,7 +254,59 @@ if __name__ == "__main__":
         res[x] += 1
 
     print(res)"""
-    from concurrent.futures import ThreadPoolExecutor
+
+    mcts1 = MCTS(args={"eec": 1.41, "n_searches": 1000})
+    games = []
+    game = CheckersBoard()
+
+    done = False
+
+    mcts1_player = np.random.choice(["white", "black"], 1)
+    while not done:
+        game.render()
+
+        if game._player == mcts1_player:
+            valid = False
+            while not valid:
+                mcts1.build_tree(game)
+                action = mcts1.get_action()
+                print(
+                    f"WHITE'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                )
+                valid, next_obs, done, reward, info = game.step(action, verbose=1)
+                if done and reward == 1:
+                    games.append("mcts1")
+                elif done and reward == 0:
+                    games.append("draw")
+                elif done and reward == -1:
+                    games.append("mcts2")
+        else:
+            valid = False
+
+            while not valid:
+                moves = game.get_all_valid_moves()
+                valids = moves["takes"] if len(moves["takes"]) > 0 else moves["simple"]
+                for tup in valids:
+                    print(
+                        f"{CheckersBoard.convert_rowcol_to_user(*tup[0])}, {CheckersBoard.convert_rowcol_to_user(*tup[1])}"
+                    )
+                move = str.split(input("Enter Move: "), ",")
+                action = (
+                    CheckersBoard.convert_rowcol_to_game(int(move[0]), move[1]),
+                    CheckersBoard.convert_rowcol_to_game(int(move[2]), move[3]),
+                )
+                print(
+                    f"BLACK'S MOVE:\n FROM:{CheckersBoard.convert_rowcol_to_user(*action[0])}\n TO:{CheckersBoard.convert_rowcol_to_user(*action[1])}"
+                )
+                valid, next_obs, done, reward, info = game.step(action, verbose=1)
+                if done and reward == 1:
+                    games.append("mcts2")
+                elif done and reward == 0:
+                    games.append("draw")
+                elif done and reward == -1:
+                    games.append("mcts1")
+
+    """from concurrent.futures import ThreadPoolExecutor
 
     max_workers = 25
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -270,4 +322,4 @@ if __name__ == "__main__":
         for out in x:
             res[out] += 1
 
-    print(res)
+    print(res)"""

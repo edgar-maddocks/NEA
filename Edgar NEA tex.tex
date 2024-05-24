@@ -52,6 +52,14 @@
         \textbf{Edgar Maddocks}
         \\
         \textbf{TO DO\\ 1.1,  1.2.3, 1.3.1 (UML), 1.3.2, 1.3.3, 1.4}
+
+        \begin{tabular}{|p{8cm}|p{8cm}|} \hline
+            Graph Traversal & Autodiff backprop\\ \hline
+            Tree Traversal & MCTS Search\\ \hline
+            Advanced Matrix Operations & Dot Procuts, Convolution, Autdiff backprop, Neural Nets\\ \hline
+            Recursion & MCTS Tree BackProp, Autodiff backprop\\ \hline
+            User-defined algos & RL solution\\ \hline
+        \end{tabular}
             
         \vfill
             
@@ -444,10 +452,8 @@
     \subsubsection{Identification of Objects}
 
     \subsubsubsection{Draughts}
-    For draughts, we will need only one object, an environment. The environment will be used for training the reinforcement learning agent as well
-    as allowing a user to play against the agent. It will require methods that reset the environment, execute an action in the environment, as
-    well as functions to compute the available moves and check for a win. An example of UML for this environment can be seen below. Including functions
-    for the user as well as the agent to interact with the environment.
+    For draughts, we will need two classes, a checkers board/environment and a checkers game. The environment will be used for training the agent and It will require methods that
+    execute an action in the environment, as well as functions to compute the available moves and check for a win. An example of UML for this environment can be seen below. 
 
     \begin{figure}[h]
         \centering
@@ -455,25 +461,28 @@
         \caption{UML for draughts/checkers game}
     \end{figure}
 
+    The checkers game varies only slightly and will inherit from the checkers board. It will however add some functionality such as a GUI and the ability to choose different
+    models to play against (such as just the MCTS or the full agent). Additionally, it should allow two people to play each other as checkers usually would.
+
     \subsubsubsection{Automatic Differentiation Engine}
-    \begin{wrapfigure}[22]{l}{0.5\linewidth}
+    \begin{wrapfigure}[20]{l}{0.45\linewidth}
         \centering
-        \includegraphics[scale=0.4]{AutoDiffUML.drawio.png}
-        \caption{Pre-design UML for Auto Diff}
+        \includegraphics[scale=0.38]{AutoDiffUML.drawio.png}
+        \caption{Example pre-design UML for Auto Diff}
     \end{wrapfigure}
     The automatic differentiation engine will be based off of the 'Tensor' object. This object will be similar to a matrix but have some additonal
-    attrributes, such as its gradient and if it's gradient requires computing. If the tensor does require a gradient then it will also store its parent
-    tensors, which will be used for the backward DFS of our computational graph.
+    attributes, such as its gradient and if its gradient requires computing. If the tensor does require a gradient then it will also store its parent
+    tensors, which will be used for the backward DFS of the computational graph.
 
     Additionally, all operators for the tensor object will have to be overridden to allow for gradient computation if the tensor requires it.
     The tensor class will also have functions to zero out the gradient as well as begin the backwards traversal through the computational graph. Below is an example
     of some possible UML for the automatic differentiation library.
 
-    Tensor operations will all have a backward and forward method - inherited from the function class. These functions will represent operations such as those seen in the
-    diagram (Addition, Division, Log, etc.). The operations such as sum and mean, that operate on the tensor itself will also be represented by a function object.
+    Tensor operations will all have a backward and forward method - inherited from the function class. These functions will represent elementary functions (Addition, Division, Log, etc.). 
+    The operations such as sum and mean, that operate on the tensor itself will also be represented by a function object.
 
     \subsubsubsection{Neural Network Library}
-    Their will be a large collection of objects inside of the neural network library, all basesd around the functionality provided by the tensor object.
+    Their will be a large collection of objects inside of the neural network library, all based around the functionality provided by the tensor object.
     Firstly, the parameter class will allow for tensors of a given shape to be created and act as parameters for a network - this will also help with backpropogation.
     The module object will have a parameters property which yields every parameter related to that module. This module class is what all layers will inherit from. It will also
     have methods to zero out the gradients of all parameters.
@@ -492,7 +501,7 @@
 
     \subsubsubsection{Reinforcement Learning Solution}
     The final solution will also require a large set of classes including: a model class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
-    a search of available actions to train the network towards - composed of a node class to make up this tree and an agent class which abstracts the processes of the previous classes. \\
+    a search of available actions to train the network towards - composed of a node class to make up this tree - and finally an agent class which abstracts the processes of the previous classes. \\
 
     \subsubsection{Identification of algorithms}
     \subsubsubsection{Automatic Differentiation Engine}
