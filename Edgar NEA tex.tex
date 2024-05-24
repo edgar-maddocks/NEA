@@ -499,6 +499,14 @@
     The class will have a list of layers which make up the model, a loss function to use and an optimizer. It will abstract away training of the model via a train function, with default
     values of some hyperparameters.
 
+    Below is an inheritance diagram for the Neural Network Library, without any attributes and methods.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.5]{NNUML(simple) (2).png}
+        \caption{Inheritance diagram for Neural Network Library}
+    \end{figure}
+
     \subsubsubsection{Reinforcement Learning Solution}
     The final solution will also require a large set of classes including: a model class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
     a search of available actions to train the network towards - composed of a node class to make up this tree - and finally an agent class which abstracts the processes of the previous classes. \\
