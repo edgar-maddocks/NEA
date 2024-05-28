@@ -26,7 +26,7 @@
 \graphicspath{ {./images/} }
 
 \setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{4}
+\setcounter{tocdepth}{3}
 
 \makeatletter
 \newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
@@ -51,15 +51,7 @@
             
         \textbf{Edgar Maddocks}
         \\
-        \textbf{TO DO\\ 1.1,  1.2.3, 1.3.1 (UML), 1.3.2, 1.3.3, 1.4}
-
-        \begin{tabular}{|p{8cm}|p{8cm}|} \hline
-            Graph Traversal & Autodiff backprop\\ \hline
-            Tree Traversal & MCTS Search\\ \hline
-            Advanced Matrix Operations & Dot Procuts, Convolution, Autdiff backprop, Neural Nets\\ \hline
-            Recursion & MCTS Tree BackProp, Autodiff backprop\\ \hline
-            User-defined algos & RL solution\\ \hline
-        \end{tabular}
+        \textbf{TO DO\\1.2.3, 1.3.1 (UML), 1.3.2, 1.3.3, 1.4}
             
         \vfill
             
@@ -111,7 +103,7 @@
     of the board, the piece becomes a 'King', and another piece should be placed on top of said piece to indicate so.
     Unless a piece is crowned and a 'King' it may only move and take pieces diagonally forwards. Kings may move and take both forwards and backwards.
     
-    \begin{wrapfigure}[15]{r}{0.4\linewidth}
+    \begin{wrapfigure}[12]{r}{0.5\linewidth}
         \centering
         \includegraphics[scale=1.15]{piece being taken.png}
         \caption{Example of a piece being taken in draughts}
@@ -126,26 +118,32 @@
     and then another capture with another piece in the same move.
     
     However, if more than one piece can capture, the player has free choice over which piece to move. Likewise, if one piece can capture in multiple
-    directions then the player has the choice in which direction to move. \textbf{Note:} it is not compulsory for the player to move in the direction, or with the piece,
+    directions then the player has the choice in which direction to move. 
+    
+    
+    \textbf{Note:} it is not compulsory for the player to move in the direction, or with the piece,
     that will lead to the greatest number of captures in that move.
     
-    \begin{wrapfigure}[10]{l}{0.4\linewidth}
+    \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.8]{double hop.png}
+        \includegraphics[scale=0.6]{double hop.png}
         \caption{Visualization of multiple captures in one move}
-    \end{wrapfigure}
+    \end{figure}
 
     A move may only end when the position has no more captures available or an uncrowned piece reaches the opposing edge
     of the board and becomes a King. 
 
-    If no capturing moves can be made, then any piece may be moved diagonally onto a vacant square.
-
     The game ends when all of a players piece's have been captured, or a player has no available moves.
 
+    \pagebreak
     \subsubsubsection{Neural Networks}
     \subsubsubsubsection{What is a neural Network}
     A neural network is a machine learning model which aims to mimic the processes of the human brain.
     Each network contains inputs and outputs, as well as one or more layers of hidden nodes - which act as artificial neurons.
+
+    Neural networks are a supervised learning model, meaning that they learn from labeled data (which has the objective correct answer in the data).
+    They are sometimes referred to as artificial neural networks (ANNs) or simulated neural networks (SNNs).\\
+
     In a fully connected network, each node is connected once to each node in the next layer - an example of how one node connects
     to the next layer can be seen below.
     \begin{figure}[h]
@@ -153,9 +151,6 @@
         \includegraphics[scale=0.2]{ConnectedNode.png}
         \caption{Example of a fully connected node and layer}
     \end{figure}
-
-    Neural networks are a supervised learning model, meaning that they learn from labeled data (which has the objective correct answer in the data).
-    They are sometimes referred to as artificial neural networks (ANNs) or simulated neural networks (SNNs).\\
 
     Neural networks can be modelled as a collection linear regression units.
 
@@ -273,6 +268,7 @@
         MSE(Y, \hat{Y}) = \frac{1}{n}((Y - \hat{Y})^T \cdot (Y - \hat{Y}))
     \end{displaymath}
 
+    \pagebreak
     If we plot the MSE curve of different weights and biases - of a single regression unit, it looks as follows.
     \begin{figure}[h]
         \centering
@@ -283,7 +279,6 @@
     Here the weight has been labelled $a$, but the bias has remained as $b$. As we can see, there is a clear local minimum of this error function,
     and the values that obtain this minimum, is what gradient descent aims to achieve. 
     
-    \pagebreak
     \begin{wrapfigure}[14]{l}{0.4\linewidth}
         \centering
         \includegraphics[scale=0.2]{image.png}
@@ -358,6 +353,7 @@
         \frac{\partial v_1}{\partial x_1} &= cos(x_1)
     \end{align}
 
+    \pagebreak
     And finally, evaluating equation $(8)$, as well as substituting our intermediate variables in terms of $x_1$, to obtain $\frac{\partial y}{\partial x_1}$:
     \begin{align}
         \frac{\partial y}{\partial x_1} &= \frac{cos(x_1)}{v_3 \cdot v_2}\\
@@ -393,7 +389,7 @@
     maps without uncertainty i.e. the agent will take the same action given the same state. Stochastic policies on the other hand output a distribution which maps a state to the probability of 
     each action.
 
-    \begin{wrapfigure}[12]{l}{0.4\linewidth}
+    \begin{wrapfigure}[11]{l}{0.4\linewidth}
         \centering
         \includegraphics[scale=0.4]{qlearning.PNG}
         \caption{Representation of Q-learning process}
@@ -441,11 +437,7 @@
     the linear algebra using an XLA backend. This backend optimizes operations for CPU's GPU's and TPU's as well as using a just-in-time compiler
     to decrease runtimes.
 
-    \subsubsection{Interview of end-user(s)}
-
-    \subsubsubsection{Interview of 3rd-party}
-
-    \subsubsubsection{Interview with end-user}
+    \subsubsection{Interview with third party}
     
     \subsection{Modelling of the problem}
 
@@ -465,7 +457,7 @@
     models to play against (such as just the MCTS or the full agent). Additionally, it should allow two people to play each other as checkers usually would.
 
     \subsubsubsection{Automatic Differentiation Engine}
-    \begin{wrapfigure}[20]{l}{0.45\linewidth}
+    \begin{wrapfigure}[26]{l}{0.525\linewidth}
         \centering
         \includegraphics[scale=0.38]{AutoDiffUML.drawio.png}
         \caption{Example pre-design UML for Auto Diff}
@@ -503,12 +495,18 @@
 
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.5]{NNUML(simple) (2).png}
+        \includegraphics[scale=0.5]{NNUML (simple).drawio.png}
         \caption{Inheritance diagram for Neural Network Library}
     \end{figure}
 
     \subsubsubsection{Reinforcement Learning Solution}
-    The final solution will also require a large set of classes including: a model class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
+
+    \begin{wrapfigure}{r}{0.5 \linewidth}
+        \centering
+        \includegraphics[scale=0.5]{RLSolutionUML.png}
+        \caption{Reinforcement Learning Solution UML}
+    \end{wrapfigure}
+    The final solution will also require a large set of classes including: a network class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
     a search of available actions to train the network towards - composed of a node class to make up this tree - and finally an agent class which abstracts the processes of the previous classes. \\
 
     \subsubsection{Identification of algorithms}
@@ -555,7 +553,76 @@
     \end{algorithm}
 
     \subsubsubsection{Neural Network Library}
+    The two main algorithms in the neural network library are the forward pass and the backward pass through a sequential model. Pseudocode for these can also been seen below.
+    \begin{algorithm}
+        \caption{Forward pass of Sequential model}\label{alg:cap}
+        \begin{algorithmic}
+        \Function{predict}{Sequential self, Tensor input}
+        \State output $\gets$ input
+        
+        \For{layer in self.modules}
+        \State output $\gets$ layer.forward(output) \Comment{layer's forward function depends on layer type (Dense/Conv)}
+        \EndFor
+        return output
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    \begin{algorithm}
+        \caption{Training process of Sequential model}\label{alg:cap}
+        \begin{algorithmic}
+        \Function{fit}{Sequential self, Tensor x, Tensor y, int epochs = 100, int verbose = 1}
+        \State startTime $\gets$ time.now()
+        
+        \For{epoch in epochs}
+        \State prediction $\gets$ self.predict(x) \Comment{Get predictions}
+        \State loss $\gets$ self.loss(y, prediction) \Comment{Calculate how far predictions are from true}
+        \State self.optimizer.zero_grads() \Comment{Reset gradients of parameters}
+        \State loss.backwards() \Comment{Calculate gradients of loss}
+        \State self.optimizer.step() \Comment{Update parameter values using calculated gradients}
+
+        \If{verbose is 1}
+        \State print(epoch, loss)
+        \EndIf
+
+        \EndFor
+        print(time.now() - startTime) \Comment{Total time elapsed}
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+    
+    
     \subsubsubsection{Reinforcement Learning Solution}
+    For the reinforcement learning, one of the most important algorithms is the MCTS which is similar to a DFS. This takes all
+    the available moves in the checkers environment, selects one at random and continues this process until a terminal state is reached.
+    After the terminal state is reached, reward values (+1 for win, -1 for loss, 0 for draw) are backrpopagated through the nodes.
+    If all possible available moves have been exhausted at a given node then it selects one using an upper confidence bound (UCB) formula.
+    The general algorithm can be seen in pseudocode below (as well as the nodes expand function).
+
+    \begin{algorithm}
+        \caption{MCTS Tree Building Function}\label{alg:cap}
+        \begin{algorithmic}
+        \Function{buildTree}{}
+        \State startTime $\gets$ time.now()
+        
+        \For{epoch in epochs}
+        \State prediction $\gets$ self.predict(x) \Comment{Get predictions}
+        \State loss $\gets$ self.loss(y, prediction) \Comment{Calculate how far predictions are from true}
+        \State self.optimizer.zero_grads() \Comment{Reset gradients of parameters}
+        \State loss.backwards() \Comment{Calculate gradients of loss}
+        \State self.optimizer.step() \Comment{Update parameter values using calculated gradients}
+
+        \If{verbose is 1}
+        \State print(epoch, loss)
+        \EndIf
+
+        \EndFor
+        print(time.now() - startTime) \Comment{Total time elapsed}
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+    
+
 
     \subsubsection{Mathematical Formula}
     \subsubsubsection{Automatic Differentiation}
@@ -567,6 +634,13 @@
     
 
     \subsection{Set of objectives}
+    \subsubsection{Draughts Game}
+
+    \subsubsection{Autodifferentiation engine}
+
+    \subsubsection{Neural Network Library} 
+
+    \subsubsection{Reinforcement Learning Solution}
     
     \section{Research Log}
 
