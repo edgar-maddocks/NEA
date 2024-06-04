@@ -31,6 +31,7 @@
 \makeatletter
 \newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
 \newcommand\subsubsubsubsection{\@startsection{subparagraph}{5}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
+\newcommand\subsubsubsubsubsection{\@startsection{subparagraph}{6}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize}}
 \makeatother
 
 
@@ -51,7 +52,7 @@
             
         \textbf{Edgar Maddocks}
         \\
-        \textbf{TO DO\\1.2.3, 1.3.1 (UML), 1.3.2, 1.3.3, 1.4}
+        \textbf{TO DO\\1.2.3, 1.3.2.3, 1.3.3 -> Math (Conv1D), 1.4}
             
         \vfill
             
@@ -156,24 +157,24 @@
 
     \subsubsubsubsection{Linear Regression Unit}
     A single linear regression unit output has the formula:
-    \begin{displaymath}
+    \begin{align}
         \hat{y} = \sum_{i=0}^{n} w_ix_i + b
-    \end{displaymath}
+    \end{align}
 
     Where $\hat{y}$ is the predicted output, $n$ is the number of inputs, $x_i$ is the $i$th input, $w_i$ is the weight of $x_i$, and $b$ is a bias.
     If, for example, there were 3 inputs the full equation for $\hat{y}$ would be:
-    \begin{displaymath}
+    \begin{align}
         \hat{y} = w_1x_1 + w_2x_2 + w_3x_3 + b
-    \end{displaymath}
+    \end{align}
 
     \subsubsubsubsection{Vectorization of processes}
     This calculation can be vectorized to improve efficiency and would be notated:
-    \begin{displaymath}
+    \begin{align}
         \hat{y} = XW + b
-    \end{displaymath}
+    \end{align}
 
     Where we let
-    \begin{displaymath}
+    \begin{align}
         W = \begin{bmatrix}
             w_1\\
             w_2\\
@@ -187,7 +188,7 @@
             \hdots&
             x_n
         \end{bmatrix}
-    \end{displaymath}
+    \end{align}
 
     $X$ here is a row vector as this is the most common format for data as an input to a network (e.g being read from a csv).
     This parallelized computation is much faster, and can be parallelized using the GPU to further improve speed and efficiency.
@@ -198,23 +199,23 @@
     composed of multiple vectors of weights, instead of just one.
 
     Here we let
-    \begin{displaymath}
+    \begin{align}
         W = \begin{bmatrix}
             w_{11} & w_{21} & \dots & w_{j1}\\
             w_{12} & w_{22} & \dots & w_{j2}\\
             \vdots & \vdots & \ddots & \vdots\\
             w_{1n} & w_{2n} & \dots & w_{jn}
         \end{bmatrix}
-    \end{displaymath}
+    \end{align}
 
     Where $j$ is now the number of nodes in the layer. If we rewrite our forward pass equation to use this weight matrix,
     with each node as its own regression unit:
-    \begin{displaymath}
+    \begin{align}
         Y = XW + B
-    \end{displaymath}
+    \end{align}
 
     Where:
-    \begin{displaymath}
+    \begin{align}
         Y = \begin{bmatrix}
             \hat{y_1}&
             \hat{y_2}&
@@ -224,7 +225,7 @@
         B = \begin{bmatrix}
            b_1 & b_2 & \dots & b_j
         \end{bmatrix}
-    \end{displaymath}
+    \end{align}
 
     With $W$ and $X$ having the same definition as most recently defined.
 
@@ -257,16 +258,16 @@
 
     Gradient descent works to minimize the error of a model by iteratively locating a minimum in the error function.
     For example, a common cost (error) function is mean squarred error.
-    \begin{displaymath}
+    \begin{align}
         MSE(Y, \hat{Y}) = \frac{1}{n}\sum_{i=0}^{n}\left(y_i - \hat{y}_i\right)^2
-    \end{displaymath}
+    \end{align}
 
     This function effectively calculates the absolute distance between the predicted value of one data point ($\hat{y_i}$) and the true value at that same point ($y_i$),
     for every value in the dataset (of size $n$) and takes the mean of these distances.
     Again, this calculation can be vectorized using the equation below.
-    \begin{displaymath}
+    \begin{align}
         MSE(Y, \hat{Y}) = \frac{1}{n}((Y - \hat{Y})^T \cdot (Y - \hat{Y}))
-    \end{displaymath}
+    \end{align}
 
     \pagebreak
     If we plot the MSE curve of different weights and biases - of a single regression unit, it looks as follows.
@@ -315,9 +316,9 @@
     makes use of the chain rule to compute the derivative with respect to the inputs, as will be shown later on.
 
     Firstly, I will walkthrough an example of the process of automatic differentiation.\\
-    \noindent Say we have a function: \begin{displaymath}
+    \noindent Say we have a function: \begin{align}
         f(x) = ln\left(\frac{sin(x_1)}{cos(x_2)}\right)
-    \end{displaymath}
+    \end{align}
 
     This function has two arbitrary inputs (perhaps in the case of a neural network these could be our parameters or outputs for example). At first, this is quite a complex
     function to differentiate but we can simplify it using intermediate variables. For example \begin{align}
@@ -591,7 +592,7 @@
         \end{algorithmic}
     \end{algorithm}
     
-    
+    \pagebreak
     \subsubsubsection{Reinforcement Learning Solution}
     For the reinforcement learning, one of the most important algorithms is the MCTS which is similar to a DFS. This takes all
     the available moves in the checkers environment, selects one at random and continues this process until a terminal state is reached.
@@ -622,11 +623,79 @@
         \end{algorithmic}
     \end{algorithm}
     
-
+    The second algorithm is the process of the final agent model selecting its actions. (SEE 3rd LINK IN 2.5)
 
     \subsubsection{Mathematical Formula}
-    \subsubsubsection{Automatic Differentiation}
+    \subsubsubsection{Automatic Differentiation Engine}
+    In this section I will simply define the formulas for the forward and backward pass of many different functions that will be implemented
+    into the autograd library.
+    \subsubsubsubsection{Addition}
+    \subsubsubsubsubsection{Forward}
+    \begin{align}a + b = y\end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align}\frac{\partial y}{\partial a} = 1 + 0\end{align}\\
+    \begin{align}\frac{\partial y}{\partial b} = 0 + 1\end{align}
 
+    \subsubsubsubsection{Negation}
+    \subsubsubsubsubsection{Forward}
+    \begin{align}y = -a\end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align}\frac{\partial y}{\partial a} = -1\end{align}
+
+    \subsubsubsubsection{Multiplication}
+    \subsubsubsubsubsection{Forward}
+    \begin{align}a \cdot b = y\end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align}\frac{\partial y}{\partial a} = b\end{align}
+    \begin{align}\frac{\partial y}{\partial b} = a\end{align}
+
+    \subsubsubsubsection{Division}
+    \subsubsubsubsubsection{Forward}
+    \begin{align}\frac{a}{b} = y\end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align}\frac{\partial y}{\partial a} = \frac{1}{b}\end{align}
+    \begin{align}\frac{\partial y}{\partial b} = -\frac{a}{b^2}\end{align}
+
+    \subsubsubsubsection{Matrix multiplication}
+    \subsubsubsubsubsection{Forward}
+    \begin{align}
+        AB = Y &&\text{where A and B are matrices}
+    \end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align}\frac{\partial Y}{\partial A} = B^T\end{align}
+    \begin{align}\frac{\partial Y}{\partial B} = A^T\end{align}
+
+    \subsubsubsubsection{Powers}
+    \subsubsubsubsubsection{Forward}
+    \begin{align}a^b = y\end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align}\frac{\partial y}{\partial a} = ba^{b-1}\end{align}
+    \begin{align}\frac{\partial y}{\partial b} = a^bln(a)\end{align}
+
+    \subsubsubsubsection{Mean}
+    \subsubsubsubsubsection{Forward}
+    \begin{align}\frac{\sum_{0}^{n}A}{n} = y, && A = (x_0, x_1, x_2, \hdots x_n) \end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align} \frac{\partial y}{\partial X} = B, && B = ({\frac{1}{n}}_0, {\frac{1}{n}}_1, {\frac{1}{n}}_2 \hdots, {\frac{1}{n}}_n) \end{align}
+    
+    \subsubsubsubsection{Natural Log}
+    \subsubsubsubsubsection{Forward}
+    \begin{align} ln(a) = y \end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align} \frac{\partial y}{\partial a} = \frac{1}{a} \end{align}
+
+    \subsubsubsubsection{Exponentation}
+    \subsubsubsubsubsection{Forward}
+    \begin{align} e^a = y \end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align} \frac{\partial y}{\partial a} = e^a \end{align}
+
+    \subsubsubsubsection{1D Convolution}
+    \textbf{NEEDS RESEARCHING}
+    \subsubsubsubsubsection{Forward}
+    \subsubsubsubsubsection{Backward}
+
+    
     \subsubsubsection{Neural Network Library}
 
     \subsubsubsection{Reinforcement Learning Solution}
