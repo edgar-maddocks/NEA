@@ -52,7 +52,7 @@
             
         \textbf{Edgar Maddocks}
         \\
-        \textbf{TO DO\\1.2.3, 1.3.2.3, 1.3.3 -> Math (Conv1D), 1.4}
+        \textbf{TO DO\\1.2.3, 1.3.2.3, 1.3.3.1(Conv1D), 1.3.3.2+3, 1.4.3+4}
             
         \vfill
             
@@ -704,9 +704,38 @@
 
     \subsection{Set of objectives}
     \subsubsection{Draughts Game}
-
+    \begin{enumerate}
+        \item An easy-to-use and understand interface for the draughts game
+        \begin{enumerate}
+            \item A small text tutorial on the rules of draughts
+            \item A visual representation of the draughts board
+            \item A list displaying all legal available moves in the given position
+            \item Informative error messages if an incorrect move is attempted
+            \item Error handling to prompt the user to enter another move if an invalid move is attempted
+        \end{enumerate}
+        \item Implementation of various decision-making agents for users to play against
+        \begin{enumerate}
+            \item Option for the user to choose which agent to play against (MCTS, Full Agent)
+            \item Ability to adjust hyperparameters of the agents from the draughts game interface
+            \item Information printed to the user as to the agent's decision-making progress
+        \end{enumerate}
+    \end{enumerate}
     \subsubsection{Autodifferentiation engine}
-
+    \begin{enumerate}
+        \item A unit-tested autograd engine capable of calculating derivatives on a variety of functions inlcuding:
+        \begin{enumerate}
+            \item Addition
+            \item Negation
+            \item Multiplication
+            \item Division
+            \item Matrix Multiplication
+            \item Powers
+            \item Mean of a 1D tensor
+            \item Natural Log
+            \item Exponentiation
+            \item (1D Conv) - YET TO BE DECIDED
+        \end{enumerate}
+    \end{enumerate}
     \subsubsection{Neural Network Library} 
 
     \subsubsection{Reinforcement Learning Solution}
