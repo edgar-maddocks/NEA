@@ -604,21 +604,21 @@
         \caption{MCTS Tree Building Function}\label{alg:cap}
         \begin{algorithmic}
         \Function{buildTree}{}
-        \State startTime $\gets$ time.now()
         
-        \For{epoch in epochs}
-        \State prediction $\gets$ self.predict(x) \Comment{Get predictions}
-        \State loss $\gets$ self.loss(y, prediction) \Comment{Calculate how far predictions are from true}
-        \State self.optimizer.zero_grads() \Comment{Reset gradients of parameters}
-        \State loss.backwards() \Comment{Calculate gradients of loss}
-        \State self.optimizer.step() \Comment{Update parameter values using calculated gradients}
+        \State self.root $\gets$ currentBoardState
 
-        \If{verbose is 1}
-        \State print(epoch, loss)
+        \For{seach in numberOfSearches}
+        \State node $\gets$ self.root \Comment{Return to start of tree for each search}
+        \If{node.brancesAvailableToExpand == 0}
+        \State node $\gets$ node.select_child()
         \EndIf
+        
+        \While{node.terminal is False AND node.branchesAvailableToExpand $>$ 0}
+        \State node $\gets$ node.expand() \Comment{Depth-first expansion until terminal state}
+        \EndWhile
 
+        \State node.backpropogate(node.reward)
         \EndFor
-        print(time.now() - startTime) \Comment{Total time elapsed}
         \EndFunction
         \end{algorithmic}
     \end{algorithm}

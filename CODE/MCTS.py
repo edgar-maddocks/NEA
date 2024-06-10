@@ -132,7 +132,7 @@ class MCTS:
             while node.is_terminal is False and node.n_branches_available > 0:
                 node = node.d_expand()
 
-            node.backprop(node.reward * -1)
+            node.backprop(node.reward)
 
     def get_action_probs(self) -> np.ndarray:
         """Gets array of probabilities of action based on tree
