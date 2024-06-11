@@ -52,7 +52,7 @@
             
         \textbf{Edgar Maddocks}
         \\
-        \textbf{TO DO\\1.2.3, 1.3.2.3, 1.3.3.1(Conv1D), 1.3.3.2+3, 1.4.3+4}
+        \textbf{TO DO\\1.2.3, 1.3.3.1(Conv1D), 1.3.3.2+3, 1.4.3+4}
             
         \vfill
             
@@ -502,9 +502,9 @@
 
     \subsubsubsection{Reinforcement Learning Solution}
 
-    \begin{wrapfigure}{r}{0.5 \linewidth}
+    \begin{wrapfigure}{r}{0.4 \linewidth}
         \centering
-        \includegraphics[scale=0.5]{RLSolutionUML.png}
+        \includegraphics[scale=0.35]{RLSolutionUML.png}
         \caption{Reinforcement Learning Solution UML}
     \end{wrapfigure}
     The final solution will also require a large set of classes including: a network class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
@@ -603,7 +603,7 @@
     \begin{algorithm}
         \caption{MCTS Tree Building Function}\label{alg:cap}
         \begin{algorithmic}
-        \Function{buildTree}{}
+        \Function{buildTree}{currentBoardState}
         
         \State self.root $\gets$ currentBoardState
 
@@ -623,8 +623,57 @@
         \end{algorithmic}
     \end{algorithm}
     
-    The second algorithm is the process of the final agent model selecting its actions. (SEE 3rd LINK IN 2.5)
+    The second algorithm is the process of the final agent model selecting its actions.
 
+    \begin{algorithm}
+        \caption{Agent Policy Selection}\label{alg:cap}
+        \begin{algorithmic}
+        \Function{trainAgent}{self, initialNeuralNetwork, hyperParameters}
+        
+        \State nnPrevious $\gets$ initialNeuralNetwork
+        \For{mctsEpoch in hyperParameters.mctsEpochs}
+            \State trainingExamplesList $\gets$ SPV(hyperParameters.maxExamples)
+            \For{episode in hyperParameters.episodes}
+                \State examples $\gets$ List()
+                \State game $\gets$ new CheckersGame
+                \While{!game.terminated}
+                    \State mcts $\gets$ MCTS(nnPrevious, game.currentBoardState, hyperParameters).buildTree()
+                    \If{game.step $<$ hyperParameters.Threshold}
+                        \State action $\sim$ mctsPolicy.getPolicy() \Comment{Select random move}
+                    \Else
+                        \State action $\gets$ mcts.getAction()
+                    \EndIf
+                    \State examples.append((game.currentBoardState, mcts.getPolicy(), initialNeuralNetwork.value))
+                \EndWhile
+                \State trainingExamplesList.append(examples)
+                \For{networkEpoch in hyperParameters.networkEpochs}
+                    \State batch $\gets$ trainingExamplesList.getBatch(hyperParameters.batchSize)
+                    \State nnNew $\gets$ nnPrevious.train(batch, hyperParameters)
+                \EndFor
+                \State numberNNNewWins = 0
+                \For{compareGame in hyperParameters.compareGames}
+                    \State game $\gets$ new CheckersGame
+                    \While{!game.terminated}
+                        \If{game.player == player1}
+                            \State action $\gets$ MCTS(nnPrev, game.currentBoardState, hyperParameters).getAction()
+                        \ElsIf{game.player == player2}
+                            \State action $\gets$ MCTS(nnNew, game.currentBoardState, hyperParameters)
+                        \EndIf
+                    \EndWhile
+                \EndFor
+                \State nnNewWinPct = numberNNNewWins/hyperParameters.compareGames
+                \If{nnNewWinPct > hyperParameters.replaceThresholdPct}
+                    \State nnPrev $\gets$ nnNew
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \Return nnPrev
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    
+    \pagebreak
     \subsubsection{Mathematical Formula}
     \subsubsubsection{Automatic Differentiation Engine}
     In this section I will simply define the formulas for the forward and backward pass of many different functions that will be implemented
