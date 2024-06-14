@@ -52,7 +52,7 @@
             
         \textbf{Edgar Maddocks}
         \\
-        \textbf{TO DO\\1.2.3, 1.3.3.1(Conv1D), 1.3.3.2+3, 1.4.3+4}
+        \textbf{TO DO\\1.3.3.1(Conv1D), 1.3.3.2+3, 1.4.3+4}
             
         \vfill
             
@@ -457,7 +457,15 @@
             \hline 
             Objective & Reasoning \\
             \hline
-            Leverage GPU cores for linear algebra computations & Allows parallelization and will increase computation speeds        \end{tabular}
+            Leverage GPU cores for linear algebra computations & Allows parallelization and will increase computation speeds  \\      
+            \hline
+            Wrap the console checkers board in a GUI & Much easier for users to use and understand \\
+            \hline
+            Use a container such as Docker to produce logs & Much better retracing and debugging capabilities \\
+            \hline
+            Evaluate the model against Chinook and human players & Allows for rating of model \\
+            \hline
+        \end{tabular}
     \end{center}
 
     
@@ -471,7 +479,7 @@
 
     \begin{figure}[h]
         \centering
-        \includegraphics[scale = 0.35]{DraughtsUML.png}
+        \includegraphics[scale = 0.72]{DraughtsUML.png}
         \caption{UML for draughts/checkers game}
     \end{figure}
 
@@ -479,9 +487,9 @@
     models to play against (such as just the MCTS or the full agent). Additionally, it should allow two people to play each other as checkers usually would.
 
     \subsubsubsection{Automatic Differentiation Engine}
-    \begin{wrapfigure}[26]{l}{0.525\linewidth}
+    \begin{wrapfigure}{l}{0.5\linewidth}
         \centering
-        \includegraphics[scale=0.38]{AutoDiffUML.drawio.png}
+        \includegraphics[scale=0.4]{AutoDiffUML.drawio.png}
         \caption{Example pre-design UML for Auto Diff}
     \end{wrapfigure}
     The automatic differentiation engine will be based off of the 'Tensor' object. This object will be similar to a matrix but have some additonal
@@ -517,20 +525,25 @@
 
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.5]{NNUML (simple).drawio.png}
+        \includegraphics[scale=0.4]{NNUML (simple).drawio.png}
         \caption{Inheritance diagram for Neural Network Library}
     \end{figure}
 
-    \subsubsubsection{Reinforcement Learning Solution}
 
-    \begin{wrapfigure}{r}{0.4 \linewidth}
-        \centering
-        \includegraphics[scale=0.35]{RLSolutionUML.png}
-        \caption{Reinforcement Learning Solution UML}
-    \end{wrapfigure}
+    \pagebreak
+    \subsubsubsection{Reinforcement Learning Solution}
     The final solution will also require a large set of classes including: a network class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
     a search of available actions to train the network towards - composed of a node class to make up this tree - and finally an agent class which abstracts the processes of the previous classes. \\
 
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.45]{RLSolutionUML.png}
+        \caption{Reinforcement Learning Solution UML}
+    \end{figure}
+    
+
+
+    \pagebreak
     \subsubsection{Identification of algorithms}
     \subsubsubsection{Automatic Differentiation Engine}
     The auto-diff engine will use a recursive DFS of the computational graph to calculate gradients. It uses a DFS as any of the computational graphs that built are directed acyclical graphs,
@@ -644,7 +657,7 @@
         \end{algorithmic}
     \end{algorithm}
     
-    The second algorithm is the process of the final agent model selecting its actions.
+    The second algorithm is the process of the final agent model selecting its actions and can be seen on the next page.
 
     \begin{algorithm}
         \caption{Agent Policy Selection}\label{alg:cap}
@@ -683,7 +696,7 @@
                     \EndWhile
                 \EndFor
                 \State nnNewWinPct = numberNNNewWins/hyperParameters.compareGames
-                \If{nnNewWinPct > hyperParameters.replaceThresholdPct}
+                \If{nnNewWinPct $>$ hyperParameters.replaceThresholdPct}
                     \State nnPrev $\gets$ nnNew
                 \EndIf
             \EndFor
