@@ -6,16 +6,21 @@ from tqdm import tqdm
 from typing import Dict, List, Tuple
 
 from copy import deepcopy
+import multiprocessing
+
 
 class Node:
-    """Creates a new Node object
-    """
-    def __init__(self, game: "CheckersGame", 
-                 parent: "Node" = None, 
-                 terminal: bool = False, 
-                 action_taken: ACTION = None, 
-                 reward: float = None, 
-                 **kwargs) -> None:
+    """Creates a new Node object"""
+
+    def __init__(
+        self,
+        game: "CheckersGame",
+        parent: "Node" = None,
+        terminal: bool = False,
+        action_taken: ACTION = None,
+        reward: float = None,
+        **kwargs
+    ) -> None:
         self._game = deepcopy(game)
         self.colour = self._game.player
 
@@ -47,7 +52,7 @@ class Node:
     @property
     def action_taken(self):
         return self._action_taken
-    
+
     def select_child(self) -> "Node":
         """Selects the best child from a fully expanded node using UCB
 
@@ -62,7 +67,7 @@ class Node:
             if ucb > best_ucb:
                 best_child = child
                 best_ucb = ucb
-            
+
         return best_child
 
     def _calculate_ucb(self, child: "Node") -> float:
@@ -84,12 +89,19 @@ class Node:
         random_move_idx = np.random.choice(self.n_available_moves_left)
         random_action = self._available_moves_left[random_move_idx]
 
-        self._available_moves_left.remove(random_action)#
+        self._available_moves_left.remove(random_action)  #
 
         child_game = deepcopy(self._game)
         valid_move, next_state, terminal, reward = child_game.step(random_action)
 
-        child = Node(child_game, parent=self, terminal=terminal, action_taken=random_action, reward=reward, eec=self.kwargs)
+        child = Node(
+            child_game,
+            parent=self,
+            terminal=terminal,
+            action_taken=random_action,
+            reward=reward,
+            eec=self.kwargs,
+        )
         self.children.append(child)
 
         return child
@@ -107,7 +119,8 @@ class Node:
             if self._parent.colour != self.colour:
                 reward *= 1
             self._parent.backprop(reward)
-        
+
+
 class MCTS:
     def __init__(self, **kwargs) -> None:
         """Creates a new MCTS object
@@ -118,9 +131,11 @@ class MCTS:
         """
 
         self.kwargs = kwargs
+        if self.kwargs["n_jobs"] is None:
+            self.kwargs["n_jobs"] = 1
 
         self._root: Node = None
-    
+
     def build_tree(self, root: "CheckersGame") -> None:
         """Builds a new tree
 
@@ -128,15 +143,29 @@ class MCTS:
             root (CheckersGame): New state to root the tree from
         """
         self._root = Node(root, eec=self.kwargs["eec"])
-        for search in tqdm(range(self.kwargs["n_searches"])):
+        for search in tqdm(
+            range(int(self.kwargs["n_searches"] / self.kwargs["n_jobs"]))
+        ):
             node = self._root
             if node.n_available_moves_left == 0:
                 node = node.select_child()
 
             while not node.is_leaf and node.n_available_moves_left > 0:
                 node = node.expand()
-                
+
             node.backprop(node.reward)
+
+    def mp_build_tree(self, root: "CheckersGame") -> None:
+        """Builds a new tree while utilizing multiple threads
+
+        Args:
+            root (CheckersGame): New state to root the tree from
+        """
+        ps: List[multiprocessing.Process] = []
+        for job in range(self.kwargs["n_jobs"]):
+            p = multiprocessing.Process(target=self.build_tree, args=(root,))
+            ps.append(p)
+            p.start()
 
     def get_action_probs(self) -> np.ndarray:
         """Gets array of probabilities of action based on tree
@@ -156,7 +185,7 @@ class MCTS:
 
         p /= np.sum(p)
         return p
-    
+
     def convert_probs_to_action(self, p: np.ndarray) -> ACTION:
         """Converts array of probabilites into action for game
 
@@ -186,5 +215,3 @@ class MCTS:
         """
         p = self.get_action_probs()
         return self.convert_probs_to_action(p)
-
-            
