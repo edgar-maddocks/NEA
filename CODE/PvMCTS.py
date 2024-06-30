@@ -6,7 +6,7 @@ game = CheckersGame()
 user_colour = input("Please enter what colour you would like to play (w/b): ")
 user_colour = "white" if user_colour == "w" else "black"
 num_searches = int(input("Enter the num searches for the MCTS: "))
-mcts = MCTS(eec=1.41, n_searches=num_searches)
+mcts = MCTS(eec=1.41, n_searches=num_searches, n_jobs=3)
 last_action = None
 while not done:
     game.render()
@@ -38,7 +38,7 @@ while not done:
         last_action = action
     else:
         print("Building Tree...")
-        mcts.build_tree(game)
+        mcts.mp_build_tree(game)
         action = mcts.get_action()
         print(
             f"WHITE'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}\n TO:{CheckersGame.convert_rowcol_to_user(*action[1])}"
