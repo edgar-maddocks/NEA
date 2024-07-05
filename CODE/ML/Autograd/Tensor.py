@@ -5,15 +5,22 @@ from consts import *
 
 # TENSOR
 
+
 def to_tensor(d):
     if isinstance(d, Tensor):
         return d
-    else: 
+    else:
         return Tensor(d)
 
+
 class Tensor:
-    
-    def __init__(self, data: Tensorable, requires_grad: bool = False, operation: "TensorFunction" = None) -> None:
+
+    def __init__(
+        self,
+        data: Tensorable,
+        requires_grad: bool = False,
+        operation: "TensorFunction" = None,
+    ) -> None:
         self._data: np.ndarray = np.array(data)
         self.shape = self._data.shape
         self.operation: TensorFunction = operation
@@ -32,16 +39,16 @@ class Tensor:
 
     def __repr__(self) -> str:
         return f"Tensor({self._data}, shape = {self.shape})"
-    
+
     @staticmethod
     def zeros(shape: Tuple[int], requires_grad: bool = False) -> "Tensor":
         return Tensor(np.zeros(shape), requires_grad=requires_grad)
-    
+
     @staticmethod
     def ones(shape: Tuple[int], requries_grad: bool = False) -> "Tensor":
         return Tensor(np.ones(shape), requires_grad=requries_grad)
-    
-    def backward(self, dy = None, y = None) -> None:
+
+    def backward(self, dy=None, y=None) -> None:
         """Reverse searches the computational graph, computing and updating parent gradients as it goes
 
         Args:
@@ -53,7 +60,7 @@ class Tensor:
         """
         if self.requires_grad is False:
             return "This tensor has requires_grad set to False"
-        
+
         if dy is None:
             dy = np.ones_like(self._data)
 
@@ -65,32 +72,25 @@ class Tensor:
         if self.operation:
             if not self.children:
                 self.operation.backward(self.grad, self)
-                
 
     def zero_grad(self) -> None:
         self.grad = np.zeros_like(self._data)
 
-    def __add__(self, other: Tensorable) -> "Tensor":
+    def __add__(self, other: Tensorable):
         add_op = Add()
         return add_op.forward(self, to_tensor(other))
-    
+
     def __radd__(self, other: Tensorable):
         add_op = Add()
         return add_op.forward(self, to_tensor(other))
-    
+
     def __iadd__(self, other: Tensorable):
         add_op = Add()
         return add_op.forward(self, to_tensor(other))
-    
-    
-
-
-
-
-
 
 
 ## TENSOR FUNCTIONS
+
 
 class TensorFunction:
     def forward():
@@ -98,6 +98,7 @@ class TensorFunction:
 
     def backward():
         raise NotImplementedError
+
 
 class Add(TensorFunction):
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
@@ -111,7 +112,7 @@ class Add(TensorFunction):
             Tensor: tensor where data is addition of parents
         """
         new_data = a._data + b._data
-        
+
         requires_grad = a.requires_grad or b.requires_grad
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
@@ -123,7 +124,7 @@ class Add(TensorFunction):
         self._cache: Tuple[Tensor] = (a, b)
 
         return y
-    
+
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes gradients for tensors stored in cache
 
@@ -131,10 +132,10 @@ class Add(TensorFunction):
             dy (np.ndarray): gradient from previous backward (to be used with chain rule)
             y (Tensor): output tensor
         """
-        a, b = self._cache # get tensors used to create output
+        a, b = self._cache  # get tensors used to create output
 
         if a.requires_grad:
-            da = dy # 1 * whatever the previous gradient is due to chain rule
+            da = dy  # 1 * whatever the previous gradient is due to chain rule
 
             # now need to sum out broadcasted dimensions from numpy
             # make da the same shape as a
@@ -142,7 +143,7 @@ class Add(TensorFunction):
             n_dims_a = len(a.shape)
             for dim in range(n_dims_da - n_dims_a):
                 da = da.sum(axis=0)
-            
+
             for n, dim in enumerate(a.shape):
                 if dim == 1:
                     da = da.sum(axis=n, keepdims=True)
@@ -161,4 +162,28 @@ class Add(TensorFunction):
                 if dim == 1:
                     db = db.sum(axis=n, keepdims=True)
             b.backward(db, y)
-    
+
+
+class Neg:
+    def forward(self, a: Tensor) -> Tensor:
+        """Computes the negation of a tensor
+
+        Args:
+            a (Tensor): tensor to be negated
+
+        Returns:
+            Tensor: negated tensor
+        """
+        new_data = -a._data
+
+        y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
+
+        self.parents = (a,)
+        a.children.append(y)
+
+        self._cache: Tuple[Tensor] = (a,)
+
+        return y
+
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        pass
