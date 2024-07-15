@@ -1,0 +1,79 @@
+Certainly! When dealing with matrix multiplication (also known as the dot product), the broadcasting rules can become more complex because the dimensions involved in the multiplication can vary, especially when higher-dimensional tensors or batches of matrices are involved.
+
+The snippet provided deals with adjusting the gradient shape for a tensor `b` when backpropagating through a matrix multiplication operation. It specifically addresses the need to sum over extra dimensions that may have been introduced during the operation.
+
+```python
+# Get difference between "b" size and upstream "db" size, to broadcast grad into "b":
+in_dim = len(b.shape)
+grad_dim = len(db.shape)
+
+for _ in range(grad_dim - in_dim):
+    db = db.sum(axis=0)
+```
+
+### Explanation
+
+1. **Identify Dimension Difference:**
+   ```python
+   in_dim = len(b.shape)
+   grad_dim = len(db.shape)
+   ```
+   - `b.shape` gives the shape of tensor `b`.
+   - `db.shape` gives the shape of the gradient tensor `db` that comes from downstream (e.g., the gradient of the loss with respect to the output of the matrix multiplication).
+   - `in_dim` is the number of dimensions in the original tensor `b`.
+   - `grad_dim` is the number of dimensions in the gradient tensor `db`.
+
+2. **Determine Difference in Dimensions:**
+   - `grad_dim - in_dim` calculates how many extra dimensions `db` has compared to `b`. These extra dimensions are typically due to broadcasting or batching in higher dimensions.
+
+3. **Sum Over Extra Dimensions:**
+   ```python
+   for _ in range(grad_dim - in_dim):
+       db = db.sum(axis=0)
+   ```
+   - This loop iterates over the extra dimensions.
+   - For each extra dimension, it sums over axis `0` (the first dimension). This effectively reduces the number of dimensions of `db` by one in each iteration of the loop.
+
+### Why It's Done This Way
+
+In matrix multiplication involving broadcasting, the gradient propagated downstream might have extra dimensions due to the shape of the operations. For example, consider the shapes involved in a batched matrix multiplication:
+
+1. **Example Matrix Shapes:**
+   ```python
+   A: (batch_size, M, K)
+   B: (batch_size, K, N)
+   Resulting Shape: (batch_size, M, N)
+   ```
+
+2. **Backpropagation Gradient Shape:**
+   - Suppose we have the gradient tensor `dL_dC` (gradient of the loss with respect to the output `C`):
+     ```python
+     dL_dC.shape == (batch_size, M, N)
+     ```
+   - When computing the gradient with respect to `B` through the transposed form of matrix multiplication, we might get a shape that has extra dimensions compared to `B`.
+
+3. **Adjusting Gradient:**
+   - The forward operation might have resulted in broadcasting. Hence, to correctly backpropagate, we need to sum out those extra dimensions.
+   - By summing over axis `0` the appropriate number of times (difference in dimensions), we remove the extra dimensions introduced by broadcasting or other factors, ensuring the gradient tensor `db` matches the shape of `b`.
+
+### Practical Answer with an Example
+
+Here's a more concrete example:
+
+1. **Input and Gradient Shapes:**
+   - Suppose `b` has shape `(3, 1, 4)`.
+   - The upstream gradient `db` has shape `(5, 3, 1, 4)` after broadcasting.
+
+2. **Adjustment Process:**
+   ```python
+   in_dim = len(b.shape)  # 3
+   grad_dim = len(db.shape)  # 4
+
+   for _ in range(grad_dim - in_dim):  # 4 - 3 = 1 time
+       db = db.sum(axis=0)
+   ```
+
+3. **Result:**
+   - After the loop, `db` would have shape `(3, 1, 4)`, matching `b`'s shape.
+
+By summing over the correct axes, this process ensures that the gradient tensor correctly reflects the dimensions of the original input tensor, which is crucial for correctly updating the parameters during gradient descent.

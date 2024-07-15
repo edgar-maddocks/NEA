@@ -1,19 +1,35 @@
-import numpy as np
-
+from __future__ import annotations
 from typing import List, Tuple
-from consts import *
+from abc import ABC
+
+import numpy as np
+from consts import Tensorable
+
 
 # TENSOR
 
 
-def to_tensor(d):
+def to_tensor(d: Tensorable) -> Tensor:
+    """Converts data to tensor if not already
+
+    Args:
+        d (Tensorable): data
+
+    Returns:
+        Tensor: Tensor of data
+    """
     if isinstance(d, Tensor):
         return d
-    else:
+    elif isinstance(d, Tensorable):
         return Tensor(d)
 
 
 class Tensor:
+    """
+    ====================
+        Tensor class
+    ====================
+    """
 
     def __init__(
         self,
@@ -35,21 +51,47 @@ class Tensor:
 
     @property
     def data(self) -> np.ndarray:
+        """Returns protected data attribute
+
+        Returns:
+            np.ndarray: data in tensor
+        """
         return self._data
 
     def __repr__(self) -> str:
         return f"Tensor({self._data}, shape = {self.shape})"
 
     @staticmethod
-    def zeros(shape: Tuple[int], requires_grad: bool = False) -> "Tensor":
+    def zeros(shape: Tuple[int], requires_grad: bool = False) -> Tensor:
+        """Returns a tensor of 1s
+
+        Args:
+            shape (Tuple[int]): desired shape of tensor
+            requires_grad (bool, optional): if the tensors requires_grad property should be false. 
+            Defaults to False.
+
+        Returns:
+            Tensor: tensor of 1s
+        """
         return Tensor(np.zeros(shape), requires_grad=requires_grad)
 
     @staticmethod
-    def ones(shape: Tuple[int], requries_grad: bool = False) -> "Tensor":
+    def ones(shape: Tuple[int], requries_grad: bool = False) -> Tensor:
+        """Returns a tensor of 0s
+
+        Args:
+            shape (Tuple[int]): desired shape of tensor
+            requires_grad (bool, optional): if the tensors requires_grad property should be false. 
+            Defaults to False.
+
+        Returns:
+            Tensor: tensor of 0s
+        """
         return Tensor(np.ones(shape), requires_grad=requries_grad)
 
     def backward(self, dy=None, y=None) -> None:
-        """Reverse searches the computational graph, computing and updating parent gradients as it goes
+        """Reverse searches the computational graph, computing and updating parent 
+        gradients as it goes
 
         Args:
             dy (Tensor, optional): _description_. Defaults to None.
@@ -74,33 +116,73 @@ class Tensor:
                 self.operation.backward(self.grad, self)
 
     def zero_grad(self) -> None:
+        """
+        Zeros out the gradient of the tensor
+        """
         self.grad = np.zeros_like(self._data)
 
-    def __add__(self, other: Tensorable):
+    def __add__(self, other: Tensorable) -> Tensor:
         add_op = Add()
         return add_op.forward(self, to_tensor(other))
 
-    def __radd__(self, other: Tensorable):
+    def __radd__(self, other: Tensorable) -> Tensor:
         add_op = Add()
         return add_op.forward(self, to_tensor(other))
 
-    def __iadd__(self, other: Tensorable):
+    def __iadd__(self, other: Tensorable) -> Tensor:
         add_op = Add()
         return add_op.forward(self, to_tensor(other))
 
+    def __neg__(self):
+        neg_op = Neg()
+        return neg_op.forward(self)
 
+    def __sub__(self, other: Tensorable) -> Tensor:
+        return self + -other
+
+    def __rsub__ (self, other: Tensorable) -> Tensor:
+        return other + -self
+
+    def __isub__(self, other: Tensorable) -> Tensor:
+        return self + -other
+
+    def __mul__(self, other: Tensorable) -> Tensor:
+        mul_op = Mul()
+        return mul_op.forward(self, to_tensor(other))
+
+    def __rmul__(self, other: Tensorable) -> Tensor:
+        mul_op = Mul()
+        return mul_op.forward(to_tensor(other), self)
+
+    def __imul__(self, other: Tensorable) -> Tensor:
+        mul_op = Mul()
+        return mul_op.forward(self, to_tensor(other))
+
+
+
+# ==================
 ## TENSOR FUNCTIONS
+# ==================
 
 
-class TensorFunction:
-    def forward():
-        raise NotImplementedError
+class TensorFunction(ABC):
+    """Abstract class of a TensorFunction, represents the operation performed
 
-    def backward():
-        raise NotImplementedError
+    Args:
+        ABC (_type_): Abstrract Class
+    """
+
+    parents: Tuple[Tensor] = None
+    _cache: Tuple[Tensor] = None
 
 
 class Add(TensorFunction):
+    """Operation to add two tensors
+
+    Args:
+        TensorFunction (_type_): _description_
+    """
+
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         """Computes the addition of two tensors
 
@@ -111,7 +193,7 @@ class Add(TensorFunction):
         Returns:
             Tensor: tensor where data is addition of parents
         """
-        new_data = a._data + b._data
+        new_data = a.data + b.data
 
         requires_grad = a.requires_grad or b.requires_grad
 
@@ -139,14 +221,55 @@ class Add(TensorFunction):
 
             # now need to sum out broadcasted dimensions from numpy
             # make da the same shape as a
+
+            # To remove broadcast dims first remove added dimensions
+            # **EXAMPLE**
+
+            # 1. Input and Gradient Shapes:
+            # - Suppose a has shape (3, 1, 4).
+            # - The gradient da has shape (5, 3, 1, 4) after operation and broadcasting.
+
+            # 2. Adjustment Process:
+            # in_dim = len(b.shape)  # 3
+            # grad_dim = len(db.shape)  # 4
+
+            # for _ in range(grad_dim - in_dim):  # 4 - 3 = 1 time
+            #     db = db.sum(axis=0)
+
+            # 3. Result:
+            # - After the loop, da would have shape (3, 1, 4), matching b's shape.
+
             n_dims_da = len(dy.shape)
             n_dims_a = len(a.shape)
             for dim in range(n_dims_da - n_dims_a):
                 da = da.sum(axis=0)
 
-            for n, dim in enumerate(a.shape):
+            # Then remove singular dimensions (indicates broadcasting)
+            # **Summing over singular dimensions:**
+
+            # a.shape = (3, 1, 4)
+
+            # for i, dim in enumerate(a.shape):
+            #     if dim == 1:
+            #         da = da.sum(axis=i, keepdims=True)
+
+            # - This loop only executes for i=1 because dim == 1 at that position.
+            # - da = da.sum(axis=1, keepdims=True)
+
+            # Since da is already of shape (3, 1, 4), summing along `axis=1` with `keepdims=True`
+            # doesn't change its shape but ensures the gradient correctly aligns with the
+            # broadcast structure.
+
+            # This is because the keepdims is a boolean parameter.
+            # If this is set to True, the axes which are reduced are
+            # left in the result as dimensions with size one.
+
+            # Therefore if da had shape (3, 2, 4) for example -
+            # this loop would reduce it to (3, 1 ,4)
+
+            for i, dim in enumerate(a.shape):
                 if dim == 1:
-                    da = da.sum(axis=n, keepdims=True)
+                    da = da.sum(axis=i, keepdims=True)
             a.backward(da, y)
 
         if b.requires_grad:
@@ -154,17 +277,23 @@ class Add(TensorFunction):
 
             # Rescale gradient to have the same shape as "b":
             n_dims_db = len(da.shape)
-            n_dums_b = len(b.shape)
-            for dim in range(n_dims_db - n_dums_b):
+            n_dims_b = len(b.shape)
+            for dim in range(n_dims_db - n_dims_b):
                 db = db.sum(axis=0)
 
-            for n, dim in enumerate(b.shape):
+            for i, dim in enumerate(b.shape):
                 if dim == 1:
-                    db = db.sum(axis=n, keepdims=True)
+                    db = db.sum(axis=i, keepdims=True)
             b.backward(db, y)
 
 
-class Neg:
+class Neg(TensorFunction):
+    """Operation to negate a tensor
+
+    Args:
+        TensorFunction (_type_): _description_
+    """
+
     def forward(self, a: Tensor) -> Tensor:
         """Computes the negation of a tensor
 
@@ -174,7 +303,7 @@ class Neg:
         Returns:
             Tensor: negated tensor
         """
-        new_data = -a._data
+        new_data = -a.data
 
         y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
 
@@ -186,4 +315,82 @@ class Neg:
         return y
 
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
-        pass
+        """Computes the gradient for tensors in cache
+
+        Args:
+            dy (np.ndarray): gradient from upstream
+            y (Tensor): output tensor
+        """
+        (a,) = self._cache
+
+        if a.requires_grad:
+            da = -dy
+            a.backward(da, y)
+
+
+class Mul(TensorFunction):
+    """Operation to multiply two tensors
+
+    Args:
+        TensorFunction (_type_): _description_
+    """
+
+    def forward(self, a: Tensor, b: Tensor) -> Tensor:
+        """Computes the multiplication of two tensors
+
+        Args:
+            a (Tensor):
+            b (Tensor):
+
+        Returns:
+            Tensor: product of a and b
+        """
+        new_data = a.data * b.data
+
+        requires_grad = a.requires_grad or b.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self._cache = (a, b)
+
+        self.parents = (a, b)
+        a.children.append(y)
+        b.children.append(y)
+
+        return y
+
+    def backward(self, dy: Tensor, y: Tensor) -> None:
+        """Computes gradients for cached tensors
+
+        Args:
+            dy (Tensor): output grad
+            y (Tensor):
+        """
+
+        a, b = self._cache
+
+        if a.requires_grad:
+            da = dy * b.data
+
+            n_dims_da = len(dy.shape)
+            n_dims_a = len(a.shape)
+            for dim in range(n_dims_da - n_dims_a):
+                da = da.sum(axis=0)
+            for i, dim in enumerate(a.shape):
+                if dim == 1:
+                    da = da.sum(axis=i, keepdims=True)
+
+            a.backward(da, y)
+
+        if b.requries_grad:
+            db = dy * a.data
+
+            n_dims_db = len(dy.shape)
+            n_dims_b = len(b.shape)
+            for dim in range(n_dims_db - n_dims_b):
+                db = db.sum(axis=0)
+            for i, dim in enumerate(b.shape):
+                if dim == 1:
+                    db = db.sum(axis=i, keepdims=True)
+
+            b.backward(db, y)
