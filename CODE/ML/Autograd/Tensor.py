@@ -121,6 +121,10 @@ class Tensor:
         """
         self.grad = np.zeros_like(self._data)
 
+    def __eq__(self, other: Tensorable):
+        if self.data == other:
+            return True
+
     def __add__(self, other: Tensorable) -> Tensor:
         add_op = Addition()
         return add_op.forward(self, to_tensor(other))
@@ -404,7 +408,7 @@ class Multiplication(TensorFunction):
 
             a.backward(da, y)
 
-        if b.requries_grad:
+        if b.requires_grad:
             db = dy * a.data
 
             n_dims_db = len(dy.shape)

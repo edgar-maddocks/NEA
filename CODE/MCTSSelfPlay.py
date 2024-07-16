@@ -4,11 +4,11 @@ from ConsoleCheckers.CheckersGame import CheckersGame
 import numpy as np
 
 def simGames(n_games: int = 10, 
-             n_searches_mcts1: int = 100000, 
-             n_searches_mcts2: int = 10000, 
-             eec_mcts1: float = 1.41, 
-             eec_mcts2: float = 1.41,
-             verbose: int = 0):
+            n_searches_mcts1: int = 100000, 
+            n_searches_mcts2: int = 10000, 
+            eec_mcts1: float = 1.41, 
+            eec_mcts2: float = 1.41,
+            verbose: int = 0):
             games = []
             for gamen in range(n_games):
                 mcts1 = MCTS(eec=eec_mcts1, n_searches= n_searches_mcts1)
@@ -24,7 +24,7 @@ def simGames(n_games: int = 10,
                         game.render()
                     print("GAME: ", gamen)
 
-                    if game._player == mcts1_player:
+                    if game.player == mcts1_player:
                         if verbose:
                             print("Building Tree...")
                         mcts1.build_tree(game)

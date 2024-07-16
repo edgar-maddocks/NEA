@@ -5,11 +5,13 @@ from Tensor import Tensor
 # ===================
 
 def test_addition_funcs():
-    """"""
+    """
+    .
+    """
     a = Tensor(1, requires_grad=True)
     b = Tensor(2, requires_grad=True)
 
-    a.zero_grad()
+    a.zero_grad() 
     y = a + b
     y.backward()
     assert a.grad == 1
@@ -29,6 +31,28 @@ def test_addition_funcs():
 # ======================
 
 def test_subtraction_funcs():
-    """"""
-    pass
+    """
+    .
+    """
+    a = Tensor(1, requires_grad=True)
+    b = Tensor(2, requires_grad=True)
 
+    y = b - a
+    assert y == 1
+
+    y.backward()
+    assert a.grad == -1
+
+    b -= 1
+    b.zero_grad()
+    b.backward()
+    assert b.grad == 1
+
+# =========================
+#    TEST MULTIPLICATION
+# =========================
+
+def test_multiplication_funcs():
+    """
+    .
+    """

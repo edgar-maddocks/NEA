@@ -2,7 +2,7 @@ from ConsoleCheckers.CheckersGame import CheckersGame
 
 game = CheckersGame()
 
-hello = False
+done = False
 while not done:
     game.render()
     valids = game.get_all_valid_moves()

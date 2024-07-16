@@ -1,13 +1,15 @@
+from typing import Tuple, Dict, List
+
 from ConsoleCheckers.consts import *
 from ConsoleCheckers.util_funcs import *
 
 import numpy as np
-import os
-
-from typing import Tuple, Dict, List
 
 
 class CheckersGame:
+    """
+    Holds basic logic and console rendering of a checkers game
+    """
     def __init__(self) -> None:
         """
         Creates a new CheckersGame object
