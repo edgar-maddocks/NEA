@@ -35,7 +35,7 @@ class Tensor:
         self,
         data: Tensorable,
         requires_grad: bool = False,
-        operation: "TensorFunction" = None,
+        operation: TensorFunction = None,
     ) -> None:
         self._data: np.ndarray = np.array(data)
         self.shape = self._data.shape
@@ -122,41 +122,62 @@ class Tensor:
         self.grad = np.zeros_like(self._data)
 
     def __add__(self, other: Tensorable) -> Tensor:
-        add_op = Add()
+        add_op = Addition()
         return add_op.forward(self, to_tensor(other))
 
     def __radd__(self, other: Tensorable) -> Tensor:
-        add_op = Add()
+        add_op = Addition()
         return add_op.forward(self, to_tensor(other))
 
     def __iadd__(self, other: Tensorable) -> Tensor:
-        add_op = Add()
+        add_op = Addition()
         return add_op.forward(self, to_tensor(other))
 
     def __neg__(self):
-        neg_op = Neg()
+        neg_op = Negation()
         return neg_op.forward(self)
 
     def __sub__(self, other: Tensorable) -> Tensor:
-        return self + -other
+        return self + -to_tensor(other)
 
     def __rsub__ (self, other: Tensorable) -> Tensor:
-        return other + -self
+        return to_tensor(other) + -self
 
     def __isub__(self, other: Tensorable) -> Tensor:
-        return self + -other
+        return self + -to_tensor(other)
 
     def __mul__(self, other: Tensorable) -> Tensor:
-        mul_op = Mul()
+        mul_op = Multiplication()
         return mul_op.forward(self, to_tensor(other))
 
     def __rmul__(self, other: Tensorable) -> Tensor:
-        mul_op = Mul()
+        mul_op = Multiplication()
         return mul_op.forward(to_tensor(other), self)
 
     def __imul__(self, other: Tensorable) -> Tensor:
-        mul_op = Mul()
+        mul_op = Multiplication()
         return mul_op.forward(self, to_tensor(other))
+
+    def __truediv__(self, other: Tensorable) -> Tensor:
+        div_op = Division()
+        return div_op.forward(self, to_tensor(other))
+
+    def __matmul__(self, other: Tensorable) -> Tensor:
+        matmul_op = MatrixMultiplication()
+        return matmul_op.forward(self, to_tensor(other))
+
+    def __pow__(self, other: Tensorable) -> Tensor:
+        pow_op = Power()
+        return pow_op.forward(self, to_tensor(other))
+
+    def mean(self) -> Tensor:
+        """Computes the mean of the tensor
+
+        Returns:
+            Tensor: _description_
+        """
+        mean_op = Mean()
+        return mean_op.forward(self)
 
 
 
@@ -176,7 +197,7 @@ class TensorFunction(ABC):
     _cache: Tuple[Tensor] = None
 
 
-class Add(TensorFunction):
+class Addition(TensorFunction):
     """Operation to add two tensors
 
     Args:
@@ -200,10 +221,11 @@ class Add(TensorFunction):
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
         self.parents = (a, b)
+
         a.children.append(y)
         b.children.append(y)
 
-        self._cache: Tuple[Tensor] = (a, b)
+        self._cache = (a, b)
 
         return y
 
@@ -287,7 +309,7 @@ class Add(TensorFunction):
             b.backward(db, y)
 
 
-class Neg(TensorFunction):
+class Negation(TensorFunction):
     """Operation to negate a tensor
 
     Args:
@@ -310,7 +332,7 @@ class Neg(TensorFunction):
         self.parents = (a,)
         a.children.append(y)
 
-        self._cache: Tuple[Tensor] = (a,)
+        self._cache = (a,)
 
         return y
 
@@ -321,14 +343,14 @@ class Neg(TensorFunction):
             dy (np.ndarray): gradient from upstream
             y (Tensor): output tensor
         """
-        (a,) = self._cache
+        a,  = self._cache
 
         if a.requires_grad:
             da = -dy
             a.backward(da, y)
 
 
-class Mul(TensorFunction):
+class Multiplication(TensorFunction):
     """Operation to multiply two tensors
 
     Args:
@@ -359,7 +381,7 @@ class Mul(TensorFunction):
 
         return y
 
-    def backward(self, dy: Tensor, y: Tensor) -> None:
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes gradients for cached tensors
 
         Args:
@@ -394,3 +416,243 @@ class Mul(TensorFunction):
                     db = db.sum(axis=i, keepdims=True)
 
             b.backward(db, y)
+
+
+class Division(TensorFunction):
+    """Division operation
+
+    Args:
+        TensorFunction (_type_): _description_
+    """
+    def forward(self, a: Tensor, b: Tensor) -> Tensor:
+        """Computes the division of two tensors
+
+        Args:
+            a (Tensor): 
+            b (Tensor): 
+
+        Returns:
+            Tensor: tensor a / tensor b
+        """
+        new_data = a.data / b.data
+
+        requires_grad = a.requires_grad or b.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, b)
+        a.children.append(y)
+        b.children.append(y)
+
+        self._cache = (a, b)
+
+        return y
+
+    def backward(self, dy: np.ndarray, y: Tensor):
+        """Computes gradients of cached tensors
+
+        Args:
+            dy (Tensor): 
+            y (Tensor): 
+        """
+        a, b = self._cache
+
+        if a.requires_grad:
+            da = dy * ( 1 / b.data )
+
+            n_dims_da = len(dy.shape)
+            n_dims_a = len(a.shape)
+            for dim in range(n_dims_da - n_dims_a):
+                da = da.sum(axis=0)
+            for i, dim in enumerate(a.shape):
+                if dim == 1:
+                    da = da.sum(axis=i, keepdims=True)
+
+            a.backward(da, y)
+
+        if b.requires_grad:
+            db = dy * - (a.data / (b.data ** 2))
+
+            n_dims_db = len(dy.shape)
+            n_dims_b = len(b.shape)
+            for dim in range(n_dims_db - n_dims_b):
+                db = db.sum(axis=0)
+            for i, dim in enumerate(b.shape):
+                if dim == 1:
+                    db = db.sum(axis=i, keepdims=True)
+
+            b.backward(db, y)
+
+
+class MatrixMultiplication(TensorFunction):
+    """Matrix Multiplication operation
+
+    Args:
+        TensorFunction (_type_): 
+    """
+    def forward(self, a: Tensor, b: Tensor) -> Tensor:
+        """Computes the matrix multiplication of two tensors
+
+        Args:
+            a (Tensor): 
+            b (Tensor): 
+
+        Returns:
+            Tensor: Tensor of a @ b
+        """
+        new_data = a.data @ b.data
+
+        requires_grad = a.requires_grad or b.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, b)
+
+        a.children.append(y)
+        b.children.append(y)
+
+        self._cache = (a, b)
+
+        return y
+
+    def backward(self, dy: np.ndarray, y:Tensor) -> None:
+        """Computes gradients for cached tensors
+
+        Args:
+            dy (Tensor): 
+            y (Tensor): 
+        """
+        a, b = self._cache
+
+        if a.requires_grad:
+            da = dy * b.data.T
+
+            n_dims_da = len(dy.shape)
+            n_dims_a = len(a.shape)
+            for _ in range(n_dims_da - n_dims_a):
+                da = da.sum(axis=0)
+
+            a.backward(da, y)
+
+        if b.requires_grad:
+            db = dy * a.data.T
+
+            n_dims_db = len(dy.shape)
+            n_dims_b = len(b.shape)
+            for _ in range(n_dims_db - n_dims_b):
+                db = db.sum(axis=0)
+
+            b.backward(db, y)
+
+
+class Power(TensorFunction):
+    """Power function e.g. a^b
+
+    Args:
+        TensorFunction (_type_): _description_
+    """
+    def forward(self, a: Tensor, b: Tensor) -> Tensor:
+        """Computes one tensor to the power of another
+
+        Args:
+            a (Tensor): 
+            b (Tensor): 
+
+        Returns:
+            Tensor: Tensor with a^b
+        """
+        new_data = a.data ** b.data
+
+        requires_grad = a.requires_grad or b.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, b)
+        a.children.append(y)
+        b.children.append(y)
+
+        self._cache = (a, b)
+
+        return y
+
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        """Computes gradients of cached tensors
+
+        Args:
+            dy (Tensor): _description_
+            y (Tensor): _description_
+        """
+        a, b = self._cache
+
+        if a.requires_grad:
+            da = dy * (b.data * (a.data ** (b.data - 1)))
+
+            n_dims_da = len(dy.shape)
+            n_dims_a = len(a.shape)
+            for dim in range(n_dims_da - n_dims_a):
+                da = da.sum(axis=0)
+            for i, dim in enumerate(a.shape):
+                if dim == 1:
+                    da = da.sum(axis=i, keepdims=True)
+
+            a.backward(da, y)
+
+        if b.requires_grad:
+            db = dy * ((a.data ** b.data) * np.log(a.data))
+
+            n_dims_db = len(dy.shape)
+            n_dims_b = len(b.shape)
+            for dim in range(n_dims_db - n_dims_b):
+                db = db.sum(axis=0)
+            for i, dim in enumerate(b.shape):
+                if dim == 1:
+                    db = db.sum(axis=i, keepdims=True)
+
+            b.backward(dy, y)
+
+
+class Mean(TensorFunction):
+    """Mean operation
+
+    Args:
+        TensorFunction (_type_): 
+    """
+    def forward(self, a: Tensor) -> Tensor:
+        """Computes the mean of a 1D tensor
+
+        #TODO: Implement mean for tensors with dims higher than 1
+
+        Args:
+            a (Tensor):
+
+        Returnws:
+            Tensor: mean of a
+        """
+        new_data = a.data.mean()
+
+        requires_grad = a.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, )
+
+        a.children.append(y)
+
+        self._cache = (a, )
+
+        return y
+
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        """Computes gradients of cached tensors
+
+        Args:
+            dy (Tensor):
+            y (Tensor):
+        """
+        a, = self._cache
+
+        if a.requires_grad:
+            da = dy * Tensor.ones(len(a.data))
+            da /= len(a.data)
+
+            a.backward(da, y)
