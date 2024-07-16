@@ -109,7 +109,7 @@ class Tensor:
         if y is not None:
             self.children.remove(y)
 
-        self.grad += dy
+        self.grad = self.grad + dy
 
         if self.operation:
             if not self.children:

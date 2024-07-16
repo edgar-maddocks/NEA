@@ -56,3 +56,31 @@ def test_multiplication_funcs():
     """
     .
     """
+    a = Tensor(1, requires_grad=True)
+    b = Tensor(2, requires_grad=True)
+
+    y = a * b
+    assert y == 2
+
+    y.backward()
+    assert a.grad == 2
+    assert b.grad == 1
+
+def test_division_funcs():
+    """
+    .
+    """
+    a = Tensor(4, requires_grad=True)
+    b = Tensor(2, requires_grad=True)
+
+    y = a / b
+    assert y == 2
+
+    y.backward()
+    assert a.grad == (1 / 2)
+    assert b.grad == - (4 / (2 ** 2))
+
+
+
+
+    
