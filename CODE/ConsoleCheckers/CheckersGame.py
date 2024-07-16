@@ -1,7 +1,9 @@
 from typing import Tuple, Dict, List
 
-from ConsoleCheckers.consts import *
-from ConsoleCheckers.util_funcs import *
+from ConsoleCheckers.consts import (BLACK, WHITE, SIZE, BLACKS, WHITES, 
+                                    BLACK_R, WHITE_R, ACTION, LEGAL_DIRS, 
+                                    COLS_TO_NUMS, NUMS_TO_COLS, NUM_TO_STR)
+from ConsoleCheckers.util_funcs import clear_window
 
 import numpy as np
 
@@ -20,8 +22,9 @@ class CheckersGame:
         self._moves_no_capture = 0
         self._switch_player = None
 
+
     @property
-    def _opposite_player(self) -> None:
+    def opposite_player(self) -> None:
         """Returns the opposite to the current player attribute
 
         Returns:
@@ -33,11 +36,16 @@ class CheckersGame:
             return WHITE
         
     @property
-    def player(self):
+    def player(self) -> str:
+        """Returns protected player attribute
+
+        Returns:
+            str: current player
+        """
         return self._player
     
     @property
-    def n_black_pieces(self):
+    def n_black_pieces(self) -> int:
         """Calculates the number of black pieces remaining on the board
 
         Returns:
@@ -51,7 +59,7 @@ class CheckersGame:
         return n
     
     @property
-    def n_white_pieces(self):
+    def n_white_pieces(self) -> int:
         """Calculates the number of white pieces remaining on the board
 
         Returns:
@@ -65,12 +73,12 @@ class CheckersGame:
         return n
     
     @property
-    def n_opposite_player_pieces(self):
+    def n_opposite_player_pieces(self) -> int:
         """Calculates the number of pieces the opposing player has.
         Opposing player is determined by value of self._player attribute.
 
         Returns:
-            _type_: _description_
+            int: number of pieces opponent has
         """
         if self._player == WHITE:
             return self.n_black_pieces
@@ -78,7 +86,12 @@ class CheckersGame:
             return self.n_white_pieces
         
     @property
-    def board(self):
+    def board(self) -> np.ndarray:
+        """Returns protected board attribute
+
+        Returns:
+            np.ndarray: state of board
+        """
         return self._board
     
     def _init_board(self) -> np.ndarray:
@@ -155,49 +168,49 @@ class CheckersGame:
         valid_moves = []
         if self._player == BLACK:
             if piece == 2:
-                for dir in LEGAL_DIRS[BLACK]["king"]:
+                for direction in LEGAL_DIRS[BLACK]["king"]:
                     if (
-                        row + 2 * dir[0] in range(8)
-                        and col + 2 * dir[1] in range(8)
-                        and self._board[row + dir[0], col + dir[1]] in WHITES
-                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and self._board[row + direction[0], col + direction[1]] in WHITES
+                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
                         )
             elif piece == 1:
-                for dir in LEGAL_DIRS[BLACK]["regular"]:
+                for direction in LEGAL_DIRS[BLACK]["regular"]:
                     if (
-                        row + 2 * dir[0] in range(8)
-                        and col + 2 * dir[1] in range(8)
-                        and self._board[row + dir[0], col + dir[1]] in WHITES
-                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and self._board[row + direction[0], col + direction[1]] in WHITES
+                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
                         )
         elif self._player == WHITE:
             if piece == 4:
-                for dir in LEGAL_DIRS[WHITE]["king"]:
+                for direction in LEGAL_DIRS[WHITE]["king"]:
                     if (
-                        row + 2 * dir[0] in range(8)
-                        and col + 2 * dir[1] in range(8)
-                        and self._board[row + dir[0], col + dir[1]] in BLACKS
-                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and self._board[row + direction[0], col + direction[1]] in BLACKS
+                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
                         )
             elif piece == 3:
-                for dir in LEGAL_DIRS[WHITE]["regular"]:
+                for direction in LEGAL_DIRS[WHITE]["regular"]:
                     if (
-                        row + 2 * dir[0] in range(8)
-                        and col + 2 * dir[1] in range(8)
-                        and self._board[row + dir[0], col + dir[1]] in BLACKS
-                        and self.square_is_empty(row + 2 * dir[0], col + 2 * dir[1])
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and self._board[row + direction[0], col + direction[1]] in BLACKS
+                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * dir[0], col + 2 * dir[1]))
+                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
                         )
 
         return valid_moves
@@ -216,38 +229,38 @@ class CheckersGame:
         valid_moves = []
         if self._player == BLACK:
             if piece == 2:
-                for dir in LEGAL_DIRS[BLACK]["king"]:
+                for direction in LEGAL_DIRS[BLACK]["king"]:
                     if (
-                        row + dir[0] in range(8)
-                        and col + dir[1] in range(8)
-                        and self.square_is_empty(row + dir[0], col + dir[1])
+                        row + direction[0] in range(8)
+                        and col + direction[1] in range(8)
+                        and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
             elif piece == 1:
-                for dir in LEGAL_DIRS[BLACK]["regular"]:
+                for direction in LEGAL_DIRS[BLACK]["regular"]:
                     if (
-                        row + dir[0] in range(8)
-                        and col + dir[1] in range(8)
-                        and self.square_is_empty(row + dir[0], col + dir[1])
+                        row + direction[0] in range(8)
+                        and col + direction[1] in range(8)
+                        and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
         elif self._player == WHITE:
             if piece == 4:
-                for dir in LEGAL_DIRS[WHITE]["king"]:
+                for direction in LEGAL_DIRS[WHITE]["king"]:
                     if (
-                        row + dir[0] in range(8)
-                        and col + dir[1] in range(8)
-                        and self.square_is_empty(row + dir[0], col + dir[1])
+                        row + direction[0] in range(8)
+                        and col + direction[1] in range(8)
+                        and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
             elif piece == 3:
-                for dir in LEGAL_DIRS[WHITE]["regular"]:
+                for direction in LEGAL_DIRS[WHITE]["regular"]:
                     if (
-                        row + dir[0] in range(8)
-                        and col + dir[1] in range(8)
-                        and self.square_is_empty(row + dir[0], col + dir[1])
+                        row + direction[0] in range(8)
+                        and col + direction[1] in range(8)
+                        and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + dir[0], col + dir[1])))
+                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
 
         return valid_moves
 
@@ -289,7 +302,8 @@ class CheckersGame:
             if len(all_valid_moves["takes"]) == 0 and len(all_valid_moves["simple"]) == 0:
                 return (True, self._board, True, -1)
             
-            valid_moves_for_turn = all_valid_moves["takes"] if len(all_valid_moves["takes"]) > 0 else all_valid_moves["simple"]
+            valid_moves_for_turn = (all_valid_moves["takes"] if len(all_valid_moves["takes"]) > 0 
+                                    else all_valid_moves["simple"])
 
             if action not in valid_moves_for_turn:
                 return (False, self._board, False, 0)
@@ -314,8 +328,8 @@ class CheckersGame:
             one_col = 0.5 * (col_to - col_from)
             self.clear(int(row_from + one_row), int(col_from + one_col))
             self._moves_no_capture = 0
-            self._last_piece_moved = row_to, col_to
-            double_moves = self._get_valid_take_moves(*self._last_piece_moved)
+            self._last_moved_piece = row_to, col_to
+            double_moves = self._get_valid_take_moves(*self._last_moved_piece)
             if len(double_moves) == 0:
                 self._last_moved_piece = None
             else:
@@ -334,7 +348,7 @@ class CheckersGame:
             return (True, self._board, True, 1)
         else:
             if self._switch_player:
-                self._player = self._opposite_player
+                self._player = self.opposite_player
             return(True, self._board, False, 0)
 
     @staticmethod
@@ -367,18 +381,18 @@ class CheckersGame:
         return row, NUMS_TO_COLS[col]
 
     def render(self) -> None:
-            """Renders the board"""
-            clear_window()
-            cols = ["X", "A", "B", "C", "D", "E", "F", "G", "H"]
-            print(str.join(" | ", cols))
-            for row in range(SIZE):
-                print("----------------------------------")
-                print(
-                    str(8 - row),
-                    "|",
-                    str.join(" | ", [NUM_TO_STR[int(x)] for x in self._board[row, :]]),
-                )
+        """Renders the board"""
+        clear_window()
+        cols = ["X", "A", "B", "C", "D", "E", "F", "G", "H"]
+        print(str.join(" | ", cols))
+        for row in range(SIZE):
             print("----------------------------------")
-            print("TURN: ", self._player)
-            print("MOVES NO CAPTURE: ", self._moves_no_capture)
-            print("----------------------------------")
+            print(
+                str(8 - row),
+                "|",
+                str.join(" | ", [NUM_TO_STR[int(x)] for x in self._board[row, :]]),
+            )
+        print("----------------------------------")
+        print("TURN: ", self._player)
+        print("MOVES NO CAPTURE: ", self._moves_no_capture)
+        print("----------------------------------")

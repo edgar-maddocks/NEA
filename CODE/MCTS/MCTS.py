@@ -1,12 +1,13 @@
-from MCTS.consts import *
+from __future__ import annotations
+from typing import List
+from copy import deepcopy
+import multiprocessing
+
+from MCTS.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
+from ConsoleCheckers.CheckersGame import CheckersGame
 
 import numpy as np
 from tqdm import tqdm
-
-from typing import Dict, List, Tuple
-
-from copy import deepcopy
-import multiprocessing
 
 
 class Node:
@@ -14,8 +15,8 @@ class Node:
 
     def __init__(
         self,
-        game: "CheckersGame",
-        parent: "Node" = None,
+        game: CheckersGame,
+        parent: Node = None,
         terminal: bool = False,
         action_taken: ACTION = None,
         reward: float = None,
@@ -32,7 +33,7 @@ class Node:
         self.reward = reward
         self._available_moves_left = self._init_available_moves()
 
-        self._visit_count, self._value_count = 0, 0
+        self.visit_count, self.value_count = 0, 0
 
         self.kwargs = kwargs
 
@@ -47,10 +48,20 @@ class Node:
 
     @property
     def n_available_moves_left(self) -> int:
+        """returns the number of moves left for the tree to search
+
+        Returns:
+            int: _description_
+        """
         return len(self._available_moves_left)
 
     @property
     def action_taken(self):
+        """returns protected attribute of action take
+
+        Returns:
+            ACTION: 
+        """
         return self._action_taken
 
     def select_child(self) -> "Node":
@@ -76,8 +87,8 @@ class Node:
         Returns:
             float: UCB value
         """
-        return (child._value_count / child._visit_count) + self.kwargs["eec"] * (
-            np.sqrt(np.log(self._visit_count) / child._visit_count)
+        return (child.value_count / child.visit_count) + self.kwargs["eec"] * (
+            np.sqrt(np.log(self.visit_count) / child.visit_count)
         )
 
     def expand(self) -> "Node":
@@ -92,7 +103,7 @@ class Node:
         self._available_moves_left.remove(random_action)  #
 
         child_game = deepcopy(self._game)
-        valid_move, next_state, terminal, reward = child_game.step(random_action)
+        _, _, terminal, reward = child_game.step(random_action)
 
         child = Node(
             child_game,
@@ -112,8 +123,8 @@ class Node:
         Args:
             reward (int): _description_
         """
-        self._visit_count += 1
-        self._value_count += reward
+        self.visit_count += 1
+        self.value_count += reward
 
         if self._parent is not None:
             if self._parent.colour != self.colour:
@@ -122,6 +133,9 @@ class Node:
 
 
 class MCTS:
+    """
+    Monte Carlo Tree Search class used to search for lines until termination in a given state
+    """
     def __init__(self, **kwargs) -> None:
         """Creates a new MCTS object
 
@@ -131,6 +145,7 @@ class MCTS:
         """
 
         self.kwargs = kwargs
+        self.kwargs["n_jobs"] = None
         if self.kwargs["n_jobs"] is None:
             self.kwargs["n_jobs"] = 1
 
@@ -143,7 +158,7 @@ class MCTS:
             root (CheckersGame): New state to root the tree from
         """
         self._root = Node(root, eec=self.kwargs["eec"])
-        for search in tqdm(
+        for _ in tqdm(
             range(int(self.kwargs["n_searches"] / self.kwargs["n_jobs"]))
         ):
             node = self._root
@@ -162,7 +177,7 @@ class MCTS:
             root (CheckersGame): New state to root the tree from
         """
         ps: List[multiprocessing.Process] = []
-        for job in range(self.kwargs["n_jobs"]):
+        for _ in range(self.kwargs["n_jobs"]):
             p = multiprocessing.Process(target=self.build_tree, args=(root,))
             ps.append(p)
             p.start()
@@ -175,13 +190,14 @@ class MCTS:
         """
         p = np.zeros(
             (8, 8, 8)
-        )  # (8x8) shows where to take piece from. Final 8 shows what direc e.g. idx 0 = row+1,col+1, idx 1 = row+1, col-1 etc.
+        )   # (8x8) shows where to take piece from. Final 8 shows what direc e.g. 
+            # idx 0 = row+1,col+1, idx 1 = row+1, col-1 etc.
         for child in self._root.children:
             piece_moved, moved_to = child.action_taken
             row_change = moved_to[0] - piece_moved[0]
             col_change = moved_to[1] - piece_moved[1]
             direc_idx = ACTION_TO_IDX[(row_change, col_change)]
-            p[piece_moved[0], piece_moved[1], direc_idx] = child._visit_count
+            p[piece_moved[0], piece_moved[1], direc_idx] = child.visit_count
 
         p /= np.sum(p)
         return p

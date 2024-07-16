@@ -27,6 +27,6 @@ while not done:
     if reward == 1:
         print(f"{game.player} WON")
     elif reward == -1:
-        print(f"{game._opposite_player} WON")
+        print(f"{game.opposite_player} WON")
     elif done and reward == 0:
         print("DRAW")
