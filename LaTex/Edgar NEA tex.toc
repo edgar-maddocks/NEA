@@ -8,67 +8,68 @@
 \contentsline {subparagraph}{Linear Regression Unit}{3}{section*.3}%
 \contentsline {subparagraph}{Vectorization of processes}{3}{section*.4}%
 \contentsline {subparagraph}{Forward Pass of Dense Layer}{4}{section*.5}%
-\contentsline {subparagraph}{Forward Pass of a 1D Convolutional Layer}{4}{section*.6}%
-\contentsline {subparagraph}{Gradient Descent}{4}{section*.7}%
-\contentsline {paragraph}{\numberline {1.2.1.3}Automatic Differentiation}{5}{paragraph.1.2.1.3}%
-\contentsline {paragraph}{\numberline {1.2.1.4}Reinforcement Learning (RL)}{7}{paragraph.1.2.1.4}%
-\contentsline {subsubsection}{\numberline {1.2.2}Similar Systems}{8}{subsubsection.1.2.2}%
-\contentsline {subsubsection}{\numberline {1.2.3}Interview with third party}{8}{subsubsection.1.2.3}%
-\contentsline {subsection}{\numberline {1.3}Modelling of the problem}{9}{subsection.1.3}%
-\contentsline {subsubsection}{\numberline {1.3.1}Identification of Objects}{9}{subsubsection.1.3.1}%
-\contentsline {paragraph}{\numberline {1.3.1.1}Draughts}{9}{paragraph.1.3.1.1}%
-\contentsline {paragraph}{\numberline {1.3.1.2}Automatic Differentiation Engine}{10}{paragraph.1.3.1.2}%
-\contentsline {paragraph}{\numberline {1.3.1.3}Neural Network Library}{10}{paragraph.1.3.1.3}%
-\contentsline {paragraph}{\numberline {1.3.1.4}Reinforcement Learning Solution}{11}{paragraph.1.3.1.4}%
-\contentsline {subsubsection}{\numberline {1.3.2}Identification of algorithms}{12}{subsubsection.1.3.2}%
-\contentsline {paragraph}{\numberline {1.3.2.1}Automatic Differentiation Engine}{12}{paragraph.1.3.2.1}%
-\contentsline {paragraph}{\numberline {1.3.2.2}Neural Network Library}{12}{paragraph.1.3.2.2}%
-\contentsline {paragraph}{\numberline {1.3.2.3}Reinforcement Learning Solution}{13}{paragraph.1.3.2.3}%
-\contentsline {subsubsection}{\numberline {1.3.3}Mathematical Formula}{15}{subsubsection.1.3.3}%
-\contentsline {paragraph}{\numberline {1.3.3.1}Automatic Differentiation Engine}{15}{paragraph.1.3.3.1}%
-\contentsline {subparagraph}{Addition}{15}{section*.8}%
-\contentsline {subparagraph}{Forward}{15}{section*.9}%
-\contentsline {subparagraph}{Backward}{15}{section*.10}%
-\contentsline {subparagraph}{Negation}{15}{section*.11}%
-\contentsline {subparagraph}{Forward}{15}{section*.12}%
-\contentsline {subparagraph}{Backward}{15}{section*.13}%
-\contentsline {subparagraph}{Multiplication}{15}{section*.14}%
-\contentsline {subparagraph}{Forward}{15}{section*.15}%
-\contentsline {subparagraph}{Backward}{15}{section*.16}%
-\contentsline {subparagraph}{Division}{15}{section*.17}%
-\contentsline {subparagraph}{Forward}{15}{section*.18}%
-\contentsline {subparagraph}{Backward}{15}{section*.19}%
-\contentsline {subparagraph}{Matrix multiplication}{16}{section*.20}%
-\contentsline {subparagraph}{Forward}{16}{section*.21}%
-\contentsline {subparagraph}{Backward}{16}{section*.22}%
-\contentsline {subparagraph}{Powers}{16}{section*.23}%
-\contentsline {subparagraph}{Forward}{16}{section*.24}%
-\contentsline {subparagraph}{Backward}{16}{section*.25}%
-\contentsline {subparagraph}{Mean}{16}{section*.26}%
-\contentsline {subparagraph}{Forward}{16}{section*.27}%
-\contentsline {subparagraph}{Backward}{16}{section*.28}%
-\contentsline {subparagraph}{Natural Log}{16}{section*.29}%
-\contentsline {subparagraph}{Forward}{16}{section*.30}%
-\contentsline {subparagraph}{Backward}{16}{section*.31}%
-\contentsline {subparagraph}{Exponentation}{16}{section*.32}%
-\contentsline {subparagraph}{Forward}{16}{section*.33}%
-\contentsline {subparagraph}{Backward}{17}{section*.34}%
-\contentsline {subparagraph}{1D Convolution}{17}{section*.35}%
-\contentsline {subparagraph}{Forward}{17}{section*.36}%
-\contentsline {subparagraph}{Backward}{17}{section*.37}%
-\contentsline {paragraph}{\numberline {1.3.3.2}Neural Network Library}{17}{paragraph.1.3.3.2}%
-\contentsline {paragraph}{\numberline {1.3.3.3}Reinforcement Learning Solution}{17}{paragraph.1.3.3.3}%
-\contentsline {subsection}{\numberline {1.4}Set of objectives}{17}{subsection.1.4}%
-\contentsline {subsubsection}{\numberline {1.4.1}Draughts Game}{17}{subsubsection.1.4.1}%
-\contentsline {subsubsection}{\numberline {1.4.2}Autodifferentiation engine}{17}{subsubsection.1.4.2}%
-\contentsline {subsubsection}{\numberline {1.4.3}Neural Network Library}{17}{subsubsection.1.4.3}%
-\contentsline {subsubsection}{\numberline {1.4.4}Reinforcement Learning Solution}{17}{subsubsection.1.4.4}%
-\contentsline {section}{\numberline {2}Research Log}{17}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Draughts Rules}{17}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Neural Networks}{18}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Vectorization of summations}{18}{subsubsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.3}Automatic Differentiation}{18}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Implementing Custom Classes using Numba}{18}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}AlphaZero}{18}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}Existing Auto differentiation systems}{18}{subsection.2.6}%
-\contentsline {subsection}{\numberline {2.7}Reinforcement Learning}{18}{subsection.2.7}%
+\contentsline {subparagraph}{Forward Pass of a Convolutional Layer}{4}{section*.6}%
+\contentsline {subparagraph}{Gradient Descent}{5}{section*.7}%
+\contentsline {paragraph}{\numberline {1.2.1.3}Automatic Differentiation}{6}{paragraph.1.2.1.3}%
+\contentsline {paragraph}{\numberline {1.2.1.4}Reinforcement Learning (RL)}{8}{paragraph.1.2.1.4}%
+\contentsline {subsubsection}{\numberline {1.2.2}Similar Systems}{9}{subsubsection.1.2.2}%
+\contentsline {subsubsection}{\numberline {1.2.3}Interview with third party}{9}{subsubsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.3}Modelling of the problem}{10}{subsection.1.3}%
+\contentsline {subsubsection}{\numberline {1.3.1}Identification of Objects}{10}{subsubsection.1.3.1}%
+\contentsline {paragraph}{\numberline {1.3.1.1}Draughts}{10}{paragraph.1.3.1.1}%
+\contentsline {paragraph}{\numberline {1.3.1.2}Automatic Differentiation Engine}{11}{paragraph.1.3.1.2}%
+\contentsline {paragraph}{\numberline {1.3.1.3}Neural Network Library}{11}{paragraph.1.3.1.3}%
+\contentsline {paragraph}{\numberline {1.3.1.4}Reinforcement Learning Solution}{12}{paragraph.1.3.1.4}%
+\contentsline {subsubsection}{\numberline {1.3.2}Identification of algorithms}{13}{subsubsection.1.3.2}%
+\contentsline {paragraph}{\numberline {1.3.2.1}Automatic Differentiation Engine}{13}{paragraph.1.3.2.1}%
+\contentsline {paragraph}{\numberline {1.3.2.2}Neural Network Library}{13}{paragraph.1.3.2.2}%
+\contentsline {paragraph}{\numberline {1.3.2.3}Reinforcement Learning Solution}{14}{paragraph.1.3.2.3}%
+\contentsline {subsubsection}{\numberline {1.3.3}Mathematical Formula}{16}{subsubsection.1.3.3}%
+\contentsline {paragraph}{\numberline {1.3.3.1}Automatic Differentiation Engine}{16}{paragraph.1.3.3.1}%
+\contentsline {subparagraph}{Addition}{16}{section*.8}%
+\contentsline {subparagraph}{Forward}{16}{section*.9}%
+\contentsline {subparagraph}{Backward}{16}{section*.10}%
+\contentsline {subparagraph}{Negation}{16}{section*.11}%
+\contentsline {subparagraph}{Forward}{16}{section*.12}%
+\contentsline {subparagraph}{Backward}{16}{section*.13}%
+\contentsline {subparagraph}{Multiplication}{16}{section*.14}%
+\contentsline {subparagraph}{Forward}{16}{section*.15}%
+\contentsline {subparagraph}{Backward}{16}{section*.16}%
+\contentsline {subparagraph}{Division}{16}{section*.17}%
+\contentsline {subparagraph}{Forward}{16}{section*.18}%
+\contentsline {subparagraph}{Backward}{16}{section*.19}%
+\contentsline {subparagraph}{Matrix multiplication}{17}{section*.20}%
+\contentsline {subparagraph}{Forward}{17}{section*.21}%
+\contentsline {subparagraph}{Backward}{17}{section*.22}%
+\contentsline {subparagraph}{Powers}{17}{section*.23}%
+\contentsline {subparagraph}{Forward}{17}{section*.24}%
+\contentsline {subparagraph}{Backward}{17}{section*.25}%
+\contentsline {subparagraph}{Mean}{17}{section*.26}%
+\contentsline {subparagraph}{Forward}{17}{section*.27}%
+\contentsline {subparagraph}{Backward}{17}{section*.28}%
+\contentsline {subparagraph}{Natural Log}{17}{section*.29}%
+\contentsline {subparagraph}{Forward}{17}{section*.30}%
+\contentsline {subparagraph}{Backward}{17}{section*.31}%
+\contentsline {subparagraph}{Exponentation}{17}{section*.32}%
+\contentsline {subparagraph}{Forward}{17}{section*.33}%
+\contentsline {subparagraph}{Backward}{18}{section*.34}%
+\contentsline {subparagraph}{Conv2D}{18}{section*.35}%
+\contentsline {subparagraph}{Forward}{18}{section*.36}%
+\contentsline {subparagraph}{Backward}{18}{section*.37}%
+\contentsline {paragraph}{\numberline {1.3.3.2}Neural Network Library}{18}{paragraph.1.3.3.2}%
+\contentsline {paragraph}{\numberline {1.3.3.3}Reinforcement Learning Solution}{18}{paragraph.1.3.3.3}%
+\contentsline {subsection}{\numberline {1.4}Set of objectives}{18}{subsection.1.4}%
+\contentsline {subsubsection}{\numberline {1.4.1}Draughts Game}{18}{subsubsection.1.4.1}%
+\contentsline {subsubsection}{\numberline {1.4.2}Autodifferentiation engine}{19}{subsubsection.1.4.2}%
+\contentsline {subsubsection}{\numberline {1.4.3}Neural Network Library}{19}{subsubsection.1.4.3}%
+\contentsline {subsubsection}{\numberline {1.4.4}Reinforcement Learning Solution}{19}{subsubsection.1.4.4}%
+\contentsline {section}{\numberline {2}Research Log}{19}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Draughts Rules}{19}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Neural Networks}{19}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Vectorization of summations}{19}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Convolutional Networks}{19}{subsubsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.3}Automatic Differentiation}{19}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Implementing Custom Classes using Numba}{19}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}AlphaZero}{20}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Existing Auto differentiation systems}{20}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Reinforcement Learning}{20}{subsection.2.7}%

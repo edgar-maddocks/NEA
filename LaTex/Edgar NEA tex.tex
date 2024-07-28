@@ -46,13 +46,13 @@
         \vspace{0.5cm}
         \LARGE
         An investigation into playing draughts using a reinforcement learning via a neural network library, with an implementation of
-        automatic differention, built from scratch.
+        automatic differentiation, built from scratch.
             
         \vspace{1.5cm}
             
         \textbf{Edgar Maddocks}
         \\
-        \textbf{TO DO\\1.3.3.1(Conv1D), 1.3.3.2+3, 1.4.3+4}
+        \textbf{1.3.3.2+3, 1.4.3+4}
             
         \vfill
             
@@ -72,10 +72,10 @@
     \section{Analysis}
     \subsection{Background}
     This project is an investigation into the use of reinforcement learning to play games (in this case draughts/checkers).
-    The model will use self-play and monte carlo tree search algorithms, coupled with a multi-headed neural network to
+    The model will use self-play and Monte Carlo tree search algorithms, coupled with a multi-headed neural network to
     understand the game and estimate optimal actions.
 
-    The neural network will built using a library, that has an autograd engine implemented, all built from scratch. This
+    The neural network will be built using a library, that has an autograd engine implemented, all built from scratch. This
     investigation will however use some scientific computing libraries for faster simple matrix operations (such as numpy). Some more
     complex functions (such as cross-correlation and its derivative) will also be built from scratch.
 
@@ -110,7 +110,7 @@
         \caption{Example of a piece being taken in draughts}
     \end{wrapfigure}
     If an adjacent square has an opponents piece and the square immediately beyond the oppositions piece is empty, the opponents piece may be captured.
-    If the player who's go it is has the opportunity to capture one or more pieces, then they must do so. 
+    If the player whose go it is, has the opportunity to capture one or more pieces, then they must do so. 
     A piece is taken by moving your own piece over the opposing player's, into the vacant square, and then removing the opposing piece from the board.
     An example of this process can be seen in Figure 3.
 
@@ -190,7 +190,7 @@
         \end{bmatrix}
     \end{align}
 
-    $X$ here is a row vector as this is the most common format for data as an input to a network (e.g being read from a csv).
+    $X$ here is a row vector as this is the most common format for data as an input to a network (e.g. being read from a csv).
     This parallelized computation is much faster, and can be parallelized using the GPU to further improve speed and efficiency.
 
     \subsubsubsubsection{Forward Pass of Dense Layer}
@@ -229,27 +229,43 @@
 
     With $W$ and $X$ having the same definition as most recently defined.
 
-    \subsubsubsubsection{Forward Pass of a 1D Convolutional Layer}
+    \subsubsubsubsection{Forward Pass of a Convolutional Layer}
     The main function of a convolutional layer is to extract key features and are often used in image recognition and classification solutions.
 
-    The input to a 1D convolutional layer is a 1 dimensional matrix which then has a cross-correlation operation completed with a filter.
-    The forward pass is quite simple and consists of sliding the filter across the input and taking the dot product. An example of this
-    can be seen below.
+    \begin{wrapfigure}[15]{r}{0.5\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{ConvInputIndependentCode.png}
+        \caption{Visualization of a Convolutional layer}
+    \end{wrapfigure}
+
+    A convolutional layer takes in a 3 dimensional block of data. This can be imagined as the first 2 dimensions being a grid of pixels, and the third dimension
+    being the colour channels for each grid. The trainable parameters in a convolutional network are the kernels/filters and the biases. The kernels can be of any size
+    but must have the same depth as the input data. Each kernel also has a bias matrix, which has the same shape as the output.
+
+    After the forward pass, the output will also be 3 dimensional, but here the depth is equal to the number of kernels, and the size is equal to
 
     \begin{align}
-        \begin{bmatrix}
-            1 & 2 & 3
-        \end{bmatrix} \star \begin{bmatrix}
-            2 & -1
-        \end{bmatrix} &= \begin{bmatrix}
-            2 \cdot 1 + -1 \cdot 2 & 2 \cdot 2 + -1 \cdot 3
-        \end{bmatrix}\\
-        &= \begin{bmatrix}
-            0 & 1
-        \end{bmatrix}
+        I - K + 1
     \end{align}
 
-    The star here denotes the cross-correlation operation. And this specific method of cross-correlation is known as valid cross-correlation.
+    Where $I$ is the size of the input grid and $K$ is the size of the kernel grids.
+
+    The forward pass can then be simplified, with each output equating to the bias for that kernel plus the sum of the sum of cross correlations between a single channel
+    of the input and its respective channel in the kernel. This can be seen in the figure below, where $d$ is equal to the number of kernels, and $n$ is the number of channels in the input data.
+
+
+    \pagebreak
+    \begin{figure}
+        \centering
+        \includegraphics[scale=0.3]{ConvForwardPropIndependentCode.png}
+        \caption{Representation of the forward pass of a convolutional layer}
+    \end{figure}
+
+    This can be written more mathematically using a summation.
+
+    \begin{align}
+        Y_i = B_i + \sum_{j=1}^{n}X_j \star K_{ij}, \hspace{1cm} i = 1 \dots d
+    \end{align}
 
     \subsubsubsubsection{Gradient Descent}
 
@@ -257,7 +273,7 @@
     a process called gradient descent is usually employed.
 
     Gradient descent works to minimize the error of a model by iteratively locating a minimum in the error function.
-    For example, a common cost (error) function is mean squarred error.
+    For example, a common cost (error) function is mean squared error.
     \begin{align}
         MSE(Y, \hat{Y}) = \frac{1}{n}\sum_{i=0}^{n}\left(y_i - \hat{y}_i\right)^2
     \end{align}
@@ -269,7 +285,6 @@
         MSE(Y, \hat{Y}) = \frac{1}{n}((Y - \hat{Y})^T \cdot (Y - \hat{Y}))
     \end{align}
 
-    \pagebreak
     If we plot the MSE curve of different weights and biases - of a single regression unit, it looks as follows.
     \begin{figure}[h]
         \centering
@@ -286,7 +301,7 @@
         \caption{MSE with respect to one parameter}
     \end{wrapfigure}
     In figure 6 we can see a representation of the MSE plot with respect to only one of the parameters. This makes understanding the process of gradient
-    descent much simpler. For example, the minimum of this function ($f(x) = \frac{x^2}{25}$) is at $x = 0$. So, if we were to have an initial $x$ value of say $-40$
+    descent much simpler. For example, the minimum of this function ($f(x) = \frac{x^2}{25}$) is at $x = 0$. So, if we were to have an initial $x$ value of say $-40$,
     and we calculated the gradient to be $3.2$, we could then subtract this from $40$. Resulting in a new value of $36.8$, which is closer to our optimal value of $0$.
     This process is completed iteratively until the minimum, or near to it, is reached.
 
@@ -302,8 +317,8 @@
     from the optimal values.
 
     That is a basic overview of gradient descent in a single regression unit, but in a dense network, the process is almost identical. An error function is evaluated, 
-    the derivative with respect to the inputs calculated, and the new values updated. The main expense computation-wise is calculating all of the derivatives, with respect to
-    each set of parameters, as this requires passing the output from the error function backwards through all of the layers and processes. To combat this, automatic differentiation
+    the derivative with respect to the inputs calculated, and the new values updated. The main expense computation-wise is calculating all the derivatives, with respect to
+    each set of parameters, as this requires passing the output from the error function backwards through all the layers and processes. To combat this, automatic differentiation
     can be used, which tracks computation dynamically at run time to compute derivatives.
 
     \subsubsubsection{Automatic Differentiation}
@@ -315,13 +330,13 @@
     complex function. This becomes very useful when there are multiple inputs to the function, and we only want the derivative to one of these variables. Finally, this process
     makes use of the chain rule to compute the derivative with respect to the inputs, as will be shown later on.
 
-    Firstly, I will walkthrough an example of the process of automatic differentiation.\\
+    Firstly, I will walk through an example of the process of automatic differentiation.\\
     \noindent Say we have a function: \begin{align}
         f(x) = ln\left(\frac{sin(x_1)}{cos(x_2)}\right)
     \end{align}
 
     This function has two arbitrary inputs (perhaps in the case of a neural network these could be our parameters or outputs for example). At first, this is quite a complex
-    function to differentiate but we can simplify it using intermediate variables. For example \begin{align}
+    function to differentiate but, we can simplify it using intermediate variables. For example \begin{align}
         v_1 &= sin(x_1)\\
         v_2 &= cos(x_2)\\
         v_3 &= \frac{v_1}{v_2}\\
@@ -337,7 +352,7 @@
     Now that we have declared our intermediate variables, we can see how automatic differentiation splits up the original function into elementary ones.
     This then allows use to easily take derivatives. Firstly, we can draw out the computational graph for this function, using our intermediate variables,
     and this can be seen in Figure 7.
-    This graph visualizes the forward pass of the function, and how the intermediate varibales compose to form our original function.
+    This graph visualizes the forward pass of the function, and how the intermediate variables compose to form our original function.
 
     Now, when we want to take the derivative with respect to one of these inputs, we can simply reverse through the graph, taking the gradient of each intermediate
     variable, and using the chain rule to give us our final derivative.
@@ -773,11 +788,44 @@
     \subsubsubsubsubsection{Backward}
     \begin{align} \frac{\partial y}{\partial a} = e^a \end{align}
 
-    \subsubsubsubsection{1D Convolution}
-    \textbf{NEEDS RESEARCHING}
+    \subsubsubsubsection{Conv2D}
     \subsubsubsubsubsection{Forward}
-    \subsubsubsubsubsection{Backward}
+    \begin{align} Y_i = B_i + \sum_{j=1}^{n}X_j \star K_{ij}, \hspace{1cm} i = 1 \dots d\end{align}
+    Similar to the current systems, the star denotes the valid cross-correlation of the two matrices.\\
+    \textbf{Example of cross-correlation}\\
+    Cross correlation can be imagined as placed the kernel ontop of the input and summing the products of the elemts which overlap, and then moving the kernel and repeating the process.
+    \begin{align}
+        \begin{bmatrix}
+            1 & 6 & 2 \\
+            5 & 3 & 1 \\
+            7 & 0 & 4 \\
+        \end{bmatrix} \star \begin{bmatrix}
+            1 & 2 \\
+            -1 & 0 \\
+        \end{bmatrix} &= \begin{bmatrix}
+            1 \cdot 1 + 2 \cdot 6 + -1 \cdot 5 + 0 \cdot 3 & 1 \cdot 6 + 2 \cdot 2 + -1 \cdot 3 + 0 \cdot 1 \\
+            1 \cdot 5 + 2 \cdot 3 + -1 \cdot 7 + 0 \cdot 0 & 1 \cdot 3 + 2 \cdot 1 + -1 \cdot 0 + 0 \cdot 4
+        \end{bmatrix}\\
+        &= \begin{bmatrix}
+            8 & 7 \\
+            4 & 5
+        \end{bmatrix}
+    \end{align}
 
+    This method of cross-correlation is known as valid cross correlation (where the upper left element of the kernel 
+    begins on the upper left element of the input).
+    \subsubsubsubsubsection{Backward}
+    
+    In this backward function, $\frac{\partial Z}{\partial Y}$ will denote the gradient being recieved from upstream.
+    \begin{align}
+        \frac{\partial Z}{\partial B_i} &= \frac{\partial Z}{\partial Y_i}\\
+        \frac{\partial Z}{\partial K_{ij}} &= X_j \star \frac{\partial Z}{\partial Y_i}\\
+        \frac{\partial Z}{\partial X_i} &= \sum_{i=1}^{d}\frac{\partial Z}{\partial Y_i} * K_{ij}
+    \end{align}
+
+    The asterisk in the final expression represents the full convolution operation, which is the same as a full cross-correlation, but
+    with the kernel rotated 180 degrees. Additionally, a full correlation begins the operation with the bottom left elemnt of the kernel
+    being placed upon the top left element of the input - and then the sliding and summing of products process remains the same.
     
     \subsubsubsection{Neural Network Library}
 
@@ -833,6 +881,9 @@
 
     \subsubsection{Vectorization of summations}
     \noindent \url{https://courses.cs.washington.edu/courses/cse446/20wi/Lecture8/08_Regularization.pdf}
+
+    \subsubsection{Convolutional Networks}
+    \noindent \url{https://www.youtube.com/watch?v=Lakz2MoHy6o}\\
 
     \subsection{Automatic Differentiation}
     \noindent \url{https://en.wikipedia.org/wiki/Automatic_differentiation}

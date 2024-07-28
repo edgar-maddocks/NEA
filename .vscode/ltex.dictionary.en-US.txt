@@ -1,0 +1,8 @@
+draughts
+numpy
+autograd
+Draughts
+AlphaZero
+StockFish
+utilises
+markov
