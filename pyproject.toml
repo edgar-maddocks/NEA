@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "code"
+name = "nea"
 version = "0.1.0"
 description = ""
 authors = ["Edgar Maddocks"]
