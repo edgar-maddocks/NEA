@@ -66,6 +66,10 @@ def test_multiplication_funcs():
     assert a.grad == 2
     assert b.grad == 1
 
+# =========================
+#    TEST DIVISION
+# =========================
+
 def test_division_funcs():
     """
     .

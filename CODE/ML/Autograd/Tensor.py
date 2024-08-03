@@ -5,8 +5,9 @@ from abc import ABC
 import numpy as np
 from consts import Tensorable
 
-
-# TENSOR
+# ========
+#  TENSOR
+# ========
 
 
 def to_tensor(d: Tensorable) -> Tensor:
@@ -182,7 +183,28 @@ class Tensor:
         """
         mean_op = Mean()
         return mean_op.forward(self)
+    
+    def log(self) -> Tensor:
+        """Computes element wise log of tensor
 
+        Returns:
+            Tensor: _description_
+        """
+        log_op = Log()
+        return log_op.forward(self)
+    
+    def convolve2d(self, k: Tensorable, b: Tensorable = None) -> Tensor:
+        """2D convolutional layer of the tensor
+
+        Args:
+            k (Tensor): kernel to use
+            b (Tensor, optional): bias to use. Defaults to None.
+
+        Returns:
+            Tensor: _description_
+        """
+        conv_op = Convolve2D()
+        conv_op.forward(self, k, b=b)
 
 
 # ==================
@@ -660,3 +682,64 @@ class Mean(TensorFunction):
             da /= len(a.data)
 
             a.backward(da, y)
+
+
+class Log(TensorFunction):
+    """Log operation
+
+    Args:
+        TensorFunction (_type_): _description_
+    """
+    def forward(self, a: Tensor) -> Tensor:
+        """Element wise log of a tensor
+
+        Args:
+            a (Tensor): 
+
+        Returns:
+            Tensor: 
+        """
+
+        new_data = np.log(a.data)
+
+        requires_grad = a.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, )
+
+        a.children.append(y)
+
+        self._cache = (a, )
+
+        return y
+    
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        """Computes gradient of cached tensor
+
+        Args:
+            dy (np.ndarray): gradient from upstream
+            y (Tensor): 
+        """
+        a, = self._cache
+        if a.requires_grad:
+            da = dy * (1 / a.data)
+
+            a.backward(da, y)
+
+
+class Convolve2D(TensorFunction):
+    """2D convolution layer as tensor function
+
+    Args:
+        TensorFunction (_type_):
+    """
+    def forward(self, x: Tensor, k: Tensor, b: Tensor = None):
+        """2D Convolution layer of X as input
+
+        Args:
+            x (Tensor): Input to layer
+            k (Tensor): Kernels to be used
+            b (Tensor, optional): Bias. Defaults to None.
+        """
+        raise NotImplementedError
