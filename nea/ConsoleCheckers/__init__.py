@@ -1,0 +1,1 @@
+from .CheckersGame import CheckersGame

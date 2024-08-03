@@ -1,5 +1,5 @@
-from mcts import MCTS
-from ConsoleCheckers import CheckersGame
+from nea.mcts import MCTS
+from nea.ConsoleCheckers import CheckersGame
 
 import numpy as np
 

@@ -1,4 +1,4 @@
-from ConsoleCheckers import CheckersGame
+from nea.ConsoleCheckers import CheckersGame
 
 game = CheckersGame()
 

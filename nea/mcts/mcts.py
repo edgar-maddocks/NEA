@@ -4,7 +4,7 @@ from copy import deepcopy
 import multiprocessing
 
 from .consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
-from ConsoleCheckers import CheckersGame
+from nea.ConsoleCheckers import CheckersGame
 
 import numpy as np
 from tqdm import tqdm
