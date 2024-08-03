@@ -1,13 +1,12 @@
 from __future__ import annotations
-from typing import List
 from copy import deepcopy
 import multiprocessing
 
-from .consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
-from nea.ConsoleCheckers import CheckersGame
-
 import numpy as np
 from tqdm import tqdm
+
+from nea.ConsoleCheckers import CheckersGame
+from .consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
 
 
 class Node:
@@ -27,7 +26,7 @@ class Node:
 
         self._state = self._game.board
         self._parent = parent
-        self.children: List["Node"] = []
+        self.children: list["Node"] = []
         self._action_taken = action_taken
         self.is_leaf = terminal
         self.reward = reward
@@ -37,11 +36,11 @@ class Node:
 
         self.kwargs = kwargs
 
-    def _init_available_moves(self) -> List[ACTION]:
+    def _init_available_moves(self) -> list[ACTION]:
         """Initializes a list of available moves given the orginial state
 
         Returns:
-            List[ACTION]: List of avaialble moves
+            list[ACTION]: list of avaialble moves
         """
         valids = self._game.get_all_valid_moves()
         return valids["takes"] if len(valids["takes"]) > 0 else valids["simple"]
@@ -176,7 +175,7 @@ class MCTS:
         Args:
             root (CheckersGame): New state to root the tree from
         """
-        ps: List[multiprocessing.Process] = []
+        ps: list[multiprocessing.Process] = []
         for _ in range(self.kwargs["n_jobs"]):
             p = multiprocessing.Process(target=self.build_tree, args=(root,))
             ps.append(p)
@@ -209,7 +208,7 @@ class MCTS:
             p (np.ndarray): array of probs
 
         Returns:
-            Tuple[Tuple, Tuple]: action (piece_to_move, move_to_where)
+            tuple[tuple, tuple]: action (piece_to_move, move_to_where)
         """
         max_prob = np.max(p)
         idx = None

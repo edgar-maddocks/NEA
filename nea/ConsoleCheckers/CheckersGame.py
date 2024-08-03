@@ -1,5 +1,3 @@
-from typing import Tuple, Dict, List
-
 from nea.ConsoleCheckers.consts import (BLACK, WHITE, SIZE, BLACKS, WHITES, 
                                     BLACK_R, WHITE_R, ACTION, LEGAL_DIRS, 
                                     COLS_TO_NUMS, NUMS_TO_COLS, NUM_TO_STR)
@@ -17,7 +15,7 @@ class CheckersGame:
         Creates a new CheckersGame object
         """
         self._board = self._init_board()
-        self._last_moved_piece: Tuple[int, int] = None
+        self._last_moved_piece: tuple[int, int] = None
         self._player = WHITE
         self._moves_no_capture = 0
         self._switch_player = None
@@ -130,7 +128,7 @@ class CheckersGame:
         else:
             return False
     
-    def get_all_valid_moves(self) -> Dict[str, List[ACTION]]:
+    def get_all_valid_moves(self) -> dict[str, list[ACTION]]:
         """Returns a dictionary of take and simple moves.
         Does not account for if a double moves are available. 
 
@@ -139,7 +137,7 @@ class CheckersGame:
             Simple moves: "simple"
 
         Returns:
-            Dict[str, List[ACTION]]: Dictionary of available moves
+            dict[str, list[ACTION]]: Dictionary of available moves
         """
         moves = {"takes": [], "simple": []}
         for row in range(SIZE):
@@ -154,7 +152,7 @@ class CheckersGame:
 
         return moves
     
-    def _get_valid_take_moves(self, row: int, col: int) -> List[ACTION]:
+    def _get_valid_take_moves(self, row: int, col: int) -> list[ACTION]:
         """Gets all valid take moves available for a given square
 
         Args:
@@ -162,7 +160,7 @@ class CheckersGame:
             col (int): column the square is on
 
         Returns:
-            List: tuple of tuples
+            list: tuple of tuples
         """
         piece = self._board[row, col]
         valid_moves = []
@@ -215,7 +213,7 @@ class CheckersGame:
 
         return valid_moves
     
-    def _get_valid_simple_moves(self, row: int, col: int) -> List[ACTION]:
+    def _get_valid_simple_moves(self, row: int, col: int) -> list[ACTION]:
         """Gets all valid simple moves available for a given square
 
         Args:
@@ -223,7 +221,7 @@ class CheckersGame:
             col (int): column the square is on
 
         Returns:
-            List: tuple of tuples
+            list: tuple of tuples
         """
         piece = self._board[row, col]
         valid_moves = []
@@ -286,14 +284,14 @@ class CheckersGame:
         elif piece == 3:
             self._board[row, col] = 4
 
-    def step(self, action: ACTION) -> Tuple[bool, np.ndarray, bool, float]:
+    def step(self, action: ACTION) -> tuple[bool, np.ndarray, bool, float]:
         """Completes a step given an action in the board environment
 
         Args:
             action (ACTION): Desired action to take
 
         Returns:
-            Tuple[bool, np.ndarray, bool, float]: (valid_move, next_obs, done, reward)
+            tuple[bool, np.ndarray, bool, float]: (valid_move, next_obs, done, reward)
         """
         self._switch_player = True
         rowcol_move_from, rowcol_move_to = action[0], action[1]
@@ -352,7 +350,7 @@ class CheckersGame:
             return(True, self._board, False, 0)
 
     @staticmethod
-    def convert_rowcol_to_game(row: int, col: str) -> Tuple[int, int]:
+    def convert_rowcol_to_game(row: int, col: str) -> tuple[int, int]:
         """Converts a row column tuple to the way the game understands
         from what user inputs
 
@@ -361,13 +359,13 @@ class CheckersGame:
             col (int):
 
         Returns:
-            Tuple[int, str]:
+            tuple[int, str]:
         """
         row = 8 - row
         return row, COLS_TO_NUMS[col]
 
     @staticmethod
-    def convert_rowcol_to_user(row: int, col: int) -> Tuple[int, str]:
+    def convert_rowcol_to_user(row: int, col: int) -> tuple[int, str]:
         """Converts a row column tuple to the way a user sees the board
 
         Args:
@@ -375,7 +373,7 @@ class CheckersGame:
             col (int):
 
         Returns:
-            Tuple[int, str]:
+            tuple[int, str]:
         """
         row = 8 - row
         return row, NUMS_TO_COLS[col]

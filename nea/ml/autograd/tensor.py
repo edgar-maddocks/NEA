@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import List, Tuple
 from abc import ABC
 
 import numpy as np
@@ -47,8 +46,8 @@ class Tensor:
         if self.requires_grad:
             self.grad = np.zeros_like(self._data)
 
-        self.children: List[Tensor] = []
-        self.parents: List[Tensor] = []
+        self.children: list[Tensor] = []
+        self.parents: list[Tensor] = []
 
     @property
     def data(self) -> np.ndarray:
@@ -63,11 +62,11 @@ class Tensor:
         return f"Tensor({self._data}, shape = {self.shape})"
 
     @staticmethod
-    def zeros(shape: Tuple[int], requires_grad: bool = False) -> Tensor:
+    def zeros(shape: tuple[int], requires_grad: bool = False) -> Tensor:
         """Returns a tensor of 1s
 
         Args:
-            shape (Tuple[int]): desired shape of tensor
+            shape (tuple[int]): desired shape of tensor
             requires_grad (bool, optional): if the tensors requires_grad property should be false. 
             Defaults to False.
 
@@ -77,11 +76,11 @@ class Tensor:
         return Tensor(np.zeros(shape), requires_grad=requires_grad)
 
     @staticmethod
-    def ones(shape: Tuple[int], requries_grad: bool = False) -> Tensor:
+    def ones(shape: tuple[int], requries_grad: bool = False) -> Tensor:
         """Returns a tensor of 0s
 
         Args:
-            shape (Tuple[int]): desired shape of tensor
+            shape (tuple[int]): desired shape of tensor
             requires_grad (bool, optional): if the tensors requires_grad property should be false. 
             Defaults to False.
 
@@ -219,8 +218,8 @@ class TensorFunction(ABC):
         ABC (_type_): Abstrract Class
     """
 
-    parents: Tuple[Tensor] = None
-    _cache: Tuple[Tensor] = None
+    parents: tuple[Tensor] = None
+    _cache: tuple[Tensor] = None
 
 
 class Addition(TensorFunction):

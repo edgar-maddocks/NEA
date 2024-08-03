@@ -683,7 +683,7 @@
         \For{mctsEpoch in hyperParameters.mctsEpochs}
             \State trainingExamplesList $\gets$ SPV(hyperParameters.maxExamples)
             \For{episode in hyperParameters.episodes}
-                \State examples $\gets$ List()
+                \State examples $\gets$ list()
                 \State game $\gets$ new CheckersGame
                 \While{!game.terminated}
                     \State mcts $\gets$ MCTS(nnPrevious, game.currentBoardState, hyperParameters).buildTree()

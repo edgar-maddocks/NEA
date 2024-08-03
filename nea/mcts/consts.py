@@ -1,5 +1,3 @@
-from typing import Tuple
-
 ACTION_TO_IDX = {
     (1, 1): 0,
     (1, -1): 1,
@@ -13,4 +11,4 @@ ACTION_TO_IDX = {
 
 IDX_TO_ACTION = {v: k for k, v in ACTION_TO_IDX.items()}
 
-ACTION = Tuple[Tuple[int, int], Tuple[int, int]]
+ACTION = tuple[tuple[int, int], tuple[int, int]]

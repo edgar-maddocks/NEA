@@ -1,7 +1,7 @@
+import numpy as np
+
 from nea.mcts import MCTS
 from nea.ConsoleCheckers import CheckersGame
-
-import numpy as np
 
 def simGames(n_games: int = 10, 
             n_searches_mcts1: int = 100000, 
@@ -21,7 +21,7 @@ def simGames(n_games: int = 10,
         verbose (int, optional): 1 to display info. Defaults to 0.
 
     Returns:
-        List[str]: list of which model won each game
+        list[str]: list of which model won each game
     """
     games = []
     for gamen in range(n_games):

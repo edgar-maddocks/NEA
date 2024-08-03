@@ -1,5 +1,3 @@
-from typing import Tuple
-
 SIZE = 8
 
 BLACK = "black"
@@ -30,4 +28,4 @@ LEGAL_DIRS = {
     WHITE: {"regular": [DIRS[2], DIRS[3]], "king": DIRS},
 }
 
-ACTION = Tuple[Tuple[int, int], Tuple[int, int]]
+ACTION = tuple[tuple[int, int], tuple[int, int]]
