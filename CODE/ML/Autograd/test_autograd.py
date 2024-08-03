@@ -1,4 +1,4 @@
-from Tensor import Tensor
+from .tensor import Tensor
 
 # ===================
 #    TEST ADDITION
