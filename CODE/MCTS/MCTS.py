@@ -3,8 +3,8 @@ from typing import List
 from copy import deepcopy
 import multiprocessing
 
-from MCTS.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
-from ConsoleCheckers.CheckersGame import CheckersGame
+from .consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
+from ConsoleCheckers import CheckersGame
 
 import numpy as np
 from tqdm import tqdm

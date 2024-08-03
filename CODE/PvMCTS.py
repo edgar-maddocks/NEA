@@ -1,5 +1,5 @@
-from ConsoleCheckers.CheckersGame import CheckersGame
-from MCTS.MCTS import MCTS
+from ConsoleCheckers import CheckersGame
+from mcts import MCTS
 
 done = False
 game = CheckersGame()

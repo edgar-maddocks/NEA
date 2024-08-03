@@ -1,4 +1,4 @@
-from ConsoleCheckers.CheckersGame import CheckersGame
+from ConsoleCheckers import CheckersGame
 
 game = CheckersGame()
 

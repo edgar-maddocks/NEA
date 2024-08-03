@@ -3,7 +3,7 @@ from typing import List, Tuple
 from abc import ABC
 
 import numpy as np
-from consts import Tensorable
+from .consts import Tensorable
 
 # ========
 #  TENSOR
