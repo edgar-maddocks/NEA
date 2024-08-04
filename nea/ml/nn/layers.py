@@ -1,7 +1,7 @@
 from abc import ABC
 import numpy as np
 
-from nea.ml.autograd import Tensor, to_tensor, TensorFunction
+from nea.ml.autograd import Tensor, to_tensor, TensorFunction, tensor_exp
 from nea.ml.autograd.consts import Tensorable
 
 
@@ -77,3 +77,17 @@ class Dense(Module):
             y = y + self.bias
         
         return y
+    
+
+class Tanh(Module):
+    """Tanh activation layer
+
+    Args:
+        Module (_type_): 
+    """
+    def __init___(self) -> None:
+        super().__init__()
+
+    def forward(self, x: Tensor) -> Tensor:
+        output = (tensor_exp(x) - tensor_exp(-x)) / (tensor_exp(x) + tensor_exp(-x))
+        return output   

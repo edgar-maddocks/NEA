@@ -1,0 +1,36 @@
+from nea.ml.autograd import Tensor
+
+def tensor_mean(a: Tensor) -> Tensor:
+    """Mean of a tensor
+
+    Args:
+        a (Tensor):
+
+    Returns:
+        Tensor: 
+    """
+    return a.mean()
+
+def tensor_sum(a: Tensor, axis: int = -1, keepdims: bool = False) -> Tensor:
+    """sum of tensor
+
+    Args:
+        a (Tensor): 
+        axis (int, optional): axis to sum across. Defaults to -1.
+        keepdims (bool, optional): reduce summed dim to 1?. Defaults to False.
+
+    Returns:
+        Tensor: 
+    """
+    return a.sum(axis=axis, keepdims=keepdims)
+
+def tensor_exp(a: Tensor) -> Tensor:
+    """e^
+
+    Args:
+        a (Tensor): 
+
+    Returns:
+        Tensor: 
+    """
+    return a.exp()

@@ -183,6 +183,19 @@ class Tensor:
         mean_op = Mean()
         return mean_op.forward(self)
     
+    def sum(self, axis: int = -1, keepdims: bool = False) -> Tensor:
+        """Computes sum of a tensor
+
+        Args:
+            axis (int, optional): axis to sum across. Defaults to -1.
+            keepdims (bool, optional): reduce summed axis to 1?. Defaults to False.
+
+        Returns:
+            Tensor: 
+        """
+        sum_op = Sum()
+        return sum_op.forward(self, axis=axis, keepdims=keepdims)
+    
     def log(self) -> Tensor:
         """Computes element wise log of tensor
 
@@ -191,6 +204,15 @@ class Tensor:
         """
         log_op = Log()
         return log_op.forward(self)
+    
+    def exp(self) -> Tensor:
+        """e^
+
+        Returns:
+            Tensor: 
+        """
+        exp_op = Exp()
+        return exp_op.forward(self)
     
     def convolve2d(self, k: Tensorable, b: Tensorable = None) -> Tensor:
         """2D convolutional layer of the tensor
