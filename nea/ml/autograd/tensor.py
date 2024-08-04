@@ -772,6 +772,49 @@ class Log(TensorFunction):
             a.backward(da, y)
 
 
+class Exp(TensorFunction):
+    """e^
+
+    Args:
+        TensorFunction (_type_): 
+    """
+    def forward(self, a: Tensor) -> Tensor:
+        """e^a
+
+        Args:
+            a (Tensor): 
+
+        Returns:
+            Tensor: 
+        """
+        new_data = np.exp(a.data)
+
+        requires_grad = a.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, )
+
+        a.children.append(y)
+
+        self._cache = (a, new_data)
+
+        return y
+    
+    def backward(self, dy: np.ndarray, y: Tensor):
+        """Computes grads
+
+        Args:
+            dy (np.ndarray): 
+            y (Tensor): 
+        """
+        a, new_data = self._cache
+
+        if a.requires_grad:
+            da = dy * new_data
+            a.backward(da, y)
+
+
 class Convolve2D(TensorFunction):
     """2D convolution layer as tensor function
 
