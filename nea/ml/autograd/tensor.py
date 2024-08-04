@@ -9,7 +9,7 @@ from .consts import Tensorable
 # ========
 
 
-def to_tensor(d: Tensorable) -> Tensor:
+def to_tensor(d: Tensorable | Tensor) -> Tensor:
     """Converts data to tensor if not already
 
     Args:
