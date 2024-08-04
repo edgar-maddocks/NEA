@@ -772,10 +772,16 @@
 
     \subsubsubsubsection{Mean}
     \subsubsubsubsubsection{Forward}
-    \begin{align}\frac{\sum_{0}^{n}A}{n} = y, && A = (x_0, x_1, x_2, \hdots x_n) \end{align}
+    \begin{align}\frac{\sum A}{n} = y, && A = (x_0, x_1, x_2, \hdots x_n) \end{align}
     \subsubsubsubsubsection{Backward}
-    \begin{align} \frac{\partial y}{\partial X} = B, && B = ({\frac{1}{n}}_0, {\frac{1}{n}}_1, {\frac{1}{n}}_2 \hdots, {\frac{1}{n}}_n) \end{align}
+    \begin{align} \frac{\partial y}{\partial A} = B, && B = ({\frac{1}{n}}_0, {\frac{1}{n}}_1, {\frac{1}{n}}_2 \hdots, {\frac{1}{n}}_n) \end{align}
     
+    \subsubsubsubsection{Sum}
+    \subsubsubsubsubsection{Forward}
+    \begin{align} \sum A = y, && A = (x_0, x_1, x_2, \hdots x_n) \end{align}
+    \subsubsubsubsubsection{Backward}
+    \begin{align} \frac{\partial y}{\partial A} = B, && B = ({1}_0, {1}_1, {1}_2 \hdots, {1}_n) \end{align}
+
     \subsubsubsubsection{Natural Log}
     \subsubsubsubsubsection{Forward}
     \begin{align} ln(a) = y \end{align}
@@ -828,10 +834,29 @@
     being placed upon the top left element of the input - and then the sliding and summing of products process remains the same.
     
     \subsubsubsection{Neural Network Library}
+    \subsubsubsubsection{Activation Layers}
+    In both dense and convolutional layers, the only operation that is occuring is multiplication and/or matrix multiplication. Graphically,
+    these operations only create linear transformations however in machine learning some problems require non-linearity. To allow for non-linearity
+    neural networks use activation layers which are non-linear functions, normally places between layers.
+    
+    \subsubsubsubsubsection{Tanh}
+    \begin{align}
+        tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+    \end{align}
+
+    \subsubsubsubsubsection{Sigmoid}
+    \begin{align}
+        S(x) = \frac{1}{1 + e^{-x}}
+    \end{align}
+
+    \subsubsubsubsubsection{Softmax}
+    The softmax function is used to turn a vector into a probability distribution. For example, if we had data in the shape (batches, classes) and we wanted to getAction
+    the probability of each batch being in a certain class we would use the softmax function across the axis with the number of class, in this case axis 1.
+    \begin{align}
+        \sigma(x) = \frac{e^x}{\sum e^x} \hspace{10mm} \text{Sum across axis with number of classifications in x}
+    \end{align}
 
     \subsubsubsection{Reinforcement Learning Solution}
-
-    
 
     \subsection{Set of objectives}
     \subsubsection{Draughts Game}
