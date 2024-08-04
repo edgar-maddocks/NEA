@@ -683,6 +683,51 @@ class Mean(TensorFunction):
             a.backward(da, y)
 
 
+class Sum(TensorFunction):
+    """Sum of a tensor
+
+    Args:
+        TensorFunction (_type_): _description_
+    """
+    def forward(self, a: Tensor, axis: int, keepdims: bool) -> Tensor:
+        """Computes sum of a tensor
+
+        Args:
+            a (Tensor): 
+            axis (int): axis to take sum across
+            keepdims (bool): keepdims maintains the number of dimensions - reduces summed axis to 1
+
+        Returns:
+            Tensor: _description_
+        """
+        new_data = a.data.sum(axis=axis, keepdims=keepdims)
+
+        requires_grad = a.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, )
+
+        a.children.append(y)
+
+        self._cache = (a, )
+
+        return y
+    
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        """Computes gradients of sum function
+
+        Args:
+            dy (np.ndarray): gradient from upstream
+            y (Tensor): 
+        """
+        a, = self._cache
+
+        if a.requires_grad:
+            da = dy * np.ones(a.shape)
+            a.backward(da, y)
+    
+
 class Log(TensorFunction):
     """Log operation
 
