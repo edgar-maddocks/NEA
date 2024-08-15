@@ -126,6 +126,28 @@ INPUT c:/texlive/2024/texmf-dist/tex/latex/wrapfig/wrapfig.sty
 INPUT c:/texlive/2024/texmf-dist/tex/latex/wrapfig/wrapfig.sty
 INPUT c:/texlive/2024/texmf-dist/tex/latex/tools/array.sty
 INPUT c:/texlive/2024/texmf-dist/tex/latex/tools/array.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/xcolor/xcolor.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/xcolor/xcolor.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
+INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
+INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
+INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx
+INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx
+INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx
+INPUT c:/texlive/2024/texmf-dist/tex/generic/soul/soul.sty
+INPUT c:/texlive/2024/texmf-dist/tex/generic/soul/soul.sty
+INPUT c:/texlive/2024/texmf-dist/tex/generic/soul/soul-ori.sty
+INPUT c:/texlive/2024/texmf-dist/tex/generic/soul/soul-ori.sty
+INPUT c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map
+INPUT c:/texlive/2024/texmf-dist/fonts/tfm/jknappen/ec/ectt1000.tfm
+INPUT c:/texlive/2024/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+INPUT c:/texlive/2024/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/lipsum/lipsum.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/lipsum/lipsum.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/lipsum/lipsum.ltd.tex
+INPUT c:/texlive/2024/texmf-dist/tex/latex/lipsum/lipsum.ltd.tex
 INPUT ./Edgar NEA tex.aux
 INPUT ./Edgar NEA tex.aux
 INPUT Edgar NEA tex.aux
@@ -139,13 +161,6 @@ INPUT c:/texlive/2024/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT c:/texlive/2024/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT c:/texlive/2024/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/color.sty
-INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/color.sty
-INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
-INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
-INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg
-INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx
-INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx
-INPUT c:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx
 INPUT ./Edgar NEA tex.out
 INPUT ./Edgar NEA tex.out
 INPUT Edgar NEA tex.out
@@ -154,7 +169,6 @@ OUTPUT Edgar NEA tex.pdf
 INPUT ./Edgar NEA tex.out
 INPUT ./Edgar NEA tex.out
 OUTPUT Edgar NEA tex.out
-INPUT c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT c:/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
 INPUT c:/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
 INPUT c:/texlive/2024/texmf-dist/fonts/tfm/public/cm/cmr17.tfm

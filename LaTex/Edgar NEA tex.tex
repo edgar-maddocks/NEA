@@ -14,9 +14,7 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
-    filecolor=magenta,      
     urlcolor=cyan,
-    pdfpagemode=FullScreen,
 }
 
 \usepackage{wrapfig}
@@ -28,10 +26,13 @@
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{3}
 
+\usepackage{xcolor,soul,lipsum}
+
 \makeatletter
 \newcommand\subsubsubsection{\@startsection{paragraph}{4}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
 \newcommand\subsubsubsubsection{\@startsection{subparagraph}{5}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize\bfseries}}
 \newcommand\subsubsubsubsubsection{\@startsection{subparagraph}{6}{\z@}{-2.5ex\@plus -1ex \@minus -.25ex}{1.25ex \@plus .25ex}{\normalfont\normalsize}}
+\newcommand{\myhy}[2]{\hyperref[#1]{\color{black}\setulcolor{black}\ul{#2}}}
 \makeatother
 
 
@@ -369,7 +370,6 @@
         \frac{\partial v_1}{\partial x_1} &= cos(x_1)
     \end{align}
 
-    \pagebreak
     And finally, evaluating equation $(8)$, as well as substituting our intermediate variables in terms of $x_1$, to obtain $\frac{\partial y}{\partial x_1}$:
     \begin{align}
         \frac{\partial y}{\partial x_1} &= \frac{cos(x_1)}{v_3 \cdot v_2}\\
@@ -405,7 +405,7 @@
     maps without uncertainty i.e. the agent will take the same action given the same state. Stochastic policies on the other hand output a distribution which maps a state to the probability of 
     each action.
 
-    \begin{wrapfigure}[11]{l}{0.4\linewidth}
+    \begin{wrapfigure}[17]{l}{0.4\linewidth}
         \centering
         \includegraphics[scale=0.4]{qlearning.PNG}
         \caption{Representation of Q-learning process}
@@ -420,6 +420,27 @@
 
     Model-based solutions are best when trying to optimize the reward for a task - such as playing chess. Whereas model-free solutions are best for tasks such as self-driving cars (as a model-based
     approach may run over a pedestrian just to try and complete the journey in the shortest time).
+
+    \subsubsubsection{AlphaZero}
+    As mentioned before, AlphaZero is model-based - but how exactly it works is unique and does not have a naming convention like Q-learning.
+
+    AlphaZero uses a process called Monte Carlo Tree Search (MCTS) to build a tree of future variations of a game. This tree is built depth first - so only begins building a new branch, when the state in the
+    branch currently being explored is terminal. When building this tree, MCTS must select a child node - if all possible new actions have been exhausted. To do this a formula called the upper confidence 
+    bound (UCB) is used. The UCB formula can be seen below.
+    \begin{align}
+        UCB = \frac{w_i}{n_i} + C\sqrt{\frac{ln(N_i)}{n_i}}
+    \end{align}
+    
+    In this equation, $w_i$ represents the number of wins a node has, $n_i$ represents the number of visits a node has, $N-i$ represents the number of visits the parent node has, and $C$ is a coefficient which
+    controls the levels of exploration in the MCTS model.
+    Also, after each branch has reached a terminal state the MCTS backpropogates and records how many times each node has been visited, and how many times that node has lead to a winning terminal state. 
+    Using this recorded data, the MCTS model can build a distribution which models the probability of winning the game for each action in the current state. This allows the model to 'learn' the rules
+    of the game, as illegal actions will have a probability of 0. This distribution can also be called the MCTS' policy.
+
+    To improve this process, AlphaZero uses a neural network to help prune some branches of the tree which can be assumed to lead to a losing state. This allows the MCTS to search only more effective
+    lines of play. The exact algorithm for this can be found in \myhy{sec:IDoA}{Identification of Algorithms}
+    
+
 
     
     \subsubsection{Similar Systems}
@@ -505,7 +526,7 @@
     \begin{wrapfigure}{l}{0.5\linewidth}
         \centering
         \includegraphics[scale=0.4]{AutoDiffUML.drawio.png}
-        \caption{Example pre-design UML for Auto Diff}
+        \caption{Example UML for Auto Diff}
     \end{wrapfigure}
     The automatic differentiation engine will be based off of the 'Tensor' object. This object will be similar to a matrix but have some additonal
     attributes, such as its gradient and if its gradient requires computing. If the tensor does require a gradient then it will also store its parent
@@ -532,15 +553,11 @@
     the learning rate as well as any parameters the optimizer is related to. It will also have virtual methods - which will be overriden by the specific optimizer classes - of
     a step (which updates all parameters), a function to zero the gradient of all parameters and finally a function to add parameters.
 
-    The final class in the library will be the Sequential class. This class will represent a model (collection of layers) and abstract some complexity of working with individual layers.
-    The class will have a list of layers which make up the model, a loss function to use and an optimizer. It will abstract away training of the model via a train function, with default
-    values of some hyperparameters.
-
     Below is an inheritance diagram for the Neural Network Library, without any attributes and methods.
 
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.4]{NNUML (simple).drawio.png}
+        \includegraphics[scale=0.5]{NNUML (simple).drawio.png}
         \caption{Inheritance diagram for Neural Network Library}
     \end{figure}
 
@@ -552,7 +569,7 @@
 
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.45]{RLSolutionUML.png}
+        \includegraphics[scale=0.5]{RLSolutionUML.png}
         \caption{Reinforcement Learning Solution UML}
     \end{figure}
     
@@ -560,6 +577,7 @@
 
     \pagebreak
     \subsubsection{Identification of algorithms}
+    \label{sec:IDoA}
     \subsubsubsection{Automatic Differentiation Engine}
     The auto-diff engine will use a recursive DFS of the computational graph to calculate gradients. It uses a DFS as any of the computational graphs that built are directed acyclical graphs,
     and therefore DFS provides a way to search the whole graph in O(n) time. Some pseudocode for this search can be seen below.
@@ -594,7 +612,9 @@
         \For{tensor in savedTensors}
         \If{tensor.requiresGrad is True}
         \State newGrad $\gets \frac{\partial output}{\partial tensor}$ \Comment{Computed by chain rule, specific for each operation}
+        \If{broadcastedDims}
         \State Remove broadcasted dims from newGrad \Comment{newGrad.shape should equal tensor.shape}
+        \EndIf
         \State tensor.backward(newGrad, t)
         \EndIf
         \EndFor
@@ -603,14 +623,14 @@
     \end{algorithm}
 
     \subsubsubsection{Neural Network Library}
-    The two main algorithms in the neural network library are the forward pass and the backward pass through a sequential model. Pseudocode for these can also been seen below.
+    The two main algorithms in the neural network library are the forward pass and the backward pass through a collection of layers. Pseudocode for these can also been seen below.
     \begin{algorithm}
-        \caption{Forward pass of Sequential model}\label{alg:cap}
+        \caption{Forward pass through collection of layers}\label{alg:cap}
         \begin{algorithmic}
-        \Function{predict}{Sequential self, Tensor input}
+        \Function{forward}{Module model, Tensor input}
         \State output $\gets$ input
         
-        \For{layer in self.modules}
+        \For{layer in model.layers}
         \State output $\gets$ layer.forward(output) \Comment{layer's forward function depends on layer type (Dense/Conv)}
         \EndFor
         return output
@@ -619,17 +639,17 @@
     \end{algorithm}
 
     \begin{algorithm}
-        \caption{Training process of Sequential model}\label{alg:cap}
+        \caption{Training process of a module}\label{alg:cap}
         \begin{algorithmic}
-        \Function{fit}{Sequential self, Tensor x, Tensor y, int epochs = 100, int verbose = 1}
+        \Function{fit}{Module model, Optimizer optim, Loss l, Tensor x, Tensor y, int epochs = 100, int verbose = 1}
         \State startTime $\gets$ time.now()
         
         \For{epoch in epochs}
-        \State prediction $\gets$ self.predict(x) \Comment{Get predictions}
-        \State loss $\gets$ self.loss(y, prediction) \Comment{Calculate how far predictions are from true}
-        \State self.optimizer.zero_grads() \Comment{Reset gradients of parameters}
+        \State prediction $\gets$ model.predict(x) \Comment{Get predictions}
+        \State loss $\gets$ l(y, prediction) \Comment{Calculate how far predictions are from true}
+        \State optimizer.zero_grads() \Comment{Reset gradients of parameters}
         \State loss.backwards() \Comment{Calculate gradients of loss}
-        \State self.optimizer.step() \Comment{Update parameter values using calculated gradients}
+        \State optimizer.step() \Comment{Update parameter values using calculated gradients}
 
         \If{verbose is 1}
         \State print(epoch, loss)

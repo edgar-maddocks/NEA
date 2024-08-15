@@ -1,6 +1,6 @@
-from nea.ml.autograd import Tensor
+from nea.ml.autograd import Tensor, Tensorable
 
-def tensor_mean(a: Tensor) -> Tensor:
+def tensor_mean(a: Tensorable) -> Tensor:
     """Mean of a tensor
 
     Args:
@@ -11,7 +11,7 @@ def tensor_mean(a: Tensor) -> Tensor:
     """
     return a.mean()
 
-def tensor_sum(a: Tensor, axis: int = -1, keepdims: bool = False) -> Tensor:
+def tensor_sum(a: Tensorable, axis: int = -1, keepdims: bool = False) -> Tensor:
     """sum of tensor
 
     Args:

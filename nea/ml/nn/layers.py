@@ -90,4 +90,6 @@ class Tanh(Module):
 
     def forward(self, x: Tensor) -> Tensor:
         output = (tensor_exp(x) - tensor_exp(-x)) / (tensor_exp(x) + tensor_exp(-x))
-        return output   
+        return output
+    
+# TODO: Add other activation layers

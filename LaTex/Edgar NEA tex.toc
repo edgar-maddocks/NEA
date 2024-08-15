@@ -11,7 +11,8 @@
 \contentsline {subparagraph}{Forward Pass of a Convolutional Layer}{4}{section*.6}%
 \contentsline {subparagraph}{Gradient Descent}{5}{section*.7}%
 \contentsline {paragraph}{\numberline {1.2.1.3}Automatic Differentiation}{6}{paragraph.1.2.1.3}%
-\contentsline {paragraph}{\numberline {1.2.1.4}Reinforcement Learning (RL)}{8}{paragraph.1.2.1.4}%
+\contentsline {paragraph}{\numberline {1.2.1.4}Reinforcement Learning (RL)}{7}{paragraph.1.2.1.4}%
+\contentsline {paragraph}{\numberline {1.2.1.5}AlphaZero}{8}{paragraph.1.2.1.5}%
 \contentsline {subsubsection}{\numberline {1.2.2}Similar Systems}{9}{subsubsection.1.2.2}%
 \contentsline {subsubsection}{\numberline {1.2.3}Interview with third party}{9}{subsubsection.1.2.3}%
 \contentsline {subsection}{\numberline {1.3}Modelling of the problem}{10}{subsection.1.3}%
