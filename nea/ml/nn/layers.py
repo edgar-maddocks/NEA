@@ -42,6 +42,29 @@ class Module(ABC):
             Tensor: 
         """
         raise NotImplementedError("Cannot call forward on raw module")
+    
+    @property
+    def params(self) -> list[Parameter | Tensor]:
+        """Gets all parameters inside a modules from the self.__dict__ 
+        Also gets any tensors with requires_grad = True,
+        and the parameters from any other module
+
+        Returns:
+            list[Parameter | Tensor]: 
+        """
+
+        params = []
+
+        for param in self.__dict__.values():
+            if isinstance(param, Module):
+                params += param.params
+            elif isinstance(param, Parameter):
+                params += param
+            elif isinstance(param, Tensor):
+                if param.requires_grad:
+                    params += param
+
+        return params
 
 
 class Dense(Module):
