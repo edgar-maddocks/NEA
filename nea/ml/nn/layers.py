@@ -1,7 +1,7 @@
 from abc import ABC
 import numpy as np
 
-from nea.ml.autograd import Tensor, to_tensor, TensorFunction, tensor_exp
+from nea.ml.autograd import Tensor, to_tensor, TensorFunction, tensor_exp, tensor_sum
 from nea.ml.autograd.consts import Tensorable
 
 
@@ -115,4 +115,24 @@ class Tanh(Module):
         output = (tensor_exp(x) - tensor_exp(-x)) / (tensor_exp(x) + tensor_exp(-x))
         return output
     
-# TODO: Add other activation layers
+class Sigmoid(Module):
+    """Sigmoid activation layer
+
+    Args:
+        Module (_type_): 
+    """
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def forward(self, x: Tensor) -> Tensor:
+        output = 1 / (1 + tensor_exp(-x))
+        return output
+    
+class Softmax(Module):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def forward(self, x: Tensor, dim: int = -1) -> Tensor:
+        z = tensor_exp(x)
+        output = z / sum(z, dim=dim)

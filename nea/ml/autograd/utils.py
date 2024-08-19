@@ -15,7 +15,7 @@ def tensor_mean(a: Tensorable) -> Tensor:
     """
     return a.mean()
 
-def tensor_sum(a: Tensorable, axis: int = -1, keepdims: bool = False) -> Tensor:
+def tensor_sum(a: Tensorable, dim: int = -1, keepdims: bool = False) -> Tensor:
     """sum of tensor
 
     Args:
@@ -26,7 +26,7 @@ def tensor_sum(a: Tensorable, axis: int = -1, keepdims: bool = False) -> Tensor:
     Returns:
         Tensor: 
     """
-    return a.sum(axis=axis, keepdims=keepdims)
+    return a.sum(dim=dim, keepdims=keepdims)
 
 def tensor_exp(a: Tensor) -> Tensor:
     """e^
