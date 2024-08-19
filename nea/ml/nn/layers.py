@@ -59,10 +59,10 @@ class Module(ABC):
             if isinstance(param, Module):
                 params += param.params
             elif isinstance(param, Parameter):
-                params += param
+                params.append(param)
             elif isinstance(param, Tensor):
                 if param.requires_grad:
-                    params += param
+                    params.append(param)
 
         return params
 
@@ -102,6 +102,11 @@ class Dense(Module):
         return y
     
 
+# ==========================
+#        Activations
+# ==========================
+
+
 class Tanh(Module):
     """Tanh activation layer
 
@@ -115,6 +120,7 @@ class Tanh(Module):
         output = (tensor_exp(x) - tensor_exp(-x)) / (tensor_exp(x) + tensor_exp(-x))
         return output
     
+
 class Sigmoid(Module):
     """Sigmoid activation layer
 
@@ -129,6 +135,7 @@ class Sigmoid(Module):
         output = 1 / (1 + tensor_exp(-x))
         return output
     
+
 class Softmax(Module):
     def __init__(self) -> None:
         super().__init__()
@@ -136,3 +143,21 @@ class Softmax(Module):
     def forward(self, x: Tensor, dim: int = -1) -> Tensor:
         z = tensor_exp(x)
         output = z / sum(z, dim=dim)
+
+
+# ==========================
+#          Losses
+# ==========================
+    
+
+class MSE(Module):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def __call__(self, predicted: Tensor, true: Tensorable) -> Tensor:
+        return self.forward(predicted=predicted, true=true)
+
+    def forward(self, predicted: Tensor, true: Tensorable) -> Tensor:
+        loss: Tensor = predicted - true
+        loss = ( 1 / true.shape[0] ) * (loss.T @ loss)
+        return loss

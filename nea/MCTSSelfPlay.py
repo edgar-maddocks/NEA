@@ -79,4 +79,4 @@ def simGames(n_games: int = 10,
     print(games)
     return games
 
-simGames(10)
+simGames(10, verbose=1)

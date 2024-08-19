@@ -1,1 +1,2 @@
-from .layers import Module, Dense
+from .layers import Parameter, Module, Dense, Tanh, Softmax, Sigmoid, MSE
+from .optimizers import SGD

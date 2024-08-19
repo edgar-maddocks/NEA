@@ -1,5 +1,6 @@
 from __future__ import annotations
 from abc import ABC
+from copy import deepcopy
 
 import numpy as np
 from .consts import Tensorable
@@ -57,6 +58,12 @@ class Tensor:
             np.ndarray: data in tensor
         """
         return self._data
+    
+    @property
+    def T(self) -> Tensor:
+        copy = deepcopy(self)
+        copy._data = self._data.T
+        return copy
 
     def __repr__(self) -> str:
         return f"Tensor({self._data}, shape = {self.shape})"
@@ -572,7 +579,7 @@ class MatrixMultiplication(TensorFunction):
         a, b = self._cache
 
         if a.requires_grad:
-            da = dy * b.data.T
+            da = dy @ b.data.T
 
             n_dims_da = len(dy.shape)
             n_dims_a = len(a.shape)
@@ -582,7 +589,7 @@ class MatrixMultiplication(TensorFunction):
             a.backward(da, y)
 
         if b.requires_grad:
-            db = dy * a.data.T
+            db = a.data.T @ dy
 
             n_dims_db = len(dy.shape)
             n_dims_b = len(b.shape)
