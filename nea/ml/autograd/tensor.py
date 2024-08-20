@@ -5,6 +5,8 @@ from copy import deepcopy
 import numpy as np
 
 from .consts import Tensorable
+
+# TODO: MOVE CROSS CORRELATION FUNCTIONS INTO SEPERATE FILE
 from .utils import _np_cross_correlate
 
 # ========
@@ -832,7 +834,7 @@ class Exp(TensorFunction):
 
         return y
     
-    def backward(self, dy: np.ndarray, y: Tensor):
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes grads
 
         Args:
@@ -852,7 +854,7 @@ class Convolve2D(TensorFunction):
     Args:
         TensorFunction (_type_):
     """     
-    def forward(self, x: Tensor, k: Tensor, b: Tensor = None):
+    def forward(self, x: Tensor, k: Tensor, b: Tensor = None) -> Tensor:
         """2D Convolution layer of X as input
 
         Args:
@@ -889,7 +891,7 @@ class Convolve2D(TensorFunction):
 
         return y
     
-    def backward(self, dy: np.ndarray, y: Tensor):
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes gradients of a convolutional layer process
 
         Args:

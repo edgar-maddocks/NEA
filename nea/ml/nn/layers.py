@@ -129,7 +129,7 @@ class Conv2D(Module):
         if self.bias:
             self.biases = Parameter(self.output_shape)
 
-    def forward(self, x: Tensor):
+    def forward(self, x: Tensor) -> Tensor:
         return x.convolve2d(k=self.kernels, b=self.biases)
 
 # ==========================

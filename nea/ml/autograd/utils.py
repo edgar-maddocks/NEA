@@ -65,14 +65,14 @@ def _np_cross_correlate(x: np.ndarray, k: np.ndarray) -> np.ndarray:
     if use_cuda:
         # print("CUDA DEVICE DETECTED TO USE")
         # print(cuda.detect())
-        output = _cuda_cross_correlate(x, k)
+        output = _cuda_cross_correlate2d(x, k)
     else:
-        output = _jit_cpu_cross_correlate(x, k)
+        output = _jit_cpu_cross_correlate2d(x, k)
     
     return output
 
 @jit(nopython=True, cache=True)
-def _jit_cpu_cross_correlate(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+def _jit_cpu_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     """Performs cross correlation between two numpy arrays - compiled
 
     Args:
@@ -82,26 +82,25 @@ def _jit_cpu_cross_correlate(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: 
     """
-    a_depth, a_rows, a_cols = a.shape
+    a_rows, a_cols = a.shape
     b_rows, b_cols = b.shape
 
     output_rows = a_rows - b_rows + 1
     output_cols = a_cols - b_cols + 1
     
-    output = np.zeros((a_depth, output_rows, output_cols), dtype=np.float64)
+    output = np.zeros((output_rows, output_cols), dtype=np.float64)
     
-    output_depth, output_rows, output_cols = output.shape
+    output_rows, output_cols = output.shape
     
-    for d in range(output_depth):
-        for i in range(output_rows):
-            for j in range(output_cols):
-                sub_matrix = a[d, i:i+b_rows, j:j+b_cols]
-                output[d, i, j] = np.sum(sub_matrix * b)
+    for i in range(output_rows):
+        for j in range(output_cols):
+            sub_matrix = a[i:i+b_rows, j:j+b_cols]
+            output[i, j] = np.sum(sub_matrix * b)
     
     return output
 
 @cuda.jit(cache=True)
-def _jit_cuda_cross_correlate(a: np.ndarray, b: np.ndarray, output: np.ndarray):
+def _jit_cuda_cross_correlate2d(a: np.ndarray, b: np.ndarray, output: np.ndarray):
     """ Performs cross correlation on one thread for cuda
 
     Args:
@@ -110,19 +109,19 @@ def _jit_cuda_cross_correlate(a: np.ndarray, b: np.ndarray, output: np.ndarray):
         output (np.ndarray): 
     """
     # get position of thread
-    thread_idx, i, j = cuda.grid(3)
+    i, j = cuda.grid(3)
     
-    n_samples, a_rows, a_cols = a.shape
+    a_rows, a_cols = a.shape
     b_rows, b_cols = b.shape
     
-    if thread_idx < n_samples and i < (a_rows - b_rows + 1) and j < (a_cols - b_cols + 1): # check thread is within bounds
+    if i < (a_rows - b_rows + 1) and j < (a_cols - b_cols + 1): # check thread is within bounds
         acc = 0.0
         for di in range(b_rows):
             for dj in range(b_cols):
-                acc += a[thread_idx, i + di, j + dj] * b[di, dj]
-        output[thread_idx, i, j] = acc
+                acc += a[i + di, j + dj] * b[di, dj]
+        output[i, j] = acc
 
-def _cuda_cross_correlate(a: np.ndarray, b: np.ndarray):
+def _cuda_cross_correlate2d(a: np.ndarray, b: np.ndarray):
     """Prepares the shape of blocks and grids, as well as the output array
     and then calls the cuda compiled function
 
@@ -131,18 +130,18 @@ def _cuda_cross_correlate(a: np.ndarray, b: np.ndarray):
         b (np.ndarray): _description_
     """
     # prepare blocks and grids and threads
-    n_samples, a_rows, a_cols = a.shape
+    a_rows, a_cols = a.shape
     b_rows, b_cols = b.shape
 
-    output_shape = (n_samples, a_rows - b_rows + 1, a_cols - b_cols + 1)
+    output_shape = (a_rows - b_rows + 1, a_cols - b_cols + 1)
     output = np.zeros(output_shape, dtype=np.float32)
 
     # bpg calculated according to numba docs
-    threads_per_block = (16, 16, 1)
-    blocks_per_grid = (n_samples, (a_rows - b_rows + 1 + threads_per_block[0] - 1) // threads_per_block[0],
+    threads_per_block = (16, 16)
+    blocks_per_grid = ((a_rows - b_rows + 1 + threads_per_block[0] - 1) // threads_per_block[0],
                     (a_cols - b_cols + 1 + threads_per_block[1] - 1) // threads_per_block[1])
 
-    _jit_cuda_cross_correlate[blocks_per_grid, threads_per_block](a, b, output)
+    _jit_cuda_cross_correlate2d[blocks_per_grid, threads_per_block](a, b, output)
 
     return output
     
@@ -158,14 +157,14 @@ def __compare_cpu_cuda():
 
     start = t.time()
 
-    result = _cuda_cross_correlate(a, b)
+    result = _cuda_cross_correlate2d(a, b)
 
     print("TIME TAKEN CUDA: ", t.time() - start)
     print(result.shape)
 
     start = t.time()
 
-    result = _jit_cpu_cross_correlate(a, b)
+    result = _jit_cpu_cross_correlate2d(a, b)
 
     print("TIME TAKEN CPU: ", t.time() - start)
     print(result.shape)
@@ -186,6 +185,6 @@ def __cross_correlate():
     print(result.shape)
 
 
-"""if __name__ == "__main__":
+if __name__ == "__main__":
     __compare_cpu_cuda()
-    __cross_correlate()"""
+    __cross_correlate()
