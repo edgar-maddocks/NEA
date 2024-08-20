@@ -102,6 +102,36 @@ class Dense(Module):
         return y
     
 
+class Conv2D(Module):
+    """A Convolutional layer
+
+    Args:
+        Module (_type_): 
+    """
+    def __init__(self,
+                 x_shape: tuple[int, int, int], 
+                 kernel_size: int, 
+                 n_kernels: int, 
+                 bias: bool = True) -> None:
+        self.n_kernels = n_kernels
+        assert len(x_shape) == 3, "Input must be of shape (n_samples, *, *)"
+        self.x_shape = x_shape
+
+        x_samples, x_width, x_height = self.x_shape
+
+        self.output_shape = (self.n_kernels, x_width - kernel_size + 1, x_height - kernel_size + 1)
+        self.kernels_shape = (n_kernels, x_samples, kernel_size, kernel_size)
+        
+        self.kernels = Parameter(self.kernels_shape)
+
+        self.bias = bias
+        self.biases = None
+        if self.bias:
+            self.biases = Parameter(self.output_shape)
+
+    def forward(self, x: Tensor):
+        return x.convolve2d(k=self.kernels, b=self.biases)
+
 # ==========================
 #        Activations
 # ==========================

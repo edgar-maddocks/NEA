@@ -3,7 +3,9 @@ from abc import ABC
 from copy import deepcopy
 
 import numpy as np
+
 from .consts import Tensorable
+from .utils import _np_cross_correlate
 
 # ========
 #  TENSOR
@@ -232,7 +234,7 @@ class Tensor:
             Tensor: _description_
         """
         conv_op = Convolve2D()
-        conv_op.forward(self, k, b=b)
+        return conv_op.forward(self, k, b=b)
 
 
 # ==================
@@ -849,13 +851,71 @@ class Convolve2D(TensorFunction):
 
     Args:
         TensorFunction (_type_):
-    """
+    """     
     def forward(self, x: Tensor, k: Tensor, b: Tensor = None):
         """2D Convolution layer of X as input
 
         Args:
             x (Tensor): Input to layer
-            k (Tensor): Kernels to be used
-            b (Tensor, optional): Bias. Defaults to None.
         """
-        raise NotImplementedError
+        self.n_kernels, self.x_samples, self.kernel_size, _ = k.shape
+        self.x_shape = x.shape
+
+        x_samples, x_width, x_height = self.x_shape
+
+        self.output_shape = (self.n_kernels, x_width - self.kernel_size + 1, x_height - self.kernel_size + 1)
+        self.kernels_shape = (self.n_kernels, x_samples, self.kernel_size, self.kernel_size)
+        
+        new_data = np.zeros(self.output_shape)
+        if b:
+            new_data += b.data
+
+        for i in range(self.n_kernels):
+            for j in range(self.x_shape[0]):
+                new_data[i] += _np_cross_correlate(x.data[j], k.data[i, j])
+
+        y = Tensor(new_data, requires_grad=True, operation=self)
+
+        self.parents = (x, k, )
+        if b:
+            self.parents += b
+
+        x.children.append(y)
+        k.children.append(y)
+        if self.b:
+            b.children.append(y)
+
+        self._cache = (x, k, b)
+
+        return y
+    
+    def backward(self, dy: np.ndarray, y: Tensor):
+        """Computes gradients of a convolutional layer process
+
+        Args:
+            dy (np.ndarray): upstream grad
+            y (Tensor): 
+        """
+        x, k, b = self._cache
+
+        if b:
+            if b.requires_grad:
+                db = dy
+                b.backward(db, y)
+
+        if x.requires_grad:
+            pass
+
+        if k.requires_grad:
+            dk = np.zeros(self.kernels_shape)
+            
+            for i in range(self.n_kernels):
+                for j in range(self.x_samples):
+                    dk[i, j] = _np_cross_correlate(x.data[j], dy[i])
+
+            k.backward(dk, y)
+
+            
+
+
+
