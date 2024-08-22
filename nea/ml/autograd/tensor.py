@@ -5,7 +5,7 @@ from copy import deepcopy
 import numpy as np
 
 from .consts import Tensorable
-from .convolve_funcs import cpu_forward_convolve2d
+from .convolve_funcs import cpu_forward_convolve2d, cpu_k_backward_convolve2d
 
 # ========
 #  TENSOR
@@ -917,7 +917,7 @@ class Convolve2D(TensorFunction):
 
         x.children.append(y)
         k.children.append(y)
-        if self.b:
+        if b:
             b.children.append(y)
 
         self._cache = (x, k, b)
@@ -935,18 +935,14 @@ class Convolve2D(TensorFunction):
 
         if b:
             if b.requires_grad:
-                db = dy
-                b.backward(db, y)
+                b.backward(dy, y)
 
         if x.requires_grad:
             pass
 
         if k.requires_grad:
             dk = np.zeros(self.kernels_shape)
-            
-            for i in range(self.n_kernels):
-                for j in range(self.x_samples):
-                    dk[i, j] = _np_cross_correlate(x.data[j], dy[i])
+            dk = cpu_k_backward_convolve2d(dk, x.data, dy, self.n_kernels)
 
             k.backward(dk, y)
 
