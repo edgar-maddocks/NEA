@@ -5,9 +5,7 @@ from copy import deepcopy
 import numpy as np
 
 from .consts import Tensorable
-
-# TODO: MOVE CROSS CORRELATION FUNCTIONS INTO SEPERATE FILE
-from .utils import _np_cross_correlate
+from .convolve_funcs import cpu_forward_convolve2d
 
 # ========
 #  TENSOR
@@ -65,6 +63,11 @@ class Tensor:
     
     @property
     def T(self) -> Tensor:
+        """Returns a copy of the tensor, however the data has been transposed
+
+        Returns:
+            Tensor: _description_
+        """
         copy = deepcopy(self)
         copy._data = self._data.T
         return copy
@@ -848,6 +851,38 @@ class Exp(TensorFunction):
             a.backward(da, y)
 
 
+class Transpose(TensorFunction):
+    def forward(self, a: Tensor) -> Tensor:
+        """Transposes the data
+
+        Args:
+            x (Tensor): 
+
+        Returns:
+            Tensor: 
+        """
+        new_data = a.data.T
+
+        requires_grad = a.requires_grad
+
+        y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+        self.parents = (a, )
+
+        a.children.append(y)
+
+        self._cache = (a, )
+
+        return y
+
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        a,  = self._cache
+        
+        if a.requires_grad:
+            da = dy.T
+ 
+            a.backward(da, y)
+
 class Convolve2D(TensorFunction):
     """2D convolution layer as tensor function
 
@@ -872,9 +907,7 @@ class Convolve2D(TensorFunction):
         if b:
             new_data += b.data
 
-        for i in range(self.n_kernels):
-            for j in range(self.x_shape[0]):
-                new_data[i] += _np_cross_correlate(x.data[j], k.data[i, j])
+        new_data = cpu_forward_convolve2d(new_data, x.data, k.data, self.n_kernels)
 
         y = Tensor(new_data, requires_grad=True, operation=self)
 
