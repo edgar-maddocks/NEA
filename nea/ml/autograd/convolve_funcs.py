@@ -1,5 +1,5 @@
 import numpy as np
-from numba import jit, cuda
+from numba import jit
 import time as t
 
 @jit(nopython=True, cache=True)
@@ -18,7 +18,7 @@ def cpu_forward_convolve2d(output: np.ndarray, x: np.ndarray, k: np.ndarray, n_k
     n_samples = x.shape[0]
     for i in range(n_kernels):
             for j in range(n_samples):
-                output[i] = _jit_cpu_cross_correlate2d(x[j], k[i, j])
+                output[i] = _jit_cpu_valid_cross_correlate2d(x[j], k[i, j])
     
     return output
 
@@ -27,12 +27,12 @@ def cpu_k_backward_convolve2d(output: np.ndarray, x: np.ndarray, dy: np.ndarray,
     n_samples = x.shape[0]
     for i in range(n_kernels):
         for j in range(n_samples):
-            output[i, j] = _jit_cpu_cross_correlate2d(x[j], dy[i])
+            output[i, j] = _jit_cpu_valid_cross_correlate2d(x[j], dy[i])
         
     return output
 
 @jit(nopython=True, cache=True)
-def _jit_cpu_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     """Performs cross correlation between two numpy arrays - compiled
 
     Args:

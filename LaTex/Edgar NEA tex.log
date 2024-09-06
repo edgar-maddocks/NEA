@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  20 AUG 2024 13:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  6 SEP 2024 12:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"c:/Users/edgar/OneDrive/Documents/CODE/GitHub/NEA/LaTex/Edgar NEA tex"
-(c:/Users/edgar/OneDrive/Documents/CODE/GitHub/NEA/LaTex/Edgar NEA tex.tex
+**"c:/Users/edgar/OneDrive/Documents/GitHub/NEA/LaTex/Edgar NEA tex"
+(c:/Users/edgar/OneDrive/Documents/GitHub/NEA/LaTex/Edgar NEA tex.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-03-14>
 (c:/texlive/2024/texmf-dist/tex/latex/base/article.cls
@@ -569,7 +569,7 @@ Overfull \hbox (23.96797pt too wide) in paragraph at lines 75--78
 \OT1/cmr/m/n/10 This project is an in-ves-ti-ga-tion into the use of re-in-force-ment learn-ing to play games (in this case draughts/checkers).
  []
 
-<./images/The-starting-position-for-checkers.png, id=137, 308.15125pt x 309.155pt>
+<./images/The-starting-position-for-checkers.png, id=197, 308.15125pt x 309.155pt>
 File: ./images/The-starting-position-for-checkers.png Graphic file (type png)
 <use ./images/The-starting-position-for-checkers.png>
 Package pdftex.def Info: ./images/The-starting-position-for-checkers.png  used on input line 99.
@@ -583,7 +583,7 @@ l.102     T
 
 Package wrapfig Warning: Collision between wrapping environments on input line 108.
 
-<./images/piece being taken.png, id=145, 114.4275pt x 113.67468pt>
+<./images/piece being taken.png, id=205, 114.4275pt x 113.67468pt>
 File: ./images/piece being taken.png Graphic file (type png)
 <use ./images/piece being taken.png>
 Package pdftex.def Info: ./images/piece being taken.png  used on input line 110.
@@ -591,7 +591,7 @@ Package pdftex.def Info: ./images/piece being taken.png  used on input line 110.
 
 Package wrapfig Warning: Stationary wrapfigure forced to float on input line 113.
 
-<./images/double hop.png, id=147, 171.13937pt x 171.13937pt>
+<./images/double hop.png, id=207, 171.13937pt x 171.13937pt>
 File: ./images/double hop.png Graphic file (type png)
 <use ./images/double hop.png>
 Package pdftex.def Info: ./images/double hop.png  used on input line 131.
@@ -601,75 +601,75 @@ Underfull \hbox (badness 10000) in paragraph at lines 146--148
 
  []
 
-<./images/ConnectedNode.png, id=158, 548.80031pt x 545.03625pt>
+<./images/ConnectedNode.png, id=218, 548.80031pt x 545.03625pt>
 File: ./images/ConnectedNode.png Graphic file (type png)
 <use ./images/ConnectedNode.png>
 Package pdftex.def Info: ./images/ConnectedNode.png  used on input line 153.
 (pdftex.def)             Requested size: 109.7581pt x 109.00531pt.
 [3 <./images/ConnectedNode.png>]
-<./images/ConvInputIndependentCode.png, id=179, 788.9475pt x 593.21625pt>
+<./images/ConvInputIndependentCode.png, id=237, 788.9475pt x 593.21625pt>
 File: ./images/ConvInputIndependentCode.png Graphic file (type png)
 <use ./images/ConvInputIndependentCode.png>
 Package pdftex.def Info: ./images/ConvInputIndependentCode.png  used on input line 238.
 (pdftex.def)             Requested size: 157.7867pt x 118.64114pt.
  [4 <./images/ConvInputIndependentCode.png>]
-<./images/ConvForwardPropIndependentCode.png, id=193, 537.207pt x 269.808pt>
+<./images/ConvForwardPropIndependentCode.png, id=251, 537.207pt x 269.808pt>
 File: ./images/ConvForwardPropIndependentCode.png Graphic file (type png)
 <use ./images/ConvForwardPropIndependentCode.png>
 Package pdftex.def Info: ./images/ConvForwardPropIndependentCode.png  used on input line 261.
 (pdftex.def)             Requested size: 161.16335pt x 80.94302pt.
-<./images/MSEplot.png, id=194, 403.9893pt x 393.8715pt>
+<./images/MSEplot.png, id=252, 403.9893pt x 393.8715pt>
 File: ./images/MSEplot.png Graphic file (type png)
 <use ./images/MSEplot.png>
 Package pdftex.def Info: ./images/MSEplot.png  used on input line 292.
 (pdftex.def)             Requested size: 201.99416pt x 196.93526pt.
-<./images/image.png, id=195, 880.03781pt x 612.78937pt>
+<./images/image.png, id=253, 880.03781pt x 612.78937pt>
 File: ./images/image.png Graphic file (type png)
 <use ./images/image.png>
 Package pdftex.def Info: ./images/image.png  used on input line 301.
 (pdftex.def)             Requested size: 176.00444pt x 122.5557pt.
  [5 <./images/ConvForwardPropIndependentCode.png> <./images/MSEplot.png>]
-<./images/ExampleCompGraph.png, id=208, 415.5525pt x 684.5575pt>
+<./images/ExampleCompGraph.png, id=266, 415.5525pt x 684.5575pt>
 File: ./images/ExampleCompGraph.png Graphic file (type png)
 <use ./images/ExampleCompGraph.png>
 Package pdftex.def Info: ./images/ExampleCompGraph.png  used on input line 350.
 (pdftex.def)             Requested size: 141.28598pt x 232.74646pt.
  [6 <./images/image.png>]
-<./images/markovprocess.png, id=226, 413.545pt x 122.4575pt>
+<./images/markovprocess.png, id=283, 413.545pt x 122.4575pt>
 File: ./images/markovprocess.png Graphic file (type png)
 <use ./images/markovprocess.png>
 Package pdftex.def Info: ./images/markovprocess.png  used on input line 391.
 (pdftex.def)             Requested size: 206.77199pt x 61.22859pt.
  [7 <./images/ExampleCompGraph.png>]
-<./images/qlearning.PNG, id=242, 390.70969pt x 346.29375pt>
+<./images/qlearning.PNG, id=298, 390.70969pt x 346.29375pt>
 File: ./images/qlearning.PNG Graphic file (type png)
 <use ./images/qlearning.PNG>
 Package pdftex.def Info: ./images/qlearning.PNG  used on input line 410.
 (pdftex.def)             Requested size: 156.2811pt x 138.51503pt.
  [8 <./images/markovprocess.png> <./images/qlearning.PNG>]
-<./images/1992Tinsleymatch.jpg, id=255, 1303.87125pt x 719.68875pt>
+<./images/1992Tinsleymatch.jpg, id=310, 1303.87125pt x 719.68875pt>
 File: ./images/1992Tinsleymatch.jpg Graphic file (type jpg)
 <use ./images/1992Tinsleymatch.jpg>
 Package pdftex.def Info: ./images/1992Tinsleymatch.jpg  used on input line 449.
 (pdftex.def)             Requested size: 189.06644pt x 104.35768pt.
-<./images/download.jpg, id=256, 290.08376pt x 174.6525pt>
+<./images/download.jpg, id=311, 290.08376pt x 174.6525pt>
 File: ./images/download.jpg Graphic file (type jpg)
 <use ./images/download.jpg>
 Package pdftex.def Info: ./images/download.jpg  used on input line 461.
 (pdftex.def)             Requested size: 203.05724pt x 122.2559pt.
  [9 <./images/1992Tinsleymatch.jpg> <./images/download.jpg>]
-<./images/DraughtsUML.png, id=263, 352.31625pt x 355.3275pt>
+<./images/DraughtsUML.png, id=318, 352.31625pt x 355.3275pt>
 File: ./images/DraughtsUML.png Graphic file (type png)
 <use ./images/DraughtsUML.png>
 Package pdftex.def Info: ./images/DraughtsUML.png  used on input line 518.
 (pdftex.def)             Requested size: 253.6675pt x 255.83559pt.
  [10 <./images/DraughtsUML.png>]
-<./images/AutoDiffUML.drawio.png, id=271, 554.07pt x 726.715pt>
+<./images/AutoDiffUML.drawio.png, id=326, 554.07pt x 726.715pt>
 File: ./images/AutoDiffUML.drawio.png Graphic file (type png)
 <use ./images/AutoDiffUML.drawio.png>
 Package pdftex.def Info: ./images/AutoDiffUML.drawio.png  used on input line 528.
 (pdftex.def)             Requested size: 221.62407pt x 290.68085pt.
-<./images/NNUML (simple).drawio.png, id=272, 706.64pt x 362.35374pt>
+<./images/NNUML (simple).drawio.png, id=327, 706.64pt x 362.35374pt>
 File: ./images/NNUML (simple).drawio.png Graphic file (type png)
 <use ./images/NNUML (simple).drawio.png>
 Package pdftex.def Info: ./images/NNUML (simple).drawio.png  used on input line 560.
@@ -683,7 +683,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 567--569
 
  []
 
-<./images/RLSolutionUML.png, id=281, 442.65375pt x 322.20375pt>
+<./images/RLSolutionUML.png, id=334, 442.65375pt x 322.20375pt>
 File: ./images/RLSolutionUML.png Graphic file (type png)
 <use ./images/RLSolutionUML.png>
 Package pdftex.def Info: ./images/RLSolutionUML.png  used on input line 572.
@@ -739,22 +739,28 @@ L3 programming layer <2024-03-14>
 
 LaTeX Warning: There were multiply-defined labels.
 
-Package rerunfilecheck Info: File `"Edgar NEA tex".out' has not changed.
-(rerunfilecheck)             Checksum: 07CD478AF605DBE755DDF357702785BD;4257.
+
+Package rerunfilecheck Warning: File `"Edgar NEA tex".out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `"Edgar NEA tex".out':
+(rerunfilecheck)             Before: B228B4C1F74AF625980EC79CCC4F063D;7129
+(rerunfilecheck)             After:  07CD478AF605DBE755DDF357702785BD;4257.
  ) 
 Here is how much of TeX's memory you used:
- 13240 strings out of 474104
- 204523 string characters out of 5747502
+ 13255 strings out of 474104
+ 204793 string characters out of 5747502
  1944496 words of memory out of 5000000
- 35215 multiletter control sequences out of 15000+600000
+ 35230 multiletter control sequences out of 15000+600000
  563626 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,16n,86p,372b,624s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,16n,86p,367b,624s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on "Edgar NEA tex.pdf" (22 pages, 2569525 bytes).
+Output written on "Edgar NEA tex.pdf" (22 pages, 2570713 bytes).
 PDF statistics:
- 562 PDF objects out of 1000 (max. 8388607)
- 471 compressed objects within 5 object streams
+ 608 PDF objects out of 1000 (max. 8388607)
+ 516 compressed objects within 6 object streams
  213 named destinations out of 1000 (max. 500000)
- 286 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 406 words of extra memory for PDF output out of 10000 (max. 10000000)
 

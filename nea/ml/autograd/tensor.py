@@ -938,7 +938,7 @@ class Convolve2D(TensorFunction):
                 b.backward(dy, y)
 
         if x.requires_grad:
-            pass
+            raise NotImplementedError
 
         if k.requires_grad:
             dk = np.zeros(self.kernels_shape)
