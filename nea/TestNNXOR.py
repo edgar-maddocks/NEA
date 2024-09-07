@@ -1,4 +1,5 @@
 import numpy as np
+import time as t
 
 from nea.ml import nn
 from nea.ml.autograd import Tensor
@@ -32,8 +33,9 @@ if __name__ == "__main__":
 
     loss_func = nn.MSE()
 
-    optim = nn.SGD(model.params, lr = 0.1)
+    optim = nn.SGD(model.params, lr = 0.5)
 
+    start = t.time()
     for i in range(1000):
         preds = model(x)
         
@@ -44,9 +46,11 @@ if __name__ == "__main__":
         optim.zero_grad()
 
     preds = model(x)
-
     print(preds)
     print(loss_func(preds, y))
+    
+    print("TIME TAKEN: ", t.time() - start)
+
 
 
         
