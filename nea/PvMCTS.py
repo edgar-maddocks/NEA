@@ -11,9 +11,10 @@ last_action = None
 while not done:
     game.render()
     if last_action is not None:
-        last_action = CheckersGame.convert_rowcol_to_user(
-            *last_action[0]
-        ), CheckersGame.convert_rowcol_to_user(*last_action[1])
+        last_action = (
+            CheckersGame.convert_rowcol_to_user(*last_action[0]),
+            CheckersGame.convert_rowcol_to_user(*last_action[1]),
+        )
         print("LAST ACTION: ", last_action)
     if game.player == user_colour:
         valids = game.get_all_valid_moves()

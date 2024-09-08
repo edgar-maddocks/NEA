@@ -4,6 +4,7 @@ from .tensor import Tensor
 #    TEST ADDITION
 # ===================
 
+
 def test_addition_funcs():
     """
     .
@@ -11,7 +12,7 @@ def test_addition_funcs():
     a = Tensor(1, requires_grad=True)
     b = Tensor(2, requires_grad=True)
 
-    a.zero_grad() 
+    a.zero_grad()
     y = a + b
     y.backward()
     assert a.grad == 1
@@ -26,9 +27,11 @@ def test_addition_funcs():
     a.backward()
     assert a.grad == 1
 
+
 # ======================
 #    TEST SUBTRACTION
 # ======================
+
 
 def test_subtraction_funcs():
     """
@@ -48,9 +51,11 @@ def test_subtraction_funcs():
     b.backward()
     assert b.grad == 1
 
+
 # =========================
 #    TEST MULTIPLICATION
 # =========================
+
 
 def test_multiplication_funcs():
     """
@@ -66,9 +71,11 @@ def test_multiplication_funcs():
     assert a.grad == 2
     assert b.grad == 1
 
+
 # =========================
 #    TEST DIVISION
 # =========================
+
 
 def test_division_funcs():
     """
@@ -82,9 +89,4 @@ def test_division_funcs():
 
     y.backward()
     assert a.grad == (1 / 2)
-    assert b.grad == - (4 / (2 ** 2))
-
-
-
-
-    
+    assert b.grad == -(4 / (2**2))

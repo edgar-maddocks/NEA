@@ -19,7 +19,7 @@ class Node:
         terminal: bool = False,
         action_taken: ACTION = None,
         reward: float = None,
-        **kwargs
+        **kwargs,
     ) -> None:
         self._game = deepcopy(game)
         self.colour = self._game.player
@@ -59,7 +59,7 @@ class Node:
         """returns protected attribute of action take
 
         Returns:
-            ACTION: 
+            ACTION:
         """
         return self._action_taken
 
@@ -135,6 +135,7 @@ class MCTS:
     """
     Monte Carlo Tree Search class used to search for lines until termination in a given state
     """
+
     def __init__(self, **kwargs) -> None:
         """Creates a new MCTS object
 
@@ -157,9 +158,7 @@ class MCTS:
             root (CheckersGame): New state to root the tree from
         """
         self._root = Node(root, eec=self.kwargs["eec"])
-        for _ in tqdm(
-            range(int(self.kwargs["n_searches"] / self.kwargs["n_jobs"]))
-        ):
+        for _ in tqdm(range(int(self.kwargs["n_searches"] / self.kwargs["n_jobs"]))):
             node = self._root
             if node.n_available_moves_left == 0:
                 node = node.select_child()
@@ -189,8 +188,8 @@ class MCTS:
         """
         p = np.zeros(
             (8, 8, 8)
-        )   # (8x8) shows where to take piece from. Final 8 shows what direc e.g. 
-            # idx 0 = row+1,col+1, idx 1 = row+1, col-1 etc.
+        )  # (8x8) shows where to take piece from. Final 8 shows what direc e.g.
+        # idx 0 = row+1,col+1, idx 1 = row+1, col-1 etc.
         for child in self._root.children:
             piece_moved, moved_to = child.action_taken
             row_change = moved_to[0] - piece_moved[0]

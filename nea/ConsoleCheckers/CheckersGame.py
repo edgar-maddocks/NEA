@@ -1,6 +1,17 @@
-from nea.ConsoleCheckers.consts import (BLACK, WHITE, SIZE, BLACKS, WHITES, 
-                                    BLACK_R, WHITE_R, ACTION, LEGAL_DIRS, 
-                                    COLS_TO_NUMS, NUMS_TO_COLS, NUM_TO_STR)
+from nea.ConsoleCheckers.consts import (
+    BLACK,
+    WHITE,
+    SIZE,
+    BLACKS,
+    WHITES,
+    BLACK_R,
+    WHITE_R,
+    ACTION,
+    LEGAL_DIRS,
+    COLS_TO_NUMS,
+    NUMS_TO_COLS,
+    NUM_TO_STR,
+)
 from nea.ConsoleCheckers.utils import clear_window
 
 import numpy as np
@@ -10,6 +21,7 @@ class CheckersGame:
     """
     Holds basic logic and console rendering of a checkers game
     """
+
     def __init__(self) -> None:
         """
         Creates a new CheckersGame object
@@ -19,7 +31,6 @@ class CheckersGame:
         self._player = WHITE
         self._moves_no_capture = 0
         self._switch_player = None
-
 
     @property
     def opposite_player(self) -> None:
@@ -32,7 +43,7 @@ class CheckersGame:
             return BLACK
         elif self._player == BLACK:
             return WHITE
-        
+
     @property
     def player(self) -> str:
         """Returns protected player attribute
@@ -41,7 +52,7 @@ class CheckersGame:
             str: current player
         """
         return self._player
-    
+
     @property
     def n_black_pieces(self) -> int:
         """Calculates the number of black pieces remaining on the board
@@ -53,9 +64,9 @@ class CheckersGame:
         for row in range(SIZE):
             for col in range(SIZE):
                 if self._board[row, col] in BLACKS:
-                    n+=1
+                    n += 1
         return n
-    
+
     @property
     def n_white_pieces(self) -> int:
         """Calculates the number of white pieces remaining on the board
@@ -67,9 +78,9 @@ class CheckersGame:
         for row in range(SIZE):
             for col in range(SIZE):
                 if self._board[row, col] in WHITES:
-                    n+=1
+                    n += 1
         return n
-    
+
     @property
     def n_opposite_player_pieces(self) -> int:
         """Calculates the number of pieces the opposing player has.
@@ -82,7 +93,7 @@ class CheckersGame:
             return self.n_black_pieces
         elif self._player == BLACK:
             return self.n_white_pieces
-        
+
     @property
     def board(self) -> np.ndarray:
         """Returns protected board attribute
@@ -91,7 +102,7 @@ class CheckersGame:
             np.ndarray: state of board
         """
         return self._board
-    
+
     def _init_board(self) -> np.ndarray:
         """Method which returns intial state of the board
 
@@ -112,7 +123,7 @@ class CheckersGame:
                         board[row, col] = BLACK_R if row <= 2 else WHITE_R
 
         return board
-    
+
     def square_is_empty(self, row: int, col: int) -> bool:
         """Function to check if a square is empty
 
@@ -127,10 +138,10 @@ class CheckersGame:
             return True
         else:
             return False
-    
+
     def get_all_valid_moves(self) -> dict[str, list[ACTION]]:
         """Returns a dictionary of take and simple moves.
-        Does not account for if a double moves are available. 
+        Does not account for if a double moves are available.
 
         Keys:
             Takes moves: "takes"
@@ -151,7 +162,7 @@ class CheckersGame:
                     moves["takes"] += self._get_valid_take_moves(row, col)
 
         return moves
-    
+
     def _get_valid_take_moves(self, row: int, col: int) -> list[ACTION]:
         """Gets all valid take moves available for a given square
 
@@ -170,22 +181,34 @@ class CheckersGame:
                     if (
                         row + 2 * direction[0] in range(8)
                         and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]] in WHITES
-                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
+                        and self._board[row + direction[0], col + direction[1]]
+                        in WHITES
+                        and self.square_is_empty(
+                            row + 2 * direction[0], col + 2 * direction[1]
+                        )
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
                         )
             elif piece == 1:
                 for direction in LEGAL_DIRS[BLACK]["regular"]:
                     if (
                         row + 2 * direction[0] in range(8)
                         and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]] in WHITES
-                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
+                        and self._board[row + direction[0], col + direction[1]]
+                        in WHITES
+                        and self.square_is_empty(
+                            row + 2 * direction[0], col + 2 * direction[1]
+                        )
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
                         )
         elif self._player == WHITE:
             if piece == 4:
@@ -193,26 +216,38 @@ class CheckersGame:
                     if (
                         row + 2 * direction[0] in range(8)
                         and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]] in BLACKS
-                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
+                        and self._board[row + direction[0], col + direction[1]]
+                        in BLACKS
+                        and self.square_is_empty(
+                            row + 2 * direction[0], col + 2 * direction[1]
+                        )
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
                         )
             elif piece == 3:
                 for direction in LEGAL_DIRS[WHITE]["regular"]:
                     if (
                         row + 2 * direction[0] in range(8)
                         and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]] in BLACKS
-                        and self.square_is_empty(row + 2 * direction[0], col + 2 * direction[1])
+                        and self._board[row + direction[0], col + direction[1]]
+                        in BLACKS
+                        and self.square_is_empty(
+                            row + 2 * direction[0], col + 2 * direction[1]
+                        )
                     ):
                         valid_moves.append(
-                            ((row, col), (row + 2 * direction[0], col + 2 * direction[1]))
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
                         )
 
         return valid_moves
-    
+
     def _get_valid_simple_moves(self, row: int, col: int) -> list[ACTION]:
         """Gets all valid simple moves available for a given square
 
@@ -233,7 +268,9 @@ class CheckersGame:
                         and col + direction[1] in range(8)
                         and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
+                        valid_moves.append(
+                            ((row, col), (row + direction[0], col + direction[1]))
+                        )
             elif piece == 1:
                 for direction in LEGAL_DIRS[BLACK]["regular"]:
                     if (
@@ -241,7 +278,9 @@ class CheckersGame:
                         and col + direction[1] in range(8)
                         and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
+                        valid_moves.append(
+                            ((row, col), (row + direction[0], col + direction[1]))
+                        )
         elif self._player == WHITE:
             if piece == 4:
                 for direction in LEGAL_DIRS[WHITE]["king"]:
@@ -250,7 +289,9 @@ class CheckersGame:
                         and col + direction[1] in range(8)
                         and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
+                        valid_moves.append(
+                            ((row, col), (row + direction[0], col + direction[1]))
+                        )
             elif piece == 3:
                 for direction in LEGAL_DIRS[WHITE]["regular"]:
                     if (
@@ -258,7 +299,9 @@ class CheckersGame:
                         and col + direction[1] in range(8)
                         and self.square_is_empty(row + direction[0], col + direction[1])
                     ):
-                        valid_moves.append(((row, col), (row + direction[0], col + direction[1])))
+                        valid_moves.append(
+                            ((row, col), (row + direction[0], col + direction[1]))
+                        )
 
         return valid_moves
 
@@ -297,11 +340,17 @@ class CheckersGame:
         rowcol_move_from, rowcol_move_to = action[0], action[1]
         if self._last_moved_piece is None:
             all_valid_moves = self.get_all_valid_moves()
-            if len(all_valid_moves["takes"]) == 0 and len(all_valid_moves["simple"]) == 0:
+            if (
+                len(all_valid_moves["takes"]) == 0
+                and len(all_valid_moves["simple"]) == 0
+            ):
                 return (True, self._board, True, -1)
-            
-            valid_moves_for_turn = (all_valid_moves["takes"] if len(all_valid_moves["takes"]) > 0 
-                                    else all_valid_moves["simple"])
+
+            valid_moves_for_turn = (
+                all_valid_moves["takes"]
+                if len(all_valid_moves["takes"]) > 0
+                else all_valid_moves["simple"]
+            )
 
             if action not in valid_moves_for_turn:
                 return (False, self._board, False, 0)
@@ -312,7 +361,7 @@ class CheckersGame:
 
         elif self._last_moved_piece is not None:
             valid_moves_for_turn = self._get_valid_take_moves(*self._last_moved_piece)
-            
+
             if action not in valid_moves_for_turn:
                 return (False, self._board, False, 0)
             else:
@@ -347,7 +396,7 @@ class CheckersGame:
         else:
             if self._switch_player:
                 self._player = self.opposite_player
-            return(True, self._board, False, 0)
+            return (True, self._board, False, 0)
 
     @staticmethod
     def convert_rowcol_to_game(row: int, col: str) -> tuple[int, int]:

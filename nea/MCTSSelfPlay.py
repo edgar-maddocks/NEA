@@ -3,12 +3,15 @@ import numpy as np
 from nea.mcts import MCTS
 from nea.ConsoleCheckers import CheckersGame
 
-def simGames(n_games: int = 10, 
-            n_searches_mcts1: int = 100000, 
-            n_searches_mcts2: int = 10000, 
-            eec_mcts1: float = 1.41, 
-            eec_mcts2: float = 1.41,
-            verbose: int = 0):
+
+def simGames(
+    n_games: int = 10,
+    n_searches_mcts1: int = 100000,
+    n_searches_mcts2: int = 10000,
+    eec_mcts1: float = 1.41,
+    eec_mcts2: float = 1.41,
+    verbose: int = 0,
+):
     """Simulates a given number of games between two mcts models with
     given hyperparams
 
@@ -25,7 +28,7 @@ def simGames(n_games: int = 10,
     """
     games = []
     for gamen in range(n_games):
-        mcts1 = MCTS(eec=eec_mcts1, n_searches= n_searches_mcts1)
+        mcts1 = MCTS(eec=eec_mcts1, n_searches=n_searches_mcts1)
         mcts2 = MCTS(eec=eec_mcts2, n_searches=n_searches_mcts2)
 
         game = CheckersGame()
@@ -57,7 +60,7 @@ def simGames(n_games: int = 10,
                     games.append("draw")
                 elif done and reward == -1:
                     games.append("mcts2")
-            
+
             else:
                 mcts2.build_tree(game)
                 action = mcts2.get_action()
@@ -78,5 +81,6 @@ def simGames(n_games: int = 10,
 
     print(games)
     return games
+
 
 simGames(10, verbose=1)

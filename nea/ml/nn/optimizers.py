@@ -5,8 +5,14 @@ from nea.ml.nn import Parameter
 
 import numpy as np
 
+
 class Optimizer(ABC):
-    def __init__(self, params: list[Tensor | Parameter], lr: float = 0.001, regulization: float = 0) -> None:
+    def __init__(
+        self,
+        params: list[Tensor | Parameter],
+        lr: float = 0.001,
+        regulization: float = 0,
+    ) -> None:
         self.params = params
         self.lr = lr
         self.regulization = regulization
@@ -24,12 +30,20 @@ class Optimizer(ABC):
         for param in self.params:
             param.zero_grad()
 
+
 class SGD(Optimizer):
-    def __init__(self, params: list[Tensor | Parameter], lr: float = 0.001, regulization: float = 0) -> None:
+    def __init__(
+        self,
+        params: list[Tensor | Parameter],
+        lr: float = 0.001,
+        regulization: float = 0,
+    ) -> None:
         super().__init__(params, lr, regulization)
 
     def step(self) -> None:
         for param in self.params:
-            param._data = param._data - (self.lr * param.grad) - (self.lr * self.regulization * param._data)
-
-    
+            param._data = (
+                param._data
+                - (self.lr * param.grad)
+                - (self.lr * self.regulization * param._data)
+            )

@@ -9,15 +9,19 @@ class Parameter(Tensor):
     """
     Represents a parameter
     """
-    def __init__(self, shape: tuple[int] = None, 
-                 requires_grad: bool = True, 
-                 operation: TensorFunction = None) -> None:
+
+    def __init__(
+        self,
+        shape: tuple[int] = None,
+        requires_grad: bool = True,
+        operation: TensorFunction = None,
+    ) -> None:
         if shape is not None:
             data = np.random.randn(*shape)
             super().__init__(data, requires_grad=requires_grad, operation=operation)
         else:
             raise ValueError("shape must be specified and cannot be left as None")
-        
+
     def set_data(self, data: Tensorable) -> None:
         """Allows user to set the data in parameters
 
@@ -29,9 +33,10 @@ class Parameter(Tensor):
 
 class Module(ABC):
     """Basis of all layers"""
+
     def __call__(self, x: Tensorable) -> Tensor:
         return self.forward(to_tensor(x))
-    
+
     def forward(self, x: Tensorable) -> Tensor:
         """Forward propogation of module
 
@@ -39,18 +44,18 @@ class Module(ABC):
             x (Tensorable): Input data
 
         Returns:
-            Tensor: 
+            Tensor:
         """
         raise NotImplementedError("Cannot call forward on raw module")
-    
+
     @property
     def params(self) -> list[Parameter | Tensor]:
-        """Gets all parameters inside a modules from the self.__dict__ 
+        """Gets all parameters inside a modules from the self.__dict__
         Also gets any tensors with requires_grad = True,
         and the parameters from any other module
 
         Returns:
-            list[Parameter | Tensor]: 
+            list[Parameter | Tensor]:
         """
 
         params = []
@@ -71,8 +76,9 @@ class Dense(Module):
     """Fully connected layer
 
     Args:
-        Module (_type_): 
+        Module (_type_):
     """
+
     def __init__(self, n_inputs: int, n_outputs: int, bias: bool = True) -> None:
         """Instantiates a new dense layer
 
@@ -84,7 +90,7 @@ class Dense(Module):
         super().__init__()
         self.weights = Parameter((n_inputs, n_outputs))
         if bias:
-            self.bias = Parameter((n_outputs, ))
+            self.bias = Parameter((n_outputs,))
 
     def forward(self, x: Tensorable) -> Tensor:
         """Propogates input data through dense layer
@@ -93,35 +99,42 @@ class Dense(Module):
             x (Tensorable): input data
 
         Returns:
-            Tensor: 
+            Tensor:
         """
         y = x @ self.weights
         if self.bias:
             y = y + self.bias
-        
+
         return y
-    
+
 
 class Conv2D(Module):
     """A Convolutional layer
 
     Args:
-        Module (_type_): 
+        Module (_type_):
     """
-    def __init__(self,
-                 x_shape: tuple[int, int, int], 
-                 kernel_size: int, 
-                 n_kernels: int, 
-                 bias: bool = True) -> None:
+
+    def __init__(
+        self,
+        x_shape: tuple[int, int, int],
+        kernel_size: int,
+        n_kernels: int,
+        bias: bool = True,
+    ) -> None:
         self.n_kernels = n_kernels
         assert len(x_shape) == 3, "Input must be of shape (n_samples, *, *)"
         self.x_shape = x_shape
 
         x_samples, x_width, x_height = self.x_shape
 
-        self.output_shape = (self.n_kernels, x_width - kernel_size + 1, x_height - kernel_size + 1)
+        self.output_shape = (
+            self.n_kernels,
+            x_width - kernel_size + 1,
+            x_height - kernel_size + 1,
+        )
         self.kernels_shape = (n_kernels, x_samples, kernel_size, kernel_size)
-        
+
         self.kernels = Parameter(self.kernels_shape)
 
         self.bias = bias
@@ -132,6 +145,7 @@ class Conv2D(Module):
     def forward(self, x: Tensor) -> Tensor:
         return x.convolve2d(k=self.kernels, b=self.biases)
 
+
 # ==========================
 #        Activations
 # ==========================
@@ -141,21 +155,22 @@ class Tanh(Module):
     """Tanh activation layer
 
     Args:
-        Module (_type_): 
+        Module (_type_):
     """
+
     def __init___(self) -> None:
         super().__init__()
 
     def forward(self, x: Tensor) -> Tensor:
         output = (tensor_exp(x) - tensor_exp(-x)) / (tensor_exp(x) + tensor_exp(-x))
         return output
-    
+
 
 class Sigmoid(Module):
     """Sigmoid activation layer
 
     Args:
-        Module (_type_): 
+        Module (_type_):
     """
 
     def __init__(self) -> None:
@@ -164,7 +179,7 @@ class Sigmoid(Module):
     def forward(self, x: Tensor) -> Tensor:
         output = 1 / (1 + tensor_exp(-x))
         return output
-    
+
 
 class Softmax(Module):
     def __init__(self) -> None:
@@ -178,7 +193,7 @@ class Softmax(Module):
 # ==========================
 #          Losses
 # ==========================
-    
+
 
 class MSE(Module):
     def __init__(self) -> None:
@@ -189,5 +204,5 @@ class MSE(Module):
 
     def forward(self, predicted: Tensor, true: Tensorable) -> Tensor:
         loss: Tensor = predicted - true
-        loss = ( 1 / true.shape[0] ) * (loss.T @ loss)
+        loss = (1 / true.shape[0]) * (loss.T @ loss)
         return loss

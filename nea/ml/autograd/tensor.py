@@ -60,7 +60,7 @@ class Tensor:
             np.ndarray: data in tensor
         """
         return self._data
-    
+
     @property
     def T(self) -> Tensor:
         """Returns a copy of the tensor, however the data has been transposed
@@ -81,7 +81,7 @@ class Tensor:
 
         Args:
             shape (tuple[int]): desired shape of tensor
-            requires_grad (bool, optional): if the tensors requires_grad property should be false. 
+            requires_grad (bool, optional): if the tensors requires_grad property should be false.
             Defaults to False.
 
         Returns:
@@ -95,7 +95,7 @@ class Tensor:
 
         Args:
             shape (tuple[int]): desired shape of tensor
-            requires_grad (bool, optional): if the tensors requires_grad property should be false. 
+            requires_grad (bool, optional): if the tensors requires_grad property should be false.
             Defaults to False.
 
         Returns:
@@ -104,7 +104,7 @@ class Tensor:
         return Tensor(np.ones(shape), requires_grad=requries_grad)
 
     def backward(self, dy=None, y=None) -> None:
-        """Reverse searches the computational graph, computing and updating parent 
+        """Reverse searches the computational graph, computing and updating parent
         gradients as it goes
 
         Args:
@@ -158,7 +158,7 @@ class Tensor:
     def __sub__(self, other: Tensorable) -> Tensor:
         return self + -to_tensor(other)
 
-    def __rsub__ (self, other: Tensorable) -> Tensor:
+    def __rsub__(self, other: Tensorable) -> Tensor:
         return to_tensor(other) + -self
 
     def __isub__(self, other: Tensorable) -> Tensor:
@@ -196,7 +196,7 @@ class Tensor:
         """
         mean_op = Mean()
         return mean_op.forward(self)
-    
+
     def sum(self, axis: int = -1, keepdims: bool = False) -> Tensor:
         """Computes sum of a tensor
 
@@ -205,11 +205,11 @@ class Tensor:
             keepdims (bool, optional): reduce summed axis to 1?. Defaults to False.
 
         Returns:
-            Tensor: 
+            Tensor:
         """
         sum_op = Sum()
         return sum_op.forward(self, axis=axis, keepdims=keepdims)
-    
+
     def log(self) -> Tensor:
         """Computes element wise log of tensor
 
@@ -218,16 +218,16 @@ class Tensor:
         """
         log_op = Log()
         return log_op.forward(self)
-    
+
     def exp(self) -> Tensor:
         """e^
 
         Returns:
-            Tensor: 
+            Tensor:
         """
         exp_op = Exp()
         return exp_op.forward(self)
-    
+
     def convolve2d(self, k: Tensorable, b: Tensorable = None) -> Tensor:
         """2D convolutional layer of the tensor
 
@@ -404,7 +404,7 @@ class Negation(TensorFunction):
             dy (np.ndarray): gradient from upstream
             y (Tensor): output tensor
         """
-        a,  = self._cache
+        (a,) = self._cache
 
         if a.requires_grad:
             da = -dy
@@ -485,12 +485,13 @@ class Division(TensorFunction):
     Args:
         TensorFunction (_type_): _description_
     """
+
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         """Computes the division of two tensors
 
         Args:
-            a (Tensor): 
-            b (Tensor): 
+            a (Tensor):
+            b (Tensor):
 
         Returns:
             Tensor: tensor a / tensor b
@@ -513,13 +514,13 @@ class Division(TensorFunction):
         """Computes gradients of cached tensors
 
         Args:
-            dy (Tensor): 
-            y (Tensor): 
+            dy (Tensor):
+            y (Tensor):
         """
         a, b = self._cache
 
         if a.requires_grad:
-            da = dy * ( 1 / b.data )
+            da = dy * (1 / b.data)
 
             n_dims_da = len(dy.shape)
             n_dims_a = len(a.shape)
@@ -532,7 +533,7 @@ class Division(TensorFunction):
             a.backward(da, y)
 
         if b.requires_grad:
-            db = dy * - (a.data / (b.data ** 2))
+            db = dy * -(a.data / (b.data**2))
 
             n_dims_db = len(dy.shape)
             n_dims_b = len(b.shape)
@@ -549,14 +550,15 @@ class MatrixMultiplication(TensorFunction):
     """Matrix Multiplication operation
 
     Args:
-        TensorFunction (_type_): 
+        TensorFunction (_type_):
     """
+
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         """Computes the matrix multiplication of two tensors
 
         Args:
-            a (Tensor): 
-            b (Tensor): 
+            a (Tensor):
+            b (Tensor):
 
         Returns:
             Tensor: Tensor of a @ b
@@ -576,12 +578,12 @@ class MatrixMultiplication(TensorFunction):
 
         return y
 
-    def backward(self, dy: np.ndarray, y:Tensor) -> None:
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes gradients for cached tensors
 
         Args:
-            dy (Tensor): 
-            y (Tensor): 
+            dy (Tensor):
+            y (Tensor):
         """
         a, b = self._cache
 
@@ -612,17 +614,18 @@ class Power(TensorFunction):
     Args:
         TensorFunction (_type_): _description_
     """
+
     def forward(self, a: Tensor, b: Tensor) -> Tensor:
         """Computes one tensor to the power of another
 
         Args:
-            a (Tensor): 
-            b (Tensor): 
+            a (Tensor):
+            b (Tensor):
 
         Returns:
             Tensor: Tensor with a^b
         """
-        new_data = a.data ** b.data
+        new_data = a.data**b.data
 
         requires_grad = a.requires_grad or b.requires_grad
 
@@ -659,7 +662,7 @@ class Power(TensorFunction):
             a.backward(da, y)
 
         if b.requires_grad:
-            db = dy * ((a.data ** b.data) * np.log(a.data))
+            db = dy * ((a.data**b.data) * np.log(a.data))
 
             n_dims_db = len(dy.shape)
             n_dims_b = len(b.shape)
@@ -676,8 +679,9 @@ class Mean(TensorFunction):
     """Mean operation
 
     Args:
-        TensorFunction (_type_): 
+        TensorFunction (_type_):
     """
+
     def forward(self, a: Tensor) -> Tensor:
         """Computes the mean of a 1D tensor
 
@@ -695,11 +699,11 @@ class Mean(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, )
+        self.parents = (a,)
 
         a.children.append(y)
 
-        self._cache = (a, )
+        self._cache = (a,)
 
         return y
 
@@ -710,7 +714,7 @@ class Mean(TensorFunction):
             dy (Tensor):
             y (Tensor):
         """
-        a, = self._cache
+        (a,) = self._cache
 
         if a.requires_grad:
             da = dy * Tensor.ones(len(a.data))
@@ -725,11 +729,12 @@ class Sum(TensorFunction):
     Args:
         TensorFunction (_type_): _description_
     """
+
     def forward(self, a: Tensor, axis: int, keepdims: bool) -> Tensor:
         """Computes sum of a tensor
 
         Args:
-            a (Tensor): 
+            a (Tensor):
             axis (int): axis to take sum across
             keepdims (bool): keepdims maintains the number of dimensions - reduces summed axis to 1
 
@@ -742,27 +747,27 @@ class Sum(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, )
+        self.parents = (a,)
 
         a.children.append(y)
 
-        self._cache = (a, )
+        self._cache = (a,)
 
         return y
-    
+
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes gradients of sum function
 
         Args:
             dy (np.ndarray): gradient from upstream
-            y (Tensor): 
+            y (Tensor):
         """
-        a, = self._cache
+        (a,) = self._cache
 
         if a.requires_grad:
             da = dy * np.ones(a.shape)
             a.backward(da, y)
-    
+
 
 class Log(TensorFunction):
     """Log operation
@@ -770,14 +775,15 @@ class Log(TensorFunction):
     Args:
         TensorFunction (_type_): _description_
     """
+
     def forward(self, a: Tensor) -> Tensor:
         """Element wise log of a tensor
 
         Args:
-            a (Tensor): 
+            a (Tensor):
 
         Returns:
-            Tensor: 
+            Tensor:
         """
 
         new_data = np.log(a.data)
@@ -786,22 +792,22 @@ class Log(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, )
+        self.parents = (a,)
 
         a.children.append(y)
 
-        self._cache = (a, )
+        self._cache = (a,)
 
         return y
-    
+
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes gradient of cached tensor
 
         Args:
             dy (np.ndarray): gradient from upstream
-            y (Tensor): 
+            y (Tensor):
         """
-        a, = self._cache
+        (a,) = self._cache
         if a.requires_grad:
             da = dy * (1 / a.data)
 
@@ -812,16 +818,17 @@ class Exp(TensorFunction):
     """e^
 
     Args:
-        TensorFunction (_type_): 
+        TensorFunction (_type_):
     """
+
     def forward(self, a: Tensor) -> Tensor:
         """e^a
 
         Args:
-            a (Tensor): 
+            a (Tensor):
 
         Returns:
-            Tensor: 
+            Tensor:
         """
         new_data = np.exp(a.data)
 
@@ -829,20 +836,20 @@ class Exp(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, )
+        self.parents = (a,)
 
         a.children.append(y)
 
         self._cache = (a, new_data)
 
         return y
-    
+
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes grads
 
         Args:
-            dy (np.ndarray): 
-            y (Tensor): 
+            dy (np.ndarray):
+            y (Tensor):
         """
         a, new_data = self._cache
 
@@ -856,10 +863,10 @@ class Transpose(TensorFunction):
         """Transposes the data
 
         Args:
-            x (Tensor): 
+            x (Tensor):
 
         Returns:
-            Tensor: 
+            Tensor:
         """
         new_data = a.data.T
 
@@ -867,28 +874,30 @@ class Transpose(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, )
+        self.parents = (a,)
 
         a.children.append(y)
 
-        self._cache = (a, )
+        self._cache = (a,)
 
         return y
 
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
-        a,  = self._cache
-        
+        (a,) = self._cache
+
         if a.requires_grad:
             da = dy.T
- 
+
             a.backward(da, y)
+
 
 class Convolve2D(TensorFunction):
     """2D convolution layer as tensor function
 
     Args:
         TensorFunction (_type_):
-    """     
+    """
+
     def forward(self, x: Tensor, k: Tensor, b: Tensor = None) -> Tensor:
         """2D Convolution layer of X as input
 
@@ -900,9 +909,18 @@ class Convolve2D(TensorFunction):
 
         x_samples, x_width, x_height = self.x_shape
 
-        self.output_shape = (self.n_kernels, x_width - self.kernel_size + 1, x_height - self.kernel_size + 1)
-        self.kernels_shape = (self.n_kernels, x_samples, self.kernel_size, self.kernel_size)
-        
+        self.output_shape = (
+            self.n_kernels,
+            x_width - self.kernel_size + 1,
+            x_height - self.kernel_size + 1,
+        )
+        self.kernels_shape = (
+            self.n_kernels,
+            x_samples,
+            self.kernel_size,
+            self.kernel_size,
+        )
+
         new_data = np.zeros(self.output_shape)
         if b:
             new_data += b.data
@@ -911,7 +929,10 @@ class Convolve2D(TensorFunction):
 
         y = Tensor(new_data, requires_grad=True, operation=self)
 
-        self.parents = (x, k, )
+        self.parents = (
+            x,
+            k,
+        )
         if b:
             self.parents += b
 
@@ -923,13 +944,13 @@ class Convolve2D(TensorFunction):
         self._cache = (x, k, b)
 
         return y
-    
+
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
         """Computes gradients of a convolutional layer process
 
         Args:
             dy (np.ndarray): upstream grad
-            y (Tensor): 
+            y (Tensor):
         """
         x, k, b = self._cache
 
@@ -945,8 +966,3 @@ class Convolve2D(TensorFunction):
             dk = cpu_k_backward_convolve2d(dk, x.data, dy, self.n_kernels)
 
             k.backward(dk, y)
-
-            
-
-
-
