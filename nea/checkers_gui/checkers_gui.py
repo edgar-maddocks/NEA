@@ -2,8 +2,8 @@ import pygame
 
 from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES
 from nea.checkers_gui.helpers import get_col_selected, get_row_selected
-from nea.ConsoleCheckers import CheckersGame
-from nea.ConsoleCheckers.consts import (
+from nea.console_checkers import CheckersGame
+from nea.console_checkers.consts import (
     ACTION,
     BLACK,
     BLACK_K,
@@ -15,7 +15,7 @@ from nea.ConsoleCheckers.consts import (
     WHITE_R,
     WHITES,
 )
-from nea.ConsoleCheckers.consts import (
+from nea.console_checkers.consts import (
     SIZE as BOARD_SIZE,
 )
 

@@ -1,7 +1,7 @@
 import numpy as np
 
 from nea.mcts import MCTS
-from nea.ConsoleCheckers import CheckersGame
+from nea.console_checkers import CheckersGame
 
 
 def simGames(
