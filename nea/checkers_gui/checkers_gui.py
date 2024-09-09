@@ -370,13 +370,13 @@ def main_loop():
         n_searches = None
         while not valid_input:
             print("==================================================")
-            print("Enter Number of Searches for MCTS \n" "(Between 1000 and 100,000)")
+            print("Enter Number of Searches for MCTS \n" "(Between 1000 and 1,000,000)")
             try:
                 n_searches = int(input("Enter Number of Searches: "))
-                if 1000 <= n_searches <= 100000:
+                if 1000 <= n_searches <= 1000000:
                     valid_input = True
                 else:
-                    raise ValueError("Please enter a number between 1000 and 100,000")
+                    raise ValueError("Please enter a number between 1000 and 1,000,000")
             except Exception:
                 print("Invalid entry")
 
