@@ -1,1 +1,1 @@
-from .checkers_gui import CheckersGUI
+from .checkers_gui import CheckersGUI, main_loop

@@ -17,3 +17,4 @@ class COLOURS:
 
 class GAME_TYPES:
     USER_VS_USER = 1
+    USER_VS_MCTS = 2

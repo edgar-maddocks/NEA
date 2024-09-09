@@ -18,6 +18,7 @@ from nea.console_checkers.consts import (
 from nea.console_checkers.consts import (
     SIZE as BOARD_SIZE,
 )
+from nea.mcts import MCTS
 
 
 class CheckersGUI:
@@ -253,6 +254,59 @@ def user_vs_user_game_loop(game: CheckersGame) -> None:
     _show_game_over(screen, winner, GAME_TYPES.USER_VS_USER)
 
 
+def user_vs_mcts_game_loop(
+    game: CheckersGame, n_searches: int, eec: float, player_colour: str
+) -> None:
+    """main loop that allows a user to play the game vs different mcts models
+
+    Args:
+        game (CheckersGame): _description_
+    """
+    pygame.init()
+
+    screen = pygame.display.set_mode((DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE))
+
+    done = False
+
+    gui = CheckersGUI(game)
+    mcts = MCTS(n_searches=n_searches, eec=eec)
+
+    winner = None
+    while not done:
+        if game.player == player_colour:
+            reward = None
+
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    done = True
+                    reward = "None"
+                if e.type == pygame.MOUSEBUTTONDOWN:
+                    action = gui.click(pygame.mouse.get_pos())
+                    if action:
+                        done, reward = gui.evaluate_action(action)
+        elif game.player != player_colour:
+            mcts.build_tree(game)
+            action = mcts.get_action()
+            done, reward = gui.evaluate_action(action)
+
+        if done:
+            if reward == -1:
+                winner = game.opposite_player
+                break
+            elif reward == 1:
+                winner = game.player
+                break
+            elif reward == "None":
+                winner = "no one"
+                break
+
+        screen.fill(COLOURS.BLACK)
+        gui.draw(screen)
+        pygame.display.flip()
+
+    _show_game_over(screen, winner, GAME_TYPES.USER_VS_USER)
+
+
 def _show_game_over(screen: pygame.Surface, winner: str, game_type: int):
     open = True
     while open:
@@ -295,17 +349,72 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int):
                 pygame.display.flip()
 
 
-if __name__ == "__main__":
+def main_loop():
     valid_input = False
     game_type = None
     while not valid_input:
-        print("Select Game Type: \n" "1. User vs User")
+        print("==================================================")
+        print("Select Game Type: \n" "1. User vs User\n" "2. User vs MCTS")
         try:
             game_type = int(input("Enter Number: "))
-            if 1 >= game_type > 0:
+            if 1 <= game_type <= 2:
                 valid_input = True
         except Exception:
             print("Invalid selection")
 
     if game_type == GAME_TYPES.USER_VS_USER:
+        print("==================================================")
         user_vs_user_game_loop(CheckersGame())
+    elif game_type == GAME_TYPES.USER_VS_MCTS:
+        valid_input = False
+        n_searches = None
+        while not valid_input:
+            print("==================================================")
+            print("Enter Number of Searches for MCTS \n" "(Between 1000 and 100,000)")
+            try:
+                n_searches = int(input("Enter Number of Searches: "))
+                if 1000 <= n_searches <= 100000:
+                    valid_input = True
+                else:
+                    raise ValueError("Please enter a number between 1000 and 100,000")
+            except Exception:
+                print("Invalid entry")
+
+        valid_input = False
+        eec = None
+        while not valid_input:
+            print("==================================================")
+            print(
+                "Enter EEC for MCTS (determines exploration - with higher values = more exploration) \n"
+                "(Between 1 and 3 - optimal value is 1.41)"
+            )
+            try:
+                eec = float(input("Enter EEC: "))
+                if 1 <= eec <= 3:
+                    valid_input = True
+                else:
+                    raise ValueError("Please enter a number between 1 and 3")
+            except Exception:
+                print("Invalid entry")
+
+        valid_input = False
+        colour = None
+        while not valid_input:
+            print("==================================================")
+            print("What colour would you like to play as?")
+            try:
+                colour = input("w/b: ")
+                if colour == ("w" or "b"):
+                    valid_input = True
+                else:
+                    raise ValueError(
+                        "Please enter w to play as white and b to play as black"
+                    )
+            except Exception:
+                print("Invalid entry")
+            print("==================================================")
+
+        player_colour = WHITE if colour == "w" else BLACK
+        user_vs_mcts_game_loop(
+            CheckersGame(), n_searches=n_searches, eec=eec, player_colour=player_colour
+        )
