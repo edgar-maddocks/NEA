@@ -1,4 +1,4 @@
-from nea.ConsoleCheckers.consts import (
+from nea.console_checkers.consts import (
     BLACK,
     WHITE,
     SIZE,
@@ -12,7 +12,7 @@ from nea.ConsoleCheckers.consts import (
     NUMS_TO_COLS,
     NUM_TO_STR,
 )
-from nea.ConsoleCheckers.utils import clear_window
+from nea.console_checkers.utils import clear_window
 
 import numpy as np
 

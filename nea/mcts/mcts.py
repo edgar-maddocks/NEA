@@ -5,7 +5,7 @@ import multiprocessing
 import numpy as np
 from tqdm import tqdm
 
-from nea.ConsoleCheckers import CheckersGame
+from nea.console_checkers import CheckersGame
 from .consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
 
 
