@@ -135,7 +135,7 @@ class Tensor:
         """
         self.grad = np.zeros_like(self._data)
 
-    def __eq__(self, other: Tensorable):
+    def __eq__(self, other: np.ndarray | int | float):
         if self.data == other:
             return True
 
