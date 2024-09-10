@@ -21,14 +21,14 @@ from nea.console_checkers.consts import (
 from nea.mcts import MCTS
 
 
-class CheckersGUI:
+class CheckersGUI(CheckersGame):
     """Class that adds extra functionality to the CheckersGame
     which allows it to display a GUI
     """
 
-    def __init__(self, game: CheckersGame) -> None:
-        self.game = game
+    def __init__(self) -> None:
         self.piece_selected = None
+        super().__init__()
 
     def draw(self, screen: pygame.Surface) -> None:
         """Draws the checkers board and pieces.
@@ -68,14 +68,14 @@ class CheckersGUI:
                     )
         for y in range(BOARD_SIZE):
             for x in range(BOARD_SIZE):
-                piece = self.game.board[x, y]
+                piece = self.board[x, y]
                 if (x, y) == self.piece_selected:
                     self._draw_selected_piece(screen)
                     self._draw_available_moves(screen)
                 elif piece != EMPTY:
                     self._get_and_draw_piece(screen, piece=piece, x=x, y=y)
 
-        pygame.display.set_caption(f"IT IS {self.game.player.upper()}'S MOVE")
+        pygame.display.set_caption(f"IT IS {self.player.upper()}'S MOVE")
 
     def _get_and_draw_piece(
         self, screen: pygame.Surface, piece: int, x: int, y: int
@@ -135,7 +135,7 @@ class CheckersGUI:
             screen (pygame.Surface): screen to draw tow
         """
         x, y = self.piece_selected
-        piece = self.game.board[x, y]
+        piece = self.board[x, y]
         piece_img = self._get_piece_img(piece)
         piece_img = pygame.transform.rotozoom(piece_img, 0, 0.9)
         screen.blit(
@@ -152,8 +152,8 @@ class CheckersGUI:
         Args:
             screen (pygame.Surface): screen to draw to
         """
-        valid_takes = self.game._get_valid_take_moves(*self.piece_selected)
-        valid_simples = self.game._get_valid_simple_moves(*self.piece_selected)
+        valid_takes = self._get_valid_take_moves(*self.piece_selected)
+        valid_simples = self._get_valid_simple_moves(*self.piece_selected)
 
         moves = valid_takes if len(valid_takes) > 0 else valid_simples
         move_tos = [x[1] for x in moves]
@@ -185,12 +185,20 @@ class CheckersGUI:
         action: ACTION = None
 
         if self.piece_selected is None:
-            if self.game.player == WHITE:
-                if self.game.board[row, col] in WHITES:
-                    self.piece_selected = (row, col)
-            elif self.game.player == BLACK:
-                if self.game.board[row, col] in BLACKS:
-                    self.piece_selected = (row, col)
+            valid_moves = self.get_all_valid_moves()
+            valid_moves = (
+                valid_moves["takes"]
+                if len(valid_moves["takes"]) > 0
+                else valid_moves["simple"]
+            )
+            valid_selections = [x[0] for x in valid_moves]
+            if (row, col) in valid_selections:
+                if self.player == WHITE:
+                    if self.board[row, col] in WHITES:
+                        self.piece_selected = (row, col)
+                elif self.player == BLACK:
+                    if self.board[row, col] in BLACKS:
+                        self.piece_selected = (row, col)
         else:
             if (row, col) != self.piece_selected:
                 action = (self.piece_selected, (row, col))
@@ -207,13 +215,13 @@ class CheckersGUI:
         Returns:
             tuple[bool, int] | tuple[None, None]: done, reward
         """
-        valid_move, _, done, reward = self.game.step(action)
+        valid_move, _, done, reward = self.step(action)
         if not valid_move:
             print("INVALID MOVE - PLEASE TRY AGAIN")
         return done, reward
 
 
-def user_vs_user_game_loop(game: CheckersGame) -> None:
+def user_vs_user_game_loop() -> None:
     """main loop that allows a user to play the game
 
     Args:
@@ -225,7 +233,7 @@ def user_vs_user_game_loop(game: CheckersGame) -> None:
 
     done = False
 
-    gui = CheckersGUI(game)
+    gui = CheckersGUI()
 
     winner = None
     while not done:
@@ -241,10 +249,10 @@ def user_vs_user_game_loop(game: CheckersGame) -> None:
 
         if done:
             if reward == -1:
-                winner = game.opposite_player
+                winner = gui.opposite_player
                 break
             elif reward == 1:
-                winner = game.player
+                winner = gui.player
                 break
 
         screen.fill(COLOURS.BLACK)
@@ -254,9 +262,7 @@ def user_vs_user_game_loop(game: CheckersGame) -> None:
     _show_game_over(screen, winner, GAME_TYPES.USER_VS_USER)
 
 
-def user_vs_mcts_game_loop(
-    game: CheckersGame, n_searches: int, eec: float, player_colour: str
-) -> None:
+def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> None:
     """main loop that allows a user to play the game vs different mcts models
 
     Args:
@@ -268,12 +274,12 @@ def user_vs_mcts_game_loop(
 
     done = False
 
-    gui = CheckersGUI(game)
+    gui = CheckersGUI()
     mcts = MCTS(n_searches=n_searches, eec=eec)
 
     winner = None
     while not done:
-        if game.player == player_colour:
+        if gui.player == player_colour:
             reward = None
 
             for e in pygame.event.get():
@@ -284,17 +290,17 @@ def user_vs_mcts_game_loop(
                     action = gui.click(pygame.mouse.get_pos())
                     if action:
                         done, reward = gui.evaluate_action(action)
-        elif game.player != player_colour:
-            mcts.build_tree(game)
+        elif gui.player != player_colour:
+            mcts.build_tree(gui)
             action = mcts.get_action()
             done, reward = gui.evaluate_action(action)
 
         if done:
             if reward == -1:
-                winner = game.opposite_player
+                winner = gui.opposite_player
                 break
             elif reward == 1:
-                winner = game.player
+                winner = gui.player
                 break
             elif reward == "None":
                 winner = "no one"
@@ -304,10 +310,17 @@ def user_vs_mcts_game_loop(
         gui.draw(screen)
         pygame.display.flip()
 
-    _show_game_over(screen, winner, GAME_TYPES.USER_VS_USER)
+    _show_game_over(
+        screen,
+        winner,
+        GAME_TYPES.USER_VS_USER,
+        n_searches=n_searches,
+        eec=eec,
+        player_colour=player_colour,
+    )
 
 
-def _show_game_over(screen: pygame.Surface, winner: str, game_type: int):
+def _show_game_over(screen: pygame.Surface, winner: str, game_type: int, **kwargs):
     open = True
     while open:
         for e in pygame.event.get():
@@ -316,7 +329,13 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int):
             elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_r:
                     if game_type == GAME_TYPES.USER_VS_USER:
-                        user_vs_user_game_loop(CheckersGame())
+                        user_vs_user_game_loop()
+                    elif game_type == GAME_TYPES.USER_VS_MCTS:
+                        user_vs_mcts_game_loop(
+                            n_searches=kwargs["n_searches"],
+                            eec=kwargs["eec"],
+                            player_colour=kwargs["player_colour"],
+                        )
             else:
                 font = pygame.font.SysFont(pygame.font.get_default_font(), 70)
                 game_over_text = font.render(
@@ -364,7 +383,7 @@ def main_loop():
 
     if game_type == GAME_TYPES.USER_VS_USER:
         print("==================================================")
-        user_vs_user_game_loop(CheckersGame())
+        user_vs_user_game_loop()
     elif game_type == GAME_TYPES.USER_VS_MCTS:
         valid_input = False
         n_searches = None
@@ -416,5 +435,5 @@ def main_loop():
 
         player_colour = WHITE if colour == "w" else BLACK
         user_vs_mcts_game_loop(
-            CheckersGame(), n_searches=n_searches, eec=eec, player_colour=player_colour
+            n_searches=n_searches, eec=eec, player_colour=player_colour
         )
