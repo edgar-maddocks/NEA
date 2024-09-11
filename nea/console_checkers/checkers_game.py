@@ -15,6 +15,7 @@ from nea.console_checkers.consts import (
 from nea.console_checkers.utils import clear_window
 
 import numpy as np
+# from numba import jit
 
 
 class CheckersGame:

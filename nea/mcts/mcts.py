@@ -6,7 +6,7 @@ import numpy as np
 from tqdm import tqdm
 
 from nea.console_checkers import CheckersGame
-from .consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
+from nea.mcts.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
 
 
 class Node:
@@ -158,6 +158,9 @@ class MCTS:
             root (CheckersGame): New state to root the tree from
         """
         self._root = Node(root, eec=self.kwargs["eec"])
+        n_wins = 0
+        n_losses = 0
+        n_draws = 0
         for _ in tqdm(range(int(self.kwargs["n_searches"] / self.kwargs["n_jobs"]))):
             node = self._root
             if node.n_available_moves_left == 0:
@@ -167,6 +170,14 @@ class MCTS:
                 node = node.expand()
 
             node.backprop(node.reward)
+            if node.reward == 1:
+                n_wins += 1
+            elif node.reward == 0:
+                n_draws += 1
+            elif node.reward == -1:
+                n_losses += 1
+
+        print(f"Found {n_wins} WINS, {n_draws} DRAWS, {n_losses} LOSSES")
 
     def mp_build_tree(self, root: "CheckersGame") -> None:
         """Builds a new tree while utilizing multiple threads
