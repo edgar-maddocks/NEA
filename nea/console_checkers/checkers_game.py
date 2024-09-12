@@ -4,18 +4,15 @@ from nea.console_checkers.consts import (
     SIZE,
     BLACKS,
     WHITES,
-    BLACK_R,
-    WHITE_R,
     ACTION,
-    LEGAL_DIRS,
     COLS_TO_NUMS,
     NUMS_TO_COLS,
     NUM_TO_STR,
 )
 from nea.console_checkers.utils import clear_window
+from nea.console_checkers import jit_functions
 
 import numpy as np
-# from numba import jit
 
 
 class CheckersGame:
@@ -61,12 +58,7 @@ class CheckersGame:
         Returns:
             int: Number of black pieces remaining
         """
-        n = 0
-        for row in range(SIZE):
-            for col in range(SIZE):
-                if self._board[row, col] in BLACKS:
-                    n += 1
-        return n
+        return jit_functions._n_black_pieces(self._board)
 
     @property
     def n_white_pieces(self) -> int:
@@ -75,12 +67,7 @@ class CheckersGame:
         Returns:
             int: Number of white pieces remaining
         """
-        n = 0
-        for row in range(SIZE):
-            for col in range(SIZE):
-                if self._board[row, col] in WHITES:
-                    n += 1
-        return n
+        return jit_functions._n_white_pieces(self.board)
 
     @property
     def n_opposite_player_pieces(self) -> int:
@@ -110,20 +97,7 @@ class CheckersGame:
         Returns:
             np.ndarray: initial board state
         """
-        board = np.empty((SIZE, SIZE))
-        board.fill(0)
-        for row in range(SIZE):
-            if row == 3 or row == 4:
-                continue
-            for col in range(SIZE):
-                if (row + 1) % 2 == 1:
-                    if col % 2 == 1:
-                        board[row, col] = BLACK_R if row <= 2 else WHITE_R
-                else:
-                    if col % 2 == 0:
-                        board[row, col] = BLACK_R if row <= 2 else WHITE_R
-
-        return board
+        return jit_functions._init_board()
 
     def square_is_empty(self, row: int, col: int) -> bool:
         """Function to check if a square is empty
@@ -164,8 +138,9 @@ class CheckersGame:
 
         return moves
 
-    def _get_valid_take_moves(self, row: int, col: int) -> list[ACTION]:
-        """Gets all valid take moves available for a given square
+    def _get_valid_take_moves(self, row: int, col: int):
+        """
+        Gets all valid take moves available for a given square
 
         Args:
             row (int): row the square is on
@@ -174,80 +149,7 @@ class CheckersGame:
         Returns:
             list: tuple of tuples
         """
-        piece = self._board[row, col]
-        valid_moves = []
-        if self._player == BLACK:
-            if piece == 2:
-                for direction in LEGAL_DIRS[BLACK]["king"]:
-                    if (
-                        row + 2 * direction[0] in range(8)
-                        and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]]
-                        in WHITES
-                        and self.square_is_empty(
-                            row + 2 * direction[0], col + 2 * direction[1]
-                        )
-                    ):
-                        valid_moves.append(
-                            (
-                                (row, col),
-                                (row + 2 * direction[0], col + 2 * direction[1]),
-                            )
-                        )
-            elif piece == 1:
-                for direction in LEGAL_DIRS[BLACK]["regular"]:
-                    if (
-                        row + 2 * direction[0] in range(8)
-                        and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]]
-                        in WHITES
-                        and self.square_is_empty(
-                            row + 2 * direction[0], col + 2 * direction[1]
-                        )
-                    ):
-                        valid_moves.append(
-                            (
-                                (row, col),
-                                (row + 2 * direction[0], col + 2 * direction[1]),
-                            )
-                        )
-        elif self._player == WHITE:
-            if piece == 4:
-                for direction in LEGAL_DIRS[WHITE]["king"]:
-                    if (
-                        row + 2 * direction[0] in range(8)
-                        and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]]
-                        in BLACKS
-                        and self.square_is_empty(
-                            row + 2 * direction[0], col + 2 * direction[1]
-                        )
-                    ):
-                        valid_moves.append(
-                            (
-                                (row, col),
-                                (row + 2 * direction[0], col + 2 * direction[1]),
-                            )
-                        )
-            elif piece == 3:
-                for direction in LEGAL_DIRS[WHITE]["regular"]:
-                    if (
-                        row + 2 * direction[0] in range(8)
-                        and col + 2 * direction[1] in range(8)
-                        and self._board[row + direction[0], col + direction[1]]
-                        in BLACKS
-                        and self.square_is_empty(
-                            row + 2 * direction[0], col + 2 * direction[1]
-                        )
-                    ):
-                        valid_moves.append(
-                            (
-                                (row, col),
-                                (row + 2 * direction[0], col + 2 * direction[1]),
-                            )
-                        )
-
-        return valid_moves
+        return jit_functions._get_valid_take_moves(self._board, row, col, self.player)
 
     def _get_valid_simple_moves(self, row: int, col: int) -> list[ACTION]:
         """Gets all valid simple moves available for a given square
@@ -259,52 +161,9 @@ class CheckersGame:
         Returns:
             list: tuple of tuples
         """
-        piece = self._board[row, col]
-        valid_moves = []
-        if self._player == BLACK:
-            if piece == 2:
-                for direction in LEGAL_DIRS[BLACK]["king"]:
-                    if (
-                        row + direction[0] in range(8)
-                        and col + direction[1] in range(8)
-                        and self.square_is_empty(row + direction[0], col + direction[1])
-                    ):
-                        valid_moves.append(
-                            ((row, col), (row + direction[0], col + direction[1]))
-                        )
-            elif piece == 1:
-                for direction in LEGAL_DIRS[BLACK]["regular"]:
-                    if (
-                        row + direction[0] in range(8)
-                        and col + direction[1] in range(8)
-                        and self.square_is_empty(row + direction[0], col + direction[1])
-                    ):
-                        valid_moves.append(
-                            ((row, col), (row + direction[0], col + direction[1]))
-                        )
-        elif self._player == WHITE:
-            if piece == 4:
-                for direction in LEGAL_DIRS[WHITE]["king"]:
-                    if (
-                        row + direction[0] in range(8)
-                        and col + direction[1] in range(8)
-                        and self.square_is_empty(row + direction[0], col + direction[1])
-                    ):
-                        valid_moves.append(
-                            ((row, col), (row + direction[0], col + direction[1]))
-                        )
-            elif piece == 3:
-                for direction in LEGAL_DIRS[WHITE]["regular"]:
-                    if (
-                        row + direction[0] in range(8)
-                        and col + direction[1] in range(8)
-                        and self.square_is_empty(row + direction[0], col + direction[1])
-                    ):
-                        valid_moves.append(
-                            ((row, col), (row + direction[0], col + direction[1]))
-                        )
-
-        return valid_moves
+        return jit_functions._get_valid_simple_moves(
+            self._board, row, col, self._player
+        )
 
     def clear(self, row: int, col: int) -> None:
         """Clears a square

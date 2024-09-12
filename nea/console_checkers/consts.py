@@ -23,9 +23,4 @@ NUMS_TO_COLS = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F", 6: "G", 7: "H"}
 
 DIRS = [(+1, -1), (+1, +1), (-1, +1), (-1, -1)]
 
-LEGAL_DIRS = {
-    BLACK: {"regular": [DIRS[0], DIRS[1]], "king": DIRS},
-    WHITE: {"regular": [DIRS[2], DIRS[3]], "king": DIRS},
-}
-
 ACTION = tuple[tuple[int, int], tuple[int, int]]
