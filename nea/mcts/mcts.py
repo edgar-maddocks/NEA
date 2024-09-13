@@ -63,7 +63,7 @@ class Node:
         """
         return self._action_taken
 
-    def select_child(self) -> "Node":
+    def select_child(self) -> Node:
         """Selects the best child from a fully expanded node using UCB
 
         Returns:
@@ -80,7 +80,7 @@ class Node:
 
         return best_child
 
-    def _calculate_ucb(self, child: "Node") -> float:
+    def _calculate_ucb(self, child: Node) -> float:
         """Calculates the UCB of a node
 
         Returns:
@@ -90,7 +90,7 @@ class Node:
             np.sqrt(np.log(self.visit_count) / child.visit_count)
         )
 
-    def expand(self) -> "Node":
+    def expand(self) -> Node:
         """Random expansion of a node
 
         Returns:
@@ -110,7 +110,7 @@ class Node:
             terminal=terminal,
             action_taken=random_action,
             reward=reward,
-            eec=self.kwargs,
+            eec=self.kwargs["eec"],
         )
         self.children.append(child)
 
@@ -151,13 +151,15 @@ class MCTS:
 
         self._root: Node = None
 
-    def build_tree(self, root: "CheckersGame") -> None:
+    def build_tree(self, root: CheckersGame | None = None) -> None:
         """Builds a new tree
 
         Args:
             root (CheckersGame): New state to root the tree from
         """
-        self._root = Node(root, eec=self.kwargs["eec"])
+        self._root = (
+            Node(root, eec=self.kwargs["eec"]) if self._root is None else self._root
+        )
         n_wins = 0
         n_losses = 0
         n_draws = 0
@@ -178,6 +180,21 @@ class MCTS:
                 n_losses += 1
 
         print(f"Found {n_wins} WINS, {n_draws} DRAWS, {n_losses} LOSSES")
+
+    def set_root_on_action(
+        self, opponent_action_taken: ACTION, own_action_taken: ACTION
+    ) -> None:
+        """Prevents the tree from completely rebuilding on each turn
+
+        Args:
+            action_taken (ACTION): Action the opposing player took
+        """
+        for child_1 in self._root.children:
+            if child_1.action_taken == own_action_taken:
+                for child_2 in child_1.children:
+                    if child_2.action_taken == opponent_action_taken:
+                        self._root = child_2
+                        # break
 
     def mp_build_tree(self, root: "CheckersGame") -> None:
         """Builds a new tree while utilizing multiple threads

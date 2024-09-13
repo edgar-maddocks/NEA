@@ -278,6 +278,9 @@ def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> N
     mcts = MCTS(n_searches=n_searches, eec=eec)
 
     winner = None
+    mcts_turns = 0
+    user_last_action: ACTION | None = None
+    mcts_last_action: ACTION | None = None
     while not done:
         if gui.player == player_colour:
             reward = None
@@ -290,9 +293,16 @@ def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> N
                     action = gui.click(pygame.mouse.get_pos())
                     if action:
                         done, reward = gui.evaluate_action(action)
+                        user_last_action = action
         elif gui.player != player_colour:
-            mcts.build_tree(gui)
+            if mcts_turns == 0:
+                mcts.build_tree(gui)
+                mcts_turns += 1
+            else:
+                mcts.set_root_on_action(user_last_action, mcts_last_action)
+                mcts.build_tree()
             action = mcts.get_action()
+            mcts_last_action = action
             done, reward = gui.evaluate_action(action)
 
         if done:
