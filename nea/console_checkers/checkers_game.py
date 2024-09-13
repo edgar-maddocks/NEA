@@ -8,6 +8,7 @@ from nea.console_checkers.consts import (
     COLS_TO_NUMS,
     NUMS_TO_COLS,
     NUM_TO_STR,
+    USER_DISPLAY_ACTION,
 )
 from nea.console_checkers.utils import clear_window
 from nea.console_checkers import jit_functions
@@ -130,40 +131,75 @@ class CheckersGame:
             for col in range(SIZE):
                 piece = self._board[row, col]
                 if piece in WHITES and self._player == WHITE:
-                    moves["simple"] += self._get_valid_simple_moves(row, col)
-                    moves["takes"] += self._get_valid_take_moves(row, col)
+                    moves["simple"] += self._get_valid_simple_moves(
+                        row, col, self._player
+                    )
+                    moves["takes"] += self._get_valid_take_moves(row, col, self._player)
                 elif piece in BLACKS and self._player == BLACK:
-                    moves["simple"] += self._get_valid_simple_moves(row, col)
-                    moves["takes"] += self._get_valid_take_moves(row, col)
+                    moves["simple"] += self._get_valid_simple_moves(
+                        row, col, self._player
+                    )
+                    moves["takes"] += self._get_valid_take_moves(row, col, self._player)
 
         return moves
 
-    def _get_valid_take_moves(self, row: int, col: int):
+    def _get_valid_take_moves(self, row: int, col: int, player: str):
         """
         Gets all valid take moves available for a given square
 
         Args:
             row (int): row the square is on
             col (int): column the square is on
+            player (str): player to check if moves are available for
 
         Returns:
             list: tuple of tuples
         """
-        return jit_functions._get_valid_take_moves(self._board, row, col, self.player)
+        return jit_functions._get_valid_take_moves(self._board, row, col, player)
 
-    def _get_valid_simple_moves(self, row: int, col: int) -> list[ACTION]:
+    def _get_valid_simple_moves(self, row: int, col: int, player: str) -> list[ACTION]:
         """Gets all valid simple moves available for a given square
 
         Args:
             row (int): row the square is on
             col (int): column the square is on
+            player (str): player to check if moves are available for
 
         Returns:
             list: tuple of tuples
         """
-        return jit_functions._get_valid_simple_moves(
-            self._board, row, col, self._player
-        )
+        return jit_functions._get_valid_simple_moves(self._board, row, col, player)
+
+    def moves_available_for_opposite_player(self) -> bool:
+        """Returns a dictionary of take and simple moves available to the other player
+
+        Keys:
+            Takes moves: "takes"
+            Simple moves: "simple"
+
+        Returns:
+            dict[str, list[ACTION]]: Dictionary of available moves
+        """
+        moves = {"takes": [], "simple": []}
+        for row in range(SIZE):
+            for col in range(SIZE):
+                piece = self._board[row, col]
+                if piece in WHITES and self.opposite_player == WHITE:
+                    moves["simple"] += self._get_valid_simple_moves(
+                        row, col, self.opposite_player
+                    )
+                    moves["takes"] += self._get_valid_take_moves(
+                        row, col, self.opposite_player
+                    )
+                elif piece in BLACKS and self.opposite_player == BLACK:
+                    moves["simple"] += self._get_valid_simple_moves(
+                        row, col, self.opposite_player
+                    )
+                    moves["takes"] += self._get_valid_take_moves(
+                        row, col, self.opposite_player
+                    )
+
+        return (len(moves["takes"]) == 0) and (len(moves["simple"]) == 0)
 
     def clear(self, row: int, col: int) -> None:
         """Clears a square
@@ -220,7 +256,9 @@ class CheckersGame:
                 self._moves_no_capture += 1
 
         elif self._last_moved_piece is not None:
-            valid_moves_for_turn = self._get_valid_take_moves(*self._last_moved_piece)
+            valid_moves_for_turn = self._get_valid_take_moves(
+                *self._last_moved_piece, self._player
+            )
 
             if action not in valid_moves_for_turn:
                 return (False, self._board, False, 0)
@@ -236,7 +274,9 @@ class CheckersGame:
             self.clear(int(row_from + one_row), int(col_from + one_col))
             self._moves_no_capture = 0
             self._last_moved_piece = row_to, col_to
-            double_moves = self._get_valid_take_moves(*self._last_moved_piece)
+            double_moves = self._get_valid_take_moves(
+                *self._last_moved_piece, self._player
+            )
             if len(double_moves) == 0:
                 self._last_moved_piece = None
             else:
@@ -252,6 +292,8 @@ class CheckersGame:
         elif self.n_black_pieces == 1 and self.n_white_pieces == 1:
             return (True, self._board, True, 0)
         elif self.n_opposite_player_pieces == 0:
+            return (True, self._board, True, 1)
+        elif self.moves_available_for_opposite_player():
             return (True, self._board, True, 1)
         else:
             if self._switch_player:
@@ -287,6 +329,22 @@ class CheckersGame:
         row = 8 - row
         return row, NUMS_TO_COLS[col]
 
+    @staticmethod
+    def convert_action_to_user(action: ACTION) -> USER_DISPLAY_ACTION:
+        """Takes in an ACTION and displays it in a userfriendly format
+
+        Args:
+            action (ACTION): action to convert
+
+        Returns:
+            USER_DISPLAY_ACTION:
+        """
+        user_disp_action = ()
+        for tup in action:
+            user_disp_action += CheckersGame.convert_rowcol_to_user(*tup)
+
+        return user_disp_action
+
     def render(self) -> None:
         """Renders the board"""
         clear_window()
@@ -301,5 +359,5 @@ class CheckersGame:
             )
         print("----------------------------------")
         print("TURN: ", self._player)
-        print("MOVES NO CAPTURE: ", self._moves_no_capture)
+        # print("MOVES NO CAPTURE: ", self._moves_no_capture)
         print("----------------------------------")

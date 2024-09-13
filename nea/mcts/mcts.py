@@ -28,9 +28,9 @@ class Node:
         self._parent = parent
         self.children: list["Node"] = []
         self._action_taken = action_taken
-        self.is_leaf = terminal
         self.reward = reward
         self._available_moves_left = self._init_available_moves()
+        self.terminal = terminal
 
         self.visit_count, self.value_count = 0, 0
 
@@ -43,7 +43,8 @@ class Node:
             list[ACTION]: list of avaialble moves
         """
         valids = self._game.get_all_valid_moves()
-        return valids["takes"] if len(valids["takes"]) > 0 else valids["simple"]
+        out = valids["takes"] if len(valids["takes"]) > 0 else valids["simple"]
+        return out
 
     @property
     def n_available_moves_left(self) -> int:
@@ -157,18 +158,22 @@ class MCTS:
         Args:
             root (CheckersGame): New state to root the tree from
         """
-        self._root = (
-            Node(root, eec=self.kwargs["eec"]) if self._root is None else self._root
-        )
+        self._root = Node(root, eec=self.kwargs["eec"])
         n_wins = 0
         n_losses = 0
         n_draws = 0
-        for _ in tqdm(range(int(self.kwargs["n_searches"] / self.kwargs["n_jobs"]))):
+
+        actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
+        print(actual_searches)
+        for _ in tqdm(range(actual_searches)):
             node = self._root
             if node.n_available_moves_left == 0:
                 node = node.select_child()
 
-            while not node.is_leaf and node.n_available_moves_left > 0:
+            while not node.terminal:
+                if node.n_available_moves_left == 0 and node.children:
+                    node = node.select_child()
+                    continue
                 node = node.expand()
 
             node.backprop(node.reward)
@@ -181,22 +186,7 @@ class MCTS:
 
         print(f"Found {n_wins} WINS, {n_draws} DRAWS, {n_losses} LOSSES")
 
-    def set_root_on_action(
-        self, opponent_action_taken: ACTION, own_action_taken: ACTION
-    ) -> None:
-        """Prevents the tree from completely rebuilding on each turn
-
-        Args:
-            action_taken (ACTION): Action the opposing player took
-        """
-        for child_1 in self._root.children:
-            if child_1.action_taken == own_action_taken:
-                for child_2 in child_1.children:
-                    if child_2.action_taken == opponent_action_taken:
-                        self._root = child_2
-                        # break
-
-    def mp_build_tree(self, root: "CheckersGame") -> None:
+    def mp_build_tree(self, root: CheckersGame) -> None:
         """Builds a new tree while utilizing multiple threads
 
         Args:
