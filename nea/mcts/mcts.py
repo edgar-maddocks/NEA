@@ -28,9 +28,9 @@ class Node:
         self._parent = parent
         self.children: list["Node"] = []
         self._action_taken = action_taken
-        self.is_leaf = terminal
         self.reward = reward
         self._available_moves_left = self._init_available_moves()
+        self.terminal = terminal
 
         self.visit_count, self.value_count = 0, 0
 
@@ -43,7 +43,8 @@ class Node:
             list[ACTION]: list of avaialble moves
         """
         valids = self._game.get_all_valid_moves()
-        return valids["takes"] if len(valids["takes"]) > 0 else valids["simple"]
+        out = valids["takes"] if len(valids["takes"]) > 0 else valids["simple"]
+        return out
 
     @property
     def n_available_moves_left(self) -> int:
@@ -63,7 +64,7 @@ class Node:
         """
         return self._action_taken
 
-    def select_child(self) -> "Node":
+    def select_child(self) -> Node:
         """Selects the best child from a fully expanded node using UCB
 
         Returns:
@@ -80,7 +81,7 @@ class Node:
 
         return best_child
 
-    def _calculate_ucb(self, child: "Node") -> float:
+    def _calculate_ucb(self, child: Node) -> float:
         """Calculates the UCB of a node
 
         Returns:
@@ -90,7 +91,7 @@ class Node:
             np.sqrt(np.log(self.visit_count) / child.visit_count)
         )
 
-    def expand(self) -> "Node":
+    def expand(self) -> Node:
         """Random expansion of a node
 
         Returns:
@@ -110,7 +111,7 @@ class Node:
             terminal=terminal,
             action_taken=random_action,
             reward=reward,
-            eec=self.kwargs,
+            eec=self.kwargs["eec"],
         )
         self.children.append(child)
 
@@ -151,7 +152,7 @@ class MCTS:
 
         self._root: Node = None
 
-    def build_tree(self, root: "CheckersGame") -> None:
+    def build_tree(self, root: CheckersGame | None = None) -> None:
         """Builds a new tree
 
         Args:
@@ -161,12 +162,18 @@ class MCTS:
         n_wins = 0
         n_losses = 0
         n_draws = 0
-        for _ in tqdm(range(int(self.kwargs["n_searches"] / self.kwargs["n_jobs"]))):
+
+        actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
+        print(actual_searches)
+        for _ in tqdm(range(actual_searches)):
             node = self._root
             if node.n_available_moves_left == 0:
                 node = node.select_child()
 
-            while not node.is_leaf and node.n_available_moves_left > 0:
+            while not node.terminal:
+                if node.n_available_moves_left == 0 and node.children:
+                    node = node.select_child()
+                    continue
                 node = node.expand()
 
             node.backprop(node.reward)
@@ -179,7 +186,7 @@ class MCTS:
 
         print(f"Found {n_wins} WINS, {n_draws} DRAWS, {n_losses} LOSSES")
 
-    def mp_build_tree(self, root: "CheckersGame") -> None:
+    def mp_build_tree(self, root: CheckersGame) -> None:
         """Builds a new tree while utilizing multiple threads
 
         Args:

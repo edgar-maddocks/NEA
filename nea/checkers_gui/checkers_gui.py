@@ -1,4 +1,5 @@
 import pygame
+from collections import deque
 
 from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES
 from nea.checkers_gui.helpers import get_col_selected, get_row_selected
@@ -152,8 +153,8 @@ class CheckersGUI(CheckersGame):
         Args:
             screen (pygame.Surface): screen to draw to
         """
-        valid_takes = self._get_valid_take_moves(*self.piece_selected)
-        valid_simples = self._get_valid_simple_moves(*self.piece_selected)
+        valid_takes = self._get_valid_take_moves(*self.piece_selected, self.player)
+        valid_simples = self._get_valid_simple_moves(*self.piece_selected, self.player)
 
         moves = valid_takes if len(valid_takes) > 0 else valid_simples
         move_tos = [x[1] for x in moves]
@@ -278,6 +279,8 @@ def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> N
     mcts = MCTS(n_searches=n_searches, eec=eec)
 
     winner = None
+    mcts_turns = 0
+    moves = deque()
     while not done:
         if gui.player == player_colour:
             reward = None
@@ -290,9 +293,15 @@ def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> N
                     action = gui.click(pygame.mouse.get_pos())
                     if action:
                         done, reward = gui.evaluate_action(action)
+                        moves.append(CheckersGame.convert_action_to_user(action))
         elif gui.player != player_colour:
-            mcts.build_tree(gui)
+            if mcts_turns == 0:
+                mcts.build_tree(gui)
+                mcts_turns += 1
+            else:
+                mcts.build_tree(gui)
             action = mcts.get_action()
+            moves.append(CheckersGame.convert_action_to_user(action))
             done, reward = gui.evaluate_action(action)
 
         if done:
@@ -389,12 +398,10 @@ def main_loop():
         n_searches = None
         while not valid_input:
             print("==================================================")
-            print(
-                "Enter Number of Searches for MCTS \n" "(Between 1000 and 100,000,000)"
-            )
+            print("Enter Number of Searches for MCTS \n" "(Between 10 and 1000)")
             try:
                 n_searches = int(input("Enter Number of Searches: "))
-                if 1000 <= n_searches <= 100000000:
+                if 10 <= n_searches <= 1000:
                     valid_input = True
                 else:
                     raise ValueError(
