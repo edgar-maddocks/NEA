@@ -546,7 +546,7 @@ def _get_valid_eec(colour: str = None) -> float:
         if colour is None:
             print(
                 "Enter EEC for MCTS (determines exploration - with higher values = more exploration) \n"
-                "(Between 1 and 3)"
+                "(Between 0.1 and 2)"
             )
         else:
             print(
