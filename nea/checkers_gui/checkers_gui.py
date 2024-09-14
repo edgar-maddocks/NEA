@@ -551,11 +551,11 @@ def _get_valid_eec(colour: str = None) -> float:
         else:
             print(
                 f"Enter EEC for the {colour} MCTS (determines exploration - with higher values = more exploration) \n"
-                "(Between 1 and 3)"
+                "(Between 0.1 and 2)"
             )
         try:
             eec = float(input("Enter EEC: "))
-            if 1 <= eec <= 3:
+            if 0.1 <= eec <= 2:
                 valid_input = True
             else:
                 raise ValueError("Please enter a number between 1 and 3")
