@@ -121,14 +121,14 @@ class Node:
         """Backpropgates through graph, updating value count, visit count.
 
         Args:
-            reward (int): _description_
+            reward (int): reward of terminal state
         """
         self.visit_count += 1
         self.value_count += reward
 
         if self._parent is not None:
             if self._parent.colour != self.colour:
-                reward *= 1
+                reward *= -1
             self._parent.backprop(reward)
 
 
@@ -152,19 +152,21 @@ class MCTS:
 
         self._root: Node = None
 
-    def build_tree(self, root: CheckersGame | None = None) -> None:
+    def build_tree(
+        self, root: CheckersGame | None = None, mcts_colour: str = None
+    ) -> None:
         """Builds a new tree
 
         Args:
             root (CheckersGame): New state to root the tree from
         """
         self._root = Node(root, eec=self.kwargs["eec"])
+
         n_wins = 0
         n_losses = 0
         n_draws = 0
 
         actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
-        print(actual_searches)
         for _ in tqdm(range(actual_searches)):
             node = self._root
             if node.n_available_moves_left == 0:
@@ -177,11 +179,11 @@ class MCTS:
                 node = node.expand()
 
             node.backprop(node.reward)
-            if node.reward == 1:
+            if node.reward == 1 and node.colour == mcts_colour:
                 n_wins += 1
             elif node.reward == 0:
                 n_draws += 1
-            elif node.reward == -1:
+            else:
                 n_losses += 1
 
         print(f"Found {n_wins} WINS, {n_draws} DRAWS, {n_losses} LOSSES")

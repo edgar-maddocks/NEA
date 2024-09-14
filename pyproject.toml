@@ -12,6 +12,7 @@ tqdm = "^4.66.5"
 numba = "^0.60.0"
 pytest = "^8.3.2"
 pygame = "^2.6.0"
+ruff = "^0.6.5"
 
 
 [build-system]

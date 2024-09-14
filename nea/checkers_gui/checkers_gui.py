@@ -1,5 +1,4 @@
 import pygame
-from collections import deque
 
 from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES
 from nea.checkers_gui.helpers import get_col_selected, get_row_selected
@@ -19,6 +18,7 @@ from nea.console_checkers.consts import (
 from nea.console_checkers.consts import (
     SIZE as BOARD_SIZE,
 )
+from nea.console_checkers.move_stack import MoveStack
 from nea.mcts import MCTS
 
 
@@ -280,7 +280,7 @@ def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> N
 
     winner = None
     mcts_turns = 0
-    moves = deque()
+    moves = MoveStack()
     while not done:
         if gui.player == player_colour:
             reward = None
@@ -293,15 +293,15 @@ def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> N
                     action = gui.click(pygame.mouse.get_pos())
                     if action:
                         done, reward = gui.evaluate_action(action)
-                        moves.append(CheckersGame.convert_action_to_user(action))
+                        moves.push(CheckersGame.convert_action_to_user(action))
         elif gui.player != player_colour:
             if mcts_turns == 0:
-                mcts.build_tree(gui)
+                mcts.build_tree(gui, gui.player)
                 mcts_turns += 1
             else:
-                mcts.build_tree(gui)
+                mcts.build_tree(gui, gui.player)
             action = mcts.get_action()
-            moves.append(CheckersGame.convert_action_to_user(action))
+            moves.push(CheckersGame.convert_action_to_user(action))
             done, reward = gui.evaluate_action(action)
 
         if done:
@@ -416,7 +416,7 @@ def main_loop():
             print("==================================================")
             print(
                 "Enter EEC for MCTS (determines exploration - with higher values = more exploration) \n"
-                "(Between 1 and 3 - optimal value is 1.41)"
+                "(Between 1 and 3)"
             )
             try:
                 eec = float(input("Enter EEC: "))
