@@ -175,10 +175,17 @@ def _cpu_time(n_kernels: int, kernel_size: int, samples: int, x_size: int):
 
     new_data = np.zeros(output_shape, dtype=np.float64)
 
+    out = np.zeros(output_shape, dtype=np.float64)
+
+    for i in range(n_kernels):
+        for j in range(x.shape[0]):
+            out[i] = _jit_cpu_valid_cross_correlate2d(x[j], k[i, j])
+
     s = t.time()
     new_data = cpu_forward_convolve2d(new_data, x, k, n_kernels)
     print(new_data)
     print(new_data.shape)
+    print(np.allclose(out, new_data, rtol=0.01))
     print("TIME TAKEN: ", t.time() - s)
 
 
