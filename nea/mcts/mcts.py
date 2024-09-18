@@ -1,6 +1,5 @@
 from __future__ import annotations
 from copy import deepcopy
-import multiprocessing
 
 import numpy as np
 from tqdm import tqdm
@@ -186,19 +185,9 @@ class MCTS:
             else:
                 n_losses += 1
 
-        print(f"Found {n_wins} WINS, {n_draws} DRAWS, {n_losses} LOSSES")
-
-    def mp_build_tree(self, root: CheckersGame) -> None:
-        """Builds a new tree while utilizing multiple threads
-
-        Args:
-            root (CheckersGame): New state to root the tree from
-        """
-        ps: list[multiprocessing.Process] = []
-        for _ in range(self.kwargs["n_jobs"]):
-            p = multiprocessing.Process(target=self.build_tree, args=(root,))
-            ps.append(p)
-            p.start()
+        print(
+            f"Search estimates {round(n_wins / actual_searches * 100, 1)} WIN%, {round(n_draws / actual_searches * 100, 1)} DRAW%, {round(n_losses / actual_searches * 100, 1)} LOSS%"
+        )
 
     def get_action_probs(self) -> np.ndarray:
         """Gets array of probabilities of action based on tree

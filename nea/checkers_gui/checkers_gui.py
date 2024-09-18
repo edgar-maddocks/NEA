@@ -520,18 +520,18 @@ def _get_valid_num_searches(colour: str = None) -> int:
     while not valid_input:
         print("==================================================")
         if colour is None:
-            print("Enter Number of Searches for the MCTS \n" "(Between 10 and 1000)")
+            print("Enter Number of Searches for the MCTS \n" "(Between 10 and 10000)")
         else:
             print(
                 f"Enter Number of Searches for the {colour} MCTS \n"
-                "(Between 10 and 1000)"
+                "(Between 10 and 10000)"
             )
         try:
             n_searches = int(input("Enter Number of Searches: "))
-            if 10 <= n_searches <= 1000:
+            if 1 <= n_searches <= 10000:
                 valid_input = True
             else:
-                raise ValueError("Please enter a number between 1000 and 100,000,000")
+                raise ValueError("Please enter a number between 1000 and 10000")
         except Exception:
             print("Invalid entry")
 
