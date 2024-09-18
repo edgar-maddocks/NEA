@@ -27,6 +27,42 @@ def cpu_forward_convolve2d(
 
 
 @jit(nopython=True, cache=True)
+def cpu_k_and_x_backward_convolve2d(
+    x_output: np.ndarray,
+    k_output: np.ndarray,
+    x: np.ndarray,
+    k: np.ndarray,
+    dy: np.ndarray,
+    n_samples: int,
+    n_kernels: int,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Calculate the gradients for both input and kernels in the same loop
+
+    Should be used if both x and k requires grad.
+
+    Reduces runtime from [O(n_samples*n_kernels)]^2 to O(n_samples*n_kernels)
+
+    Args:
+        x_output (np.ndarray): Array to fill with input grads
+        k_output (np.ndarray): Array to fill with kernel grads
+        x (np.ndarray): input
+        k (np.ndarray): kernels
+        dy (np.ndarray): upstream grad
+        n_samples (int): number of samples in x (x.shape[0])
+        n_kernels (int): number of kernels
+
+    Returns:
+        tuple[np.ndarray, np.ndarray]: x_grads, k_grads
+    """
+    for i in range(n_kernels):
+        for j in range(n_samples):
+            x_output[j] += _jit_cpu_convolve2d(dy[i], k[i, j])
+            k_output[i, j] = _jit_cpu_valid_cross_correlate2d(x[j], dy[i])
+
+    return x_output, k_output
+
+
+@jit(nopython=True, cache=True)
 def cpu_k_backward_convolve2d(
     output: np.ndarray, x: np.ndarray, dy: np.ndarray, n_kernels: int
 ) -> np.ndarray:
@@ -39,8 +75,66 @@ def cpu_k_backward_convolve2d(
 
 
 @jit(nopython=True, cache=True)
+def cpu_x_backward_convolve2d(
+    output: np.ndarray, k: np.ndarray, dy: np.ndarray, n_samples: int, n_kernels: int
+) -> np.ndarray:
+    """Get input gradients for a convolutional layer
+
+    Args:
+        output (np.ndarray): array to fill with gradients
+        k (np.ndarray): kernels
+        dy (np.ndarray): upstream gradient
+        n_samples (int): number of samples in input
+        n_kernels (int): number of kernels
+
+    Returns:
+        np.ndarray: gradients
+    """
+    for i in range(n_kernels):
+        for j in range(n_samples):
+            output[j] += _jit_cpu_convolve2d(dy[i], k[i, j])
+
+    return output
+
+
+@jit(nopython=True, cache=True)
+def _jit_cpu_convolve2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    """Returns the 2d convolution of two matrices
+
+    (which is equivalent to full cross correlation of a and rot180(b))
+
+    Args:
+        a (np.ndarray):
+        b (np.ndarray):
+
+    Returns:
+        np.ndarray:
+    """
+    return _jit_cpu_full_cross_correlate2d(a, _jit_rotate_180(b))
+
+
+@jit(nopython=True, cache=True)
+def _jit_rotate_180(b: np.ndarray) -> np.ndarray:
+    """Rotates a given matrix by 180 degrees
+
+    Args:
+        b (np.ndarray): matrix to rotate
+
+    Returns:
+        np.ndarray: rotated matrix
+    """
+    rot90 = np.rot90(b)
+    return np.rot90(rot90)
+
+
+@jit(nopython=True, cache=True)
+def _jit_cpu_full_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+    raise NotImplementedError
+
+
+@jit(nopython=True, cache=True)
 def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    """Performs cross correlation between two numpy arrays - compiled
+    """Performs VALID cross correlation between two numpy arrays
 
     Args:
         a (np.ndarray):
@@ -86,10 +180,6 @@ def _cpu_time(n_kernels: int, kernel_size: int, samples: int, x_size: int):
     print(new_data)
     print(new_data.shape)
     print("TIME TAKEN: ", t.time() - s)
-
-    """s = t.time()
-    new_data = gpu_forward_convolve2d(new_data, x.data, k.data, 4)
-    print("TIME TAKEN: ", t.time() - s)"""
 
 
 if __name__ == "__main__":

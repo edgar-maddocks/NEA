@@ -96,6 +96,9 @@ class Node:
         Returns:
             Node: New child
         """
+        if self.n_available_moves_left == 0 and self.children:
+            return self.select_child()
+
         random_move_idx = np.random.choice(self.n_available_moves_left)
         random_action = self._available_moves_left[random_move_idx]
 
@@ -172,9 +175,6 @@ class MCTS:
                 node = node.select_child()
 
             while not node.terminal:
-                if node.n_available_moves_left == 0 and node.children:
-                    node = node.select_child()
-                    continue
                 node = node.expand()
 
             node.backprop(node.reward)
