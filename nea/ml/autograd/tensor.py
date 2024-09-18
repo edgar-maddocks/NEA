@@ -5,7 +5,12 @@ from copy import deepcopy
 import numpy as np
 
 from .consts import Tensorable
-from .convolve_funcs import cpu_forward_convolve2d, cpu_k_backward_convolve2d
+from .convolve_funcs import (
+    cpu_forward_convolve2d,
+    cpu_k_backward_convolve2d,
+    cpu_x_backward_convolve2d,
+    cpu_x_and_k_backward_convolve2d,
+)
 
 # ========
 #  TENSOR
@@ -958,11 +963,26 @@ class Convolve2D(TensorFunction):
             if b.requires_grad:
                 b.backward(dy, y)
 
-        if x.requires_grad:
-            raise NotImplementedError
-
-        if k.requires_grad:
+        if x.requires_grad and k.requires_grad:
+            dx = np.zeros(self.input_shape)
             dk = np.zeros(self.kernels_shape)
-            dk = cpu_k_backward_convolve2d(dk, x.data, dy, self.n_kernels)
+            dx, dk = cpu_x_and_k_backward_convolve2d(
+                dx, dk, x.data, k.data, dy, x.shape[0], self.n_kernels
+            )
 
+            x.backward(dx, y)
             k.backward(dk, y)
+        else:
+            if x.requires_grad:
+                dx = np.zeros(self.input_shape)
+                dx = cpu_x_backward_convolve2d(
+                    dx, k.data, dy, x.shape[0], self.n_kernels
+                )
+
+                x.backward(dx, y)
+
+            if k.requires_grad:
+                dk = np.zeros(self.kernels_shape)
+                dk = cpu_k_backward_convolve2d(dk, x.data, dy, self.n_kernels)
+
+                k.backward(dk, y)

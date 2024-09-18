@@ -27,7 +27,7 @@ def cpu_forward_convolve2d(
 
 
 @jit(nopython=True, cache=True)
-def cpu_k_and_x_backward_convolve2d(
+def cpu_x_and_k_backward_convolve2d(
     x_output: np.ndarray,
     k_output: np.ndarray,
     x: np.ndarray,
@@ -66,6 +66,17 @@ def cpu_k_and_x_backward_convolve2d(
 def cpu_k_backward_convolve2d(
     output: np.ndarray, x: np.ndarray, dy: np.ndarray, n_kernels: int
 ) -> np.ndarray:
+    """Get input gradients for a convolutional layer
+
+    Args:
+        output (np.ndarray): array to fill with gradients
+        x (np.ndarray): input
+        dy (np.ndarray): upstream gradient
+        n_kernels (int): number of kernels
+
+    Returns:
+        np.ndarray: gradients
+    """
     n_samples = x.shape[0]
     for i in range(n_kernels):
         for j in range(n_samples):
@@ -129,7 +140,43 @@ def _jit_rotate_180(b: np.ndarray) -> np.ndarray:
 
 @jit(nopython=True, cache=True)
 def _jit_cpu_full_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    raise NotImplementedError
+    """Performs FULL cross-correlation between two numpy arrays.
+
+    Args:
+        a (np.ndarray):
+        b (np.ndarray):
+
+    Returns:
+        np.ndarray:
+    """
+    a_rows, a_cols = a.shape
+    b_rows, b_cols = b.shape
+
+    # calculate output sizing (note: a+b-1 instead of a -b+1 for valid)
+    out_rows = a_rows + b_rows - 1
+    out_cols = a_cols + b_cols - 1
+
+    out = np.zeros((out_rows, out_cols), dtype=np.float64)
+
+    # slide b over a - including only partial coverage
+    for m in range(out_rows):
+        for n in range(out_cols):
+            s = 0.0  # sum value
+
+            # compute dot product of a and b that overlap
+            for p in range(b_rows):
+                for q in range(b_cols):
+                    # get positions in a that correspond with b[p, q]
+                    a_row = m - p
+                    a_col = n - q
+
+                    # check the kernel is in bounds
+                    if 0 <= a_row < a_rows and 0 <= a_col < a_cols:
+                        s += a[a_row, a_col] * b[p, q]
+
+            out[m, n] = s  # add sum to output
+
+    return out
 
 
 @jit(nopython=True, cache=True)
@@ -146,6 +193,7 @@ def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray
     a_rows, a_cols = a.shape
     b_rows, b_cols = b.shape
 
+    # calculate output sizing
     out_rows = a_rows - b_rows + 1
     out_cols = a_cols - b_cols + 1
 
@@ -153,16 +201,21 @@ def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray
 
     out_rows, out_cols = out.shape
 
+    # slide b over a
     for m in range(out_rows):
         for n in range(out_cols):
-            sub_matrix = a[m : m + b_rows, n : n + b_cols]
+            sub_matrix = a[
+                m : m + b_rows, n : n + b_cols
+            ]  # get the parts of a which overlap with b at that time
 
-            s = 0.0
+            s = 0.0  # sum (numpy sum function was producing errors)
             for p in range(b_rows):
                 for q in range(b_cols):
-                    s += sub_matrix[p, q] * b[p, q]
+                    s += (
+                        sub_matrix[p, q] * b[p, q]
+                    )  # computes the dot product of sub_matrix and b
 
-            out[m, n] = s
+            out[m, n] = s  # add to output array
 
     return out
 
@@ -185,7 +238,7 @@ def _cpu_time(n_kernels: int, kernel_size: int, samples: int, x_size: int):
     new_data = cpu_forward_convolve2d(new_data, x, k, n_kernels)
     print(new_data)
     print(new_data.shape)
-    print(np.allclose(out, new_data, rtol=0.01))
+    print("RESULT IS SAME AS NUMPY?", np.allclose(out, new_data, rtol=0.01))
     print("TIME TAKEN: ", t.time() - s)
 
 
