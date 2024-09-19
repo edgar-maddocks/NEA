@@ -71,7 +71,7 @@ class Tensor:
         """Returns a copy of the tensor, however the data has been transposed
 
         Returns:
-            Tensor: _description_
+            Tensor:
         """
         copy = deepcopy(self)
         copy._data = self._data.T
@@ -241,10 +241,22 @@ class Tensor:
             b (Tensor, optional): bias to use. Defaults to None.
 
         Returns:
-            Tensor: _description_
+            Tensor:
         """
         conv_op = Convolve2D()
         return conv_op.forward(self, k, b=b)
+
+    def reshape(self, shape: tuple[int, int]) -> Tensor:
+        """Reshapes a tensor
+
+        Args:
+            shape (tuple[int, int]): shape to change to
+
+        Returns:
+            Tensor:
+        """
+        reshape_op = Reshape()
+        reshape_op.forward(self, shape=shape)
 
 
 # ==================
@@ -986,3 +998,37 @@ class Convolve2D(TensorFunction):
                 dk = cpu_k_backward_convolve2d(dk, x.data, dy, self.n_kernels)
 
                 k.backward(dk, y)
+
+
+class Reshape(TensorFunction):
+    """Reshapes a tensor
+
+    Args:
+        TensorFunction :
+    """
+
+    def forward(self, a: Tensor, shape: tuple[int]) -> Tensor:
+        """Reshapes the tensor
+
+        Args:
+            x (Tensor): tensor to reshape
+
+        Returns:
+            Tensor: reshaped tensor
+        """
+        new_data = np.reshape(a.data, shape)
+
+        y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
+
+        self.parents = (a,)
+
+        a.children.append(y)
+
+        self._cache = (a,)
+
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        (a,) = self._cache
+
+        if a.requires_grad:
+            da = np.reshape(a.shape)
+            a.backward(da, y)
