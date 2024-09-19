@@ -1,7 +1,3 @@
-import numpy as np
-import time as t
-from numba import cuda, jit
-
 from nea.ml.autograd import Tensor, Tensorable
 
 

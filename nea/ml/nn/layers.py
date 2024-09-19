@@ -146,6 +146,14 @@ class Conv2D(Module):
         return x.convolve2d(k=self.kernels, b=self.biases)
 
 
+class Reshape(Module):
+    def __init__(self, desired_shape: tuple[int]) -> None:
+        self.desired_shape = desired_shape
+
+    def forward(self, x: Tensor) -> Tensor:
+        return x.reshape(self.desired_shape)
+
+
 # ==========================
 #        Activations
 # ==========================
@@ -187,7 +195,8 @@ class Softmax(Module):
 
     def forward(self, x: Tensor, dim: int = -1) -> Tensor:
         z = tensor_exp(x)
-        output = z / sum(z, dim=dim)
+        output = z / tensor_sum(z, dim=dim, keepdims=True)
+        return output
 
 
 # ==========================
@@ -206,3 +215,33 @@ class MSE(Module):
         loss: Tensor = predicted - true
         loss = (1 / true.shape[0]) * (loss.T @ loss)
         return loss
+
+
+class AlphaLoss(Module):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def __call__(
+        self,
+        true_value: Tensor,
+        predicted_value: Tensor,
+        mcts_pol: Tensor,
+        net_pol: Tensor,
+    ) -> Tensor:
+        return self.forward(
+            true_value=true_value,
+            predicted_value=predicted_value,
+            mcts_pol=mcts_pol,
+            net_pol=net_pol,
+        )
+
+    def forward(
+        self,
+        true_value: Tensor,
+        predicted_value: Tensor,
+        mcts_pol: Tensor,
+        net_pol: Tensor,
+    ) -> Tensor:
+        val_sqe = (true_value - predicted_value) ** 2
+        pol_bcel = mcts_pol.T @ net_pol.log()
+        return val_sqe - pol_bcel

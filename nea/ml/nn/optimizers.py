@@ -3,8 +3,6 @@ from abc import ABC
 from nea.ml.autograd import Tensor
 from nea.ml.nn import Parameter
 
-import numpy as np
-
 
 class Optimizer(ABC):
     def __init__(
