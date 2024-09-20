@@ -1,4 +1,5 @@
 import numpy as np
+import time as t
 
 from nea.ml import nn
 from nea.ml.autograd import Tensor, Tensorable
@@ -18,6 +19,13 @@ if __name__ == "__main__":
             return x
 
     net = Model()
+    samples = []
+    for i in range(10000):
+        samples.append(game.board)
 
-    input = np.reshape(game.board, (1, 8, 8))
-    print(net.forward(input))
+    input = Tensor(samples, requires_grad=True)
+    print(input.shape)
+    y = net.forward(input)
+    start = t.time()
+    y.backward()
+    print("GRAD CALCULATION TOOK: ", t.time() - start)

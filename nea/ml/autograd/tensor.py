@@ -976,7 +976,7 @@ class Convolve2D(TensorFunction):
                 b.backward(dy, y)
 
         if x.requires_grad and k.requires_grad:
-            dx = np.zeros(self.input_shape)
+            dx = np.zeros(self.x_shape)
             dk = np.zeros(self.kernels_shape)
             dx, dk = cpu_x_and_k_backward_convolve2d(
                 dx, dk, x.data, k.data, dy, x.shape[0], self.n_kernels
@@ -986,7 +986,7 @@ class Convolve2D(TensorFunction):
             k.backward(dk, y)
         else:
             if x.requires_grad:
-                dx = np.zeros(self.input_shape)
+                dx = np.zeros(self.x_shape)
                 dx = cpu_x_backward_convolve2d(
                     dx, k.data, dy, x.shape[0], self.n_kernels
                 )
