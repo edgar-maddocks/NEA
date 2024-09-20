@@ -7,7 +7,9 @@ from .layers import (
     Tanh,
     Softmax,
     Sigmoid,
+    ReLU,
     MSE,
+    AlphaLoss,
 )
 from .optimizers import SGD
 
@@ -22,4 +24,6 @@ __all__ = [
     "Sigmoid",
     "MSE",
     "SGD",
+    "ReLU",
+    "AlphaLoss",
 ]

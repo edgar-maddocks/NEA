@@ -216,6 +216,14 @@ class Softmax(Module):
         return output
 
 
+class ReLU(Module):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def forward(self, x: Tensor) -> Tensor:
+        return x.relu()
+
+
 # ==========================
 #          Losses
 # ==========================

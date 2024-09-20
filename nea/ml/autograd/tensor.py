@@ -142,7 +142,7 @@ class Tensor:
         self.grad = np.zeros_like(self._data)
 
     def __eq__(self, other: np.ndarray | int | float):
-        if self.data == other:
+        if np.array_equal(self.data, np.array(other)):
             return True
 
     def __add__(self, other: Tensorable) -> Tensor:
@@ -203,7 +203,7 @@ class Tensor:
         mean_op = Mean()
         return mean_op.forward(self)
 
-    def sum(self, axis: int = -1, keepdims: bool = False) -> Tensor:
+    def sum(self, dim: int = -1, keepdims: bool = False) -> Tensor:
         """Computes sum of a tensor
 
         Args:
@@ -214,7 +214,7 @@ class Tensor:
             Tensor:
         """
         sum_op = Sum()
-        return sum_op.forward(self, axis=axis, keepdims=keepdims)
+        return sum_op.forward(self, dim=dim, keepdims=keepdims)
 
     def log(self) -> Tensor:
         """Computes element wise log of tensor
@@ -271,6 +271,15 @@ class Tensor:
         """
         pad_op = Pad2D()
         return pad_op.forward(self, padding=padding, value=value)
+
+    def relu(self) -> Tensor:
+        """Acts as function for relu activation layer
+
+        Returns:
+            Tensor:
+        """
+        relu_op = ReLU()
+        return relu_op.forward(self)
 
 
 # ==================
@@ -761,7 +770,7 @@ class Sum(TensorFunction):
         TensorFunction (_type_): _description_
     """
 
-    def forward(self, a: Tensor, axis: int, keepdims: bool) -> Tensor:
+    def forward(self, a: Tensor, dim: int, keepdims: bool) -> Tensor:
         """Computes sum of a tensor
 
         Args:
@@ -772,7 +781,7 @@ class Sum(TensorFunction):
         Returns:
             Tensor: _description_
         """
-        new_data = a.data.sum(axis=axis, keepdims=keepdims)
+        new_data = a.data.sum(axis=dim, keepdims=keepdims)
 
         requires_grad = a.requires_grad
 
@@ -936,20 +945,12 @@ class Convolve2D(TensorFunction):
             x (Tensor): Input to layer
         """
         self.n_kernels, self.x_samples, self.kernel_size, _ = k.shape
-        self.x_shape = x.shape
-
-        x_samples, x_width, x_height = self.x_shape
+        x_samples, x_width, x_height = x.shape
 
         self.output_shape = (
             self.n_kernels,
             x_width - self.kernel_size + 1,
             x_height - self.kernel_size + 1,
-        )
-        self.kernels_shape = (
-            self.n_kernels,
-            x_samples,
-            self.kernel_size,
-            self.kernel_size,
         )
 
         new_data = np.zeros(self.output_shape)
@@ -988,10 +989,9 @@ class Convolve2D(TensorFunction):
         if b:
             if b.requires_grad:
                 b.backward(dy, y)
-
         if x.requires_grad and k.requires_grad:
-            dx = np.zeros(self.x_shape)
-            dk = np.zeros(self.kernels_shape)
+            dx = np.zeros(x.shape)
+            dk = np.zeros(k.shape)
             dx, dk = cpu_x_and_k_backward_convolve2d(
                 dx, dk, x.data, k.data, dy, x.shape[0], self.n_kernels
             )
@@ -1000,7 +1000,7 @@ class Convolve2D(TensorFunction):
             k.backward(dk, y)
         else:
             if x.requires_grad:
-                dx = np.zeros(self.x_shape)
+                dx = np.zeros(x.shape)
                 dx = cpu_x_backward_convolve2d(
                     dx, k.data, dy, x.shape[0], self.n_kernels
                 )
@@ -1008,7 +1008,7 @@ class Convolve2D(TensorFunction):
                 x.backward(dx, y)
 
             if k.requires_grad:
-                dk = np.zeros(self.kernels_shape)
+                dk = np.zeros(k.shape)
                 dk = cpu_k_backward_convolve2d(dk, x.data, dy, self.n_kernels)
 
                 k.backward(dk, y)
@@ -1046,7 +1046,7 @@ class Reshape(TensorFunction):
         (a,) = self._cache
 
         if a.requires_grad:
-            da = np.reshape(a.shape)
+            da = np.reshape(dy, a.shape)
             a.backward(da, y)
 
 
@@ -1081,7 +1081,40 @@ class Pad2D(TensorFunction):
         ) = self._cache
 
         if a.requires_grad:
-            da = dy[padding:-padding, padding:-padding]
+            if len(dy.shape) == 3:
+                da = dy[:, padding:-padding, padding:-padding]
+            elif len(dy.shape) == 3:
+                da = dy[padding:-padding, padding:-padding]
+            a.backward(da, y)
+
+
+class ReLU(TensorFunction):
+    def forward(self, a: Tensor) -> Tensor:
+        """Specialised function for relu activation
+
+        Args:
+            a (Tensor):
+
+        Returns:
+            Tensor:
+        """
+        new_data = np.maximum(0.0, a.data)
+
+        y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
+
+        self.parents = (a,)
+
+        a.children.append(y)
+
+        self._cache = (a,)
+
+        return y
+
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        (a,) = self._cache
+
+        if a.requires_grad:
+            da = np.greater(dy, 0.0).astype(np.float64)
             a.backward(da, y)
 
 
