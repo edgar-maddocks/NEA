@@ -11,7 +11,7 @@ if __name__ == "__main__":
     class Model(nn.Module):
         def __init__(self) -> None:
             super().__init__()
-            self.conv = nn.Conv2D((1, 8, 8), 3, 64)
+            self.conv = nn.Conv2D((1, 8, 8), 3, 64, padding=1, padding_value=0)
 
         def forward(self, x: Tensorable) -> Tensor:
             x = self.conv(x)

@@ -4,13 +4,14 @@ from copy import deepcopy
 
 import numpy as np
 
-from .consts import Tensorable
-from .convolve_funcs import (
+from nea.ml.autograd.consts import Tensorable
+from nea.ml.autograd.convolve_funcs import (
     cpu_forward_convolve2d,
     cpu_k_backward_convolve2d,
     cpu_x_backward_convolve2d,
     cpu_x_and_k_backward_convolve2d,
 )
+from nea.ml.autograd.jit_functions import fill_padded_array
 
 # ========
 #  TENSOR
@@ -256,7 +257,20 @@ class Tensor:
             Tensor:
         """
         reshape_op = Reshape()
-        reshape_op.forward(self, shape=shape)
+        return reshape_op.forward(self, shape=shape)
+
+    def pad2D(self, padding: int, value: float) -> Tensor:
+        """Pads a 2D tensor
+
+        Args:
+            padding (int): how much to add to each edge
+            value (float): value to pad with
+
+        Returns:
+            Tensor: padded tensor
+        """
+        pad_op = Pad2D()
+        return pad_op.forward(self, padding=padding, value=value)
 
 
 # ==================
@@ -1026,9 +1040,57 @@ class Reshape(TensorFunction):
 
         self._cache = (a,)
 
+        return y
+
     def backward(self, dy: np.ndarray, y: Tensor) -> None:
         (a,) = self._cache
 
         if a.requires_grad:
             da = np.reshape(a.shape)
             a.backward(da, y)
+
+
+class Pad2D(TensorFunction):
+    def forward(self, a: Tensor, padding: int, value: float) -> Tensor:
+        a_samples, a_rows, a_cols = a.shape
+
+        new_rows = a_rows + 2 * padding
+        new_cols = a_cols + 2 * padding
+
+        arr = np.full((a_samples, new_rows, new_cols), fill_value=value)
+
+        arr = fill_padded_array(arr, a.data, padding)
+
+        y = Tensor(arr, a.requires_grad, operation=self)
+
+        self.parents = (a,)
+
+        a.children.append(y)
+
+        self._cache = (
+            a,
+            padding,
+        )
+
+        return y
+
+    def backward(self, dy: np.ndarray, y: Tensor) -> None:
+        (
+            a,
+            padding,
+        ) = self._cache
+
+        if a.requires_grad:
+            da = dy[padding:-padding, padding:-padding]
+            a.backward(da, y)
+
+
+if __name__ == "__main__":
+    x = Tensor([[1, 1], [1, 1]], requires_grad=True)
+
+    y = x.pad2D(1, 0)
+    y += np.full((4, 4), fill_value=8)
+
+    y.backward()
+
+    print(x.grad)

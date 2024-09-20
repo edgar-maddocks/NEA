@@ -121,12 +121,27 @@ class Conv2D(Module):
         kernel_size: int,
         n_kernels: int,
         bias: bool = False,
+        padding: int = None,
+        padding_value: float = None,
     ) -> None:
-        self.n_kernels = n_kernels
         assert len(x_shape) == 3, "Input must be of shape (n_samples, *, *)"
+        if padding_value:
+            assert padding, "Must define amount of padding if padding value is not None"
+
+        self.n_kernels = n_kernels
         self.x_shape = x_shape
 
         x_samples, x_width, x_height = self.x_shape
+
+        self.padding = padding
+        self.padding_value = padding_value
+        if self.padding:
+            self.x_shape = (
+                x_samples,
+                x_width + 2 * self.padding,
+                x_height + 2 * self.padding,
+            )
+            x_samples, x_width, x_height = self.x_shape
 
         self.output_shape = (
             self.n_kernels,
@@ -143,6 +158,8 @@ class Conv2D(Module):
             self.biases = Parameter(self.output_shape)
 
     def forward(self, x: Tensor) -> Tensor:
+        if self.padding:
+            x = x.pad2D(padding=self.padding, value=self.padding_value)
         return x.convolve2d(k=self.kernels, b=self.biases)
 
 
