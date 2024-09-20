@@ -946,12 +946,12 @@ class Convolve2D(TensorFunction):
 
         y = Tensor(new_data, requires_grad=True, operation=self)
 
-        self.parents = (
+        self.parents = [
             x,
             k,
-        )
+        ]
         if b:
-            self.parents += b
+            self.parents.append(b)
 
         x.children.append(y)
         k.children.append(y)

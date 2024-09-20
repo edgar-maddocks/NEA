@@ -120,7 +120,7 @@ class Conv2D(Module):
         x_shape: tuple[int, int, int],
         kernel_size: int,
         n_kernels: int,
-        bias: bool = True,
+        bias: bool = False,
     ) -> None:
         self.n_kernels = n_kernels
         assert len(x_shape) == 3, "Input must be of shape (n_samples, *, *)"
