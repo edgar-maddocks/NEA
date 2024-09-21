@@ -1,4 +1,5 @@
 from abc import ABC
+import collections
 import numpy as np
 
 from nea.ml.autograd import Tensor, to_tensor, TensorFunction, tensor_exp, tensor_sum
@@ -63,6 +64,8 @@ class Module(ABC):
         for param in self.__dict__.values():
             if isinstance(param, Module):
                 params += param.params
+            elif isinstance(param, ModuleList):
+                params += param.params
             elif isinstance(param, Parameter):
                 params.append(param)
             elif isinstance(param, Tensor):
@@ -70,6 +73,36 @@ class Module(ABC):
                     params.append(param)
 
         return params
+
+
+class ModuleList(Module, collections.abc.Sequence):
+    def __init__(self, modules: list[Module]) -> None:
+        super().__init__()
+        self.modules = modules
+
+    @property
+    def params(self) -> list[Parameter | Tensor]:
+        params = []
+
+        for module in self.modules:
+            for param in module.__dict__.values():
+                if isinstance(param, Module):
+                    params += param.params
+                elif isinstance(param, ModuleList):
+                    params += param.params
+                elif isinstance(param, Parameter):
+                    params.append(param)
+                elif isinstance(param, Tensor):
+                    if param.requires_grad:
+                        params.append(param)
+
+            return params
+
+    def __getitem__(self, index: int) -> Module:
+        return self.modules[index]
+
+    def __len__(self) -> int:
+        return len(self.modules)
 
 
 class Dense(Module):

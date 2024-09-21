@@ -1,6 +1,7 @@
 from .layers import (
     Parameter,
     Module,
+    ModuleList,
     Dense,
     Conv2D,
     Reshape,
@@ -16,6 +17,7 @@ from .optimizers import SGD
 __all__ = [
     "Parameter",
     "Module",
+    "ModuleList",
     "Dense",
     "Conv2D",
     "Reshape",

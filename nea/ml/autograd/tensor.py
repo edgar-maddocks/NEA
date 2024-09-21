@@ -1,6 +1,5 @@
 from __future__ import annotations
 from abc import ABC
-from copy import deepcopy
 
 import numpy as np
 
@@ -74,9 +73,8 @@ class Tensor:
         Returns:
             Tensor:
         """
-        copy = deepcopy(self)
-        copy._data = self._data.T
-        return copy
+        transpose_op = Transpose()
+        return transpose_op.forward(self)
 
     def __repr__(self) -> str:
         return f"Tensor({self._data}, shape = {self.shape})"
@@ -628,7 +626,7 @@ class MatrixMultiplication(TensorFunction):
         a, b = self._cache
 
         if a.requires_grad:
-            da = dy @ b.data.T
+            da = dy @ b.data.swapaxes(-1, -2)
 
             n_dims_da = len(dy.shape)
             n_dims_a = len(a.shape)
@@ -638,7 +636,7 @@ class MatrixMultiplication(TensorFunction):
             a.backward(da, y)
 
         if b.requires_grad:
-            db = a.data.T @ dy
+            db = a.data.swapaxes(-1, -2) @ dy
 
             n_dims_db = len(dy.shape)
             n_dims_b = len(b.shape)
