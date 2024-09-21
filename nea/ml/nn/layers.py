@@ -301,7 +301,5 @@ class AlphaLoss(Module):
         net_pol: Tensor,
     ) -> Tensor:
         val_sqe = (true_value - predicted_value) ** 2
-        log_net_pol = net_pol.log()
-        mcts_pol_t = mcts_pol.T
-        pol_bcel = mcts_pol_t @ log_net_pol
+        pol_bcel = mcts_pol.T @ net_pol.log()
         return val_sqe - pol_bcel
