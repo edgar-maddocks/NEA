@@ -2,14 +2,15 @@ from collections import deque
 
 import numpy as np
 
-from nea.mcts import MCTS
+from nea.mcts import MCTS, AlphaMCTS
 from nea.console_checkers import CheckersGame
+from nea.agent import AlphaModel
 
 
 def simGames(
     n_games: int = 10,
-    n_searches_mcts1: int = 100000,
-    n_searches_mcts2: int = 10000,
+    n_searches_mcts1: int = 100,
+    n_searches_mcts2: int = 100,
     eec_mcts1: float = 1.41,
     eec_mcts2: float = 1.41,
     verbose: int = 0,
@@ -19,8 +20,8 @@ def simGames(
 
     Args:
         n_games (int, optional): Defaults to 10.
-        n_searches_mcts1 (int, optional): hyperparameter. Defaults to 100000.
-        n_searches_mcts2 (int, optional): hyperparameter. Defaults to 10000.
+        n_searches_mcts1 (int, optional): hyperparameter. Defaults to 100.
+        n_searches_mcts2 (int, optional): hyperparameter. Defaults to 100.
         eec_mcts1 (float, optional): hyperparameter. Defaults to 1.41.
         eec_mcts2 (float, optional): hyperparameter. Defaults to 1.41.
         verbose (int, optional): 1 to display info. Defaults to 0.
@@ -33,20 +34,26 @@ def simGames(
         mcts1 = MCTS(eec=eec_mcts1, n_searches=n_searches_mcts1)
         mcts2 = MCTS(eec=eec_mcts2, n_searches=n_searches_mcts2)
 
+        moves = 0
+        prior_states = deque(maxlen=4)
+        alphamcts1 = AlphaMCTS(
+            model=AlphaModel(), eec=eec_mcts1, n_searches=n_searches_mcts1
+        )
+        alphamcts2 = AlphaMCTS(
+            model=AlphaModel(), eec=eec_mcts2, n_searches=n_searches_mcts2
+        )
+
         game = CheckersGame()
 
         done = False
         mcts1_player = np.random.choice(["white", "black"], 1)
-
-        moves = 0
-        prior_states = deque(maxlen=4)
 
         while not done:
             moves += 1
             prior_states.append(game.board)
             if verbose:
                 game.render()
-            print("GAME: ", gamen)
+            print("GAME: ", gamen + 1)
 
             if game.player == mcts1_player:
                 if moves < 4:
@@ -55,7 +62,10 @@ def simGames(
                     mcts1.build_tree(game)
                     action = mcts1.get_action()
                 else:
-                    raise NotImplementedError("ADD ALPHAMCTS SELF PLAY")
+                    if verbose:
+                        print("Building Tree...")
+                    alphamcts1.build_tree(game, prior_states)
+                    action = alphamcts1.get_action()
 
                 if verbose:
                     print(
@@ -78,7 +88,10 @@ def simGames(
                     mcts2.build_tree(game)
                     action = mcts2.get_action()
                 else:
-                    raise NotImplementedError("ADD ALPHAMCTS SELF PLAY")
+                    if verbose:
+                        print("Building Tree...")
+                    alphamcts2.build_tree(game, prior_states)
+                    action = alphamcts1.get_action()
 
                 if verbose:
                     print(

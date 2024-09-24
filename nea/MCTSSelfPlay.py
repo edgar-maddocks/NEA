@@ -6,8 +6,8 @@ from nea.console_checkers import CheckersGame
 
 def simGames(
     n_games: int = 10,
-    n_searches_mcts1: int = 100000,
-    n_searches_mcts2: int = 10000,
+    n_searches_mcts1: int = 100,
+    n_searches_mcts2: int = 100,
     eec_mcts1: float = 1.41,
     eec_mcts2: float = 1.41,
     verbose: int = 0,
@@ -17,8 +17,8 @@ def simGames(
 
     Args:
         n_games (int, optional): Defaults to 10.
-        n_searches_mcts1 (int, optional): hyperparameter. Defaults to 100000.
-        n_searches_mcts2 (int, optional): hyperparameter. Defaults to 10000.
+        n_searches_mcts1 (int, optional): hyperparameter. Defaults to 100.
+        n_searches_mcts2 (int, optional): hyperparameter. Defaults to 100.
         eec_mcts1 (float, optional): hyperparameter. Defaults to 1.41.
         eec_mcts2 (float, optional): hyperparameter. Defaults to 1.41.
         verbose (int, optional): 1 to display info. Defaults to 0.
@@ -83,4 +83,4 @@ def simGames(
     return games
 
 
-simGames(10, verbose=1)
+simGames(10, verbose=0)

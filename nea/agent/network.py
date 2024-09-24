@@ -137,7 +137,7 @@ class ValueHead(nn.Module):
 
 
 class AlphaModel(nn.Module):
-    def __init__(self, n_res_layers: int = 10, num_hidden_conv: int = 64) -> None:
+    def __init__(self, n_res_layers: int = 5, num_hidden_conv: int = 32) -> None:
         super().__init__()
         self.first_layer = ConvolutionalLayer(num_hidden_conv=num_hidden_conv)
         self.res_layers = nn.ModuleList(

@@ -23,7 +23,7 @@ class Node:
         reward: float = None,
         **kwargs,
     ) -> None:
-        self._game = deepcopy(game)
+        self._game = game
         self.colour = self._game.player
 
         self._state = self._game.board
@@ -173,6 +173,9 @@ class MCTS:
         for _ in tqdm(range(actual_searches)):
             node = self._root
 
+            if node.n_available_moves_left == 0 and node.children:
+                node = node.select_child()
+
             while not node.terminal:
                 node = node.expand()
 
@@ -265,7 +268,7 @@ class AlphaNode(Node):
             if prob > 0:
                 child_game = deepcopy(self._game)
                 action = self._convert_action_idx_to_action_game(action)
-                _, child_game, terminal, reward = child_game.step(action)
+                _, _, terminal, reward = child_game.step(action)
 
                 child = AlphaNode(
                     game=child_game,
@@ -293,7 +296,9 @@ class AlphaNode(Node):
         )
         return q
 
-    def _convert_action_idx_to_action_game(action: tuple[int, int, int]) -> ACTION:
+    def _convert_action_idx_to_action_game(
+        self, action: tuple[int, int, int]
+    ) -> ACTION:
         idx, row, col = action
 
         direc = IDX_TO_ACTION[idx]
@@ -303,10 +308,9 @@ class AlphaNode(Node):
 
 
 class AlphaMCTS(MCTS):
-    def __init__(self, model: AlphaModel, prior_states: deque, **kwargs) -> None:
-        super().__init__(kwargs=kwargs)
+    def __init__(self, model: AlphaModel, **kwargs) -> None:
+        super().__init__(**kwargs)
         self.model = model
-        self.prior_states = prior_states
 
     def build_tree(self, root: CheckersGame, prior_states: deque) -> None:
         """_summary_
@@ -316,15 +320,19 @@ class AlphaMCTS(MCTS):
             prior_states (list[np.ndarray]): _description_
         """
         self._root = AlphaNode(root, eec=self.kwargs["eec"])
+        self.prior_states = prior_states
 
         actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
         for _ in tqdm(range(actual_searches)):
             node = self._root
             policy, value = None, None
 
-            while not node.terminal:
+            while node.n_available_moves_left == 0 and node.children:
+                node = node.select_child()
+
+            if not node.terminal:
                 self.prior_states.append(node._state)
-                input_tensor = self._create_input_tensor(node._state, self.prior_states)
+                input_tensor = self._create_input_tensor(node._state)
                 policy, value = self.model.forward(input_tensor)
                 policy *= self._get_valid_moves_as_action_tensor(node=node)
                 policy /= policy.sum().sum().sum()
@@ -360,9 +368,11 @@ class AlphaMCTS(MCTS):
         Returns:
             Tensor: _description_
         """
-        data = reversed(list(self.prior_states).append(current_state))
+        data = list(self.prior_states)
+        data.append(current_state)
+        data = data[::-1]
 
-        return Tensor(data, requires_grad=True)
+        return Tensor(data)
 
 
 if __name__ == "__main__":

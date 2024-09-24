@@ -1,3 +1,3 @@
-from .mcts import MCTS
+from .mcts import MCTS, AlphaMCTS
 
-__all__ = ["MCTS"]
+__all__ = ["MCTS", "AlphaMCTS"]
