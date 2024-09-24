@@ -1,11 +1,14 @@
 from __future__ import annotations
 from copy import deepcopy
+from collections import deque
 
 import numpy as np
 from tqdm import tqdm
 
 from nea.console_checkers import CheckersGame
 from nea.mcts.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
+from nea.agent import AlphaModel
+from nea.ml.autograd import Tensor
 
 
 class Node:
@@ -154,9 +157,7 @@ class MCTS:
 
         self._root: Node = None
 
-    def build_tree(
-        self, root: CheckersGame | None = None, mcts_colour: str = None
-    ) -> None:
+    def build_tree(self, root: CheckersGame, mcts_colour: str = None) -> None:
         """Builds a new tree
 
         Args:
@@ -171,8 +172,6 @@ class MCTS:
         actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
         for _ in tqdm(range(actual_searches)):
             node = self._root
-            if node.n_available_moves_left == 0:
-                node = node.select_child()
 
             while not node.terminal:
                 node = node.expand()
@@ -204,7 +203,7 @@ class MCTS:
             row_change = moved_to[0] - piece_moved[0]
             col_change = moved_to[1] - piece_moved[1]
             direc_idx = ACTION_TO_IDX[(row_change, col_change)]
-            p[piece_moved[0], piece_moved[1], direc_idx] = child.visit_count
+            p[direc_idx, piece_moved[0], piece_moved[1]] = child.visit_count
 
         p /= np.sum(p)
         return p
@@ -223,7 +222,7 @@ class MCTS:
         for idx, val in np.ndenumerate(p):
             if val == max_prob:
                 break
-        row, col, idx = idx
+        idx, row, col = idx
 
         direc = IDX_TO_ACTION[idx]
         new_row, new_col = row + direc[0], col + direc[1]
@@ -238,3 +237,133 @@ class MCTS:
         """
         p = self.get_action_probs()
         return self.convert_probs_to_action(p)
+
+
+class AlphaNode(Node):
+    def __init__(
+        self,
+        game: CheckersGame,
+        parent: Node = None,
+        terminal: bool = False,
+        action_taken: ACTION = None,
+        reward: float = None,
+        prior_prob: float = None,
+        **kwargs,
+    ) -> None:
+        super().__init__(
+            game=game,
+            parent=parent,
+            terminal=terminal,
+            action_taken=action_taken,
+            reward=reward,
+            kwargs=kwargs,
+        )
+        self.prior_prob = prior_prob
+
+    def expand(self, policy: np.ndarray) -> AlphaNode:
+        for action, prob in np.ndenumerate(policy):
+            if prob > 0:
+                child_game = deepcopy(self._game)
+                action = self._convert_action_idx_to_action_game(action)
+                _, child_game, terminal, reward = child_game.step(action)
+
+                child = AlphaNode(
+                    game=child_game,
+                    parent=self,
+                    terminal=terminal,
+                    action_taken=action,
+                    reward=reward,
+                    prior_prob=prob,
+                )
+
+                self.children.append(child)
+
+        return child
+
+    def _calculate_ucb(self, child: AlphaNode) -> float:
+        if child.visit_count == 0:
+            q = 0
+        else:
+            q = 1 - ((child.value_count / child.visit_count) + 1) / 2
+        q = (
+            q
+            + self.kwargs["eec"]
+            * (np.sqrt(self.visit_count) / (child.visit_count + 1))
+            * child.prior_prob
+        )
+        return q
+
+    def _convert_action_idx_to_action_game(action: tuple[int, int, int]) -> ACTION:
+        idx, row, col = action
+
+        direc = IDX_TO_ACTION[idx]
+        new_row, new_col = row + direc[0], col + direc[1]
+
+        return ((row, col), (new_row, new_col))
+
+
+class AlphaMCTS(MCTS):
+    def __init__(self, model: AlphaModel, prior_states: deque, **kwargs) -> None:
+        super().__init__(kwargs=kwargs)
+        self.model = model
+        self.prior_states = prior_states
+
+    def build_tree(self, root: CheckersGame, prior_states: deque) -> None:
+        """_summary_
+
+        Args:
+            root (CheckersGame): _description_
+            prior_states (list[np.ndarray]): _description_
+        """
+        self._root = AlphaNode(root, eec=self.kwargs["eec"])
+
+        actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
+        for _ in tqdm(range(actual_searches)):
+            node = self._root
+            policy, value = None, None
+
+            while not node.terminal:
+                self.prior_states.append(node._state)
+                input_tensor = self._create_input_tensor(node._state, self.prior_states)
+                policy, value = self.model.forward(input_tensor)
+                policy *= self._get_valid_moves_as_action_tensor(node=node)
+                policy /= policy.sum().sum().sum()
+
+                node.expand(policy.data)
+
+                value = value.data
+
+            node.backprop(value)
+
+    def _get_valid_moves_as_action_tensor(self, node: AlphaNode | Node) -> Tensor:
+        valid_moves = node._available_moves_left
+        p = np.zeros(
+            (8, 8, 8)
+        )  # (8x8) shows where to take piece from. Final 8 shows what direc e.g.
+        # idx 0 = row+1,col+1, idx 1 = row+1, col-1 etc.
+        for move in valid_moves:
+            piece_moved, moved_to = move
+            row_change = moved_to[0] - piece_moved[0]
+            col_change = moved_to[1] - piece_moved[1]
+            direc_idx = ACTION_TO_IDX[(row_change, col_change)]
+            p[direc_idx, piece_moved[0], piece_moved[1]] = 1
+
+        return Tensor(p)
+
+    def _create_input_tensor(self, current_state: np.ndarray) -> Tensor:
+        """Creates a tensor from the current and previous states
+
+        Args:
+            current_state (np.ndarray): current node state
+            prior_states (np.ndarray): _description_
+
+        Returns:
+            Tensor: _description_
+        """
+        data = reversed(list(self.prior_states).append(current_state))
+
+        return Tensor(data, requires_grad=True)
+
+
+if __name__ == "__main__":
+    AlphaMCTS(AlphaModel(), eec=1.41)

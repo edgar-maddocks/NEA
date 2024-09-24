@@ -56,7 +56,7 @@ class ConvolutionalLayer(nn.Module):
     def __init__(self, num_hidden_conv: int) -> None:
         super().__init__()
         self.Conv1 = nn.Conv2D(
-            (15, 8, 8),
+            (5, 8, 8),
             n_kernels=num_hidden_conv,
             kernel_size=3,
             padding=1,
@@ -65,7 +65,7 @@ class ConvolutionalLayer(nn.Module):
         self.ReLU = nn.ReLU()
 
     def forward(self, x: Tensor) -> Tensor:
-        """Input shape of (15, 8, 8)
+        """Input shape of (5, 8, 8)
 
         Output shape of (128, 8, 8)
 
@@ -150,7 +150,7 @@ class AlphaModel(nn.Module):
         self.value_head = ValueHead(num_hidden_conv=num_hidden_conv)
 
     def forward(self, x: Tensor) -> tuple[Tensor, Tensor]:
-        """Input shape (15, 8, 8)
+        """Input shape (5, 8, 8)
 
         Output of tuple (policy, value)
 
@@ -170,3 +170,6 @@ class AlphaModel(nn.Module):
         pol = self.policy_head(x)
         val = self.value_head(x)
         return pol, val
+
+    def __call__(self, x: Tensor) -> tuple[Tensor, Tensor]:
+        return self.forward(x)
