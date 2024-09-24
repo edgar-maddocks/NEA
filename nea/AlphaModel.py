@@ -10,7 +10,7 @@ if __name__ == "__main__":
     model = AlphaModel()
 
     samples = []
-    for i in range(15):
+    for i in range(5):
         samples.append(CheckersGame().board)
 
     input = Tensor(samples, requires_grad=True)

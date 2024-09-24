@@ -6,6 +6,10 @@ from nea.mcts import MCTS, AlphaMCTS
 from nea.console_checkers import CheckersGame
 from nea.agent import AlphaModel
 
+import sys
+
+sys.setrecursionlimit(10**4)
+
 
 def simGames(
     n_games: int = 10,
@@ -91,7 +95,7 @@ def simGames(
                     if verbose:
                         print("Building Tree...")
                     alphamcts2.build_tree(game, prior_states)
-                    action = alphamcts1.get_action()
+                    action = alphamcts2.get_action()
 
                 if verbose:
                     print(
@@ -113,4 +117,4 @@ def simGames(
     return games
 
 
-simGames(10, verbose=0)
+simGames(1, n_searches_mcts1=500, n_searches_mcts2=500, verbose=1)

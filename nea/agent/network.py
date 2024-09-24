@@ -1,4 +1,3 @@
-from copy import deepcopy
 import numpy as np
 
 from nea.ml import nn
@@ -36,7 +35,7 @@ class ResidualLayer(nn.Module):
         Returns:
             Tensor:
         """
-        original_input = deepcopy(x)
+        original_input = x.data
         x = self.Conv1(x)
         x = self.ReLU1(x)
         x = self.Conv2(x)
@@ -170,6 +169,3 @@ class AlphaModel(nn.Module):
         pol = self.policy_head(x)
         val = self.value_head(x)
         return pol, val
-
-    def __call__(self, x: Tensor) -> tuple[Tensor, Tensor]:
-        return self.forward(x)

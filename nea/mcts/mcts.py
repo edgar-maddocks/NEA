@@ -333,7 +333,7 @@ class AlphaMCTS(MCTS):
             if not node.terminal:
                 self.prior_states.append(node._state)
                 input_tensor = self._create_input_tensor(node._state)
-                policy, value = self.model.forward(input_tensor)
+                policy, value = self.model(input_tensor)
                 policy *= self._get_valid_moves_as_action_tensor(node=node)
                 policy /= policy.sum().sum().sum()
 
