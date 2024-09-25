@@ -157,17 +157,13 @@ class MCTS:
 
         self._root: Node = None
 
-    def build_tree(self, root: CheckersGame, mcts_colour: str = None) -> None:
+    def build_tree(self, root: CheckersGame) -> None:
         """Builds a new tree
 
         Args:
             root (CheckersGame): New state to root the tree from
         """
         self._root = Node(root, eec=self.kwargs["eec"])
-
-        n_wins = 0
-        n_losses = 0
-        n_draws = 0
 
         actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
         for _ in tqdm(range(actual_searches)):
@@ -180,16 +176,6 @@ class MCTS:
                 node = node.expand()
 
             node.backprop(node.reward)
-            if node.reward == 1 and node.colour == mcts_colour:
-                n_wins += 1
-            elif node.reward == 0:
-                n_draws += 1
-            else:
-                n_losses += 1
-
-        print(
-            f"Search estimates {round(n_wins / actual_searches * 100, 1)} WIN%, {round(n_draws / actual_searches * 100, 1)} DRAW%, {round(n_losses / actual_searches * 100, 1)} LOSS%"
-        )
 
     def get_action_probs(self) -> np.ndarray:
         """Gets array of probabilities of action based on tree
@@ -314,13 +300,17 @@ class AlphaMCTS(MCTS):
         super().__init__(**kwargs)
         self.model = model
 
-    def build_tree(self, root: CheckersGame, prior_states: deque) -> None:
+    def alpha_build_tree(self, root: CheckersGame, prior_states: deque) -> None:
         """_summary_
 
         Args:
             root (CheckersGame): _description_
             prior_states (list[np.ndarray]): _description_
         """
+        if len(prior_states) < 4:
+            self.build_tree(root)
+            return
+
         self._root = AlphaNode(root, eec=self.kwargs["eec"])
         self.prior_states = prior_states
 
@@ -334,7 +324,7 @@ class AlphaMCTS(MCTS):
 
             if not node.terminal:
                 self.prior_states.append(node._state)
-                input_tensor = self._create_input_tensor(node._state)
+                input_tensor = self._create_input_tensor()
                 policy, value = self.model(input_tensor)
                 policy *= self._get_valid_moves_as_action_tensor(node=node)
                 policy /= policy.sum().sum().sum()
@@ -362,7 +352,7 @@ class AlphaMCTS(MCTS):
 
         return Tensor(p)
 
-    def _create_input_tensor(self, current_state: np.ndarray) -> Tensor:
+    def _create_input_tensor(self) -> Tensor:
         """Creates a tensor from the current and previous states
 
         Args:
@@ -373,7 +363,6 @@ class AlphaMCTS(MCTS):
             Tensor: _description_
         """
         data = list(self.prior_states)
-        data.append(current_state)
         data = data[::-1]
 
         return Tensor(data)

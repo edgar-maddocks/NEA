@@ -48,7 +48,7 @@ def simGames(
                 action = mcts1.get_action()
                 if verbose:
                     print(
-                        f"""WHITE'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}\n
+                        f"""WHITE'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}
                         TO:{CheckersGame.convert_rowcol_to_user(*action[1])}"""
                     )
                 valid, _, done, reward = game.step(action)
@@ -66,7 +66,7 @@ def simGames(
                 action = mcts2.get_action()
                 if verbose:
                     print(
-                        f"""BLACK'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}\n 
+                        f"""BLACK'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}
                         TO:{CheckersGame.convert_rowcol_to_user(*action[1])}"""
                     )
                 valid, _, done, reward = game.step(action)

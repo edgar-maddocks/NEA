@@ -2,13 +2,9 @@ from collections import deque
 
 import numpy as np
 
-from nea.mcts import MCTS, AlphaMCTS
+from nea.mcts import AlphaMCTS
 from nea.console_checkers import CheckersGame
 from nea.agent import AlphaModel
-
-import sys
-
-sys.setrecursionlimit(10**4)
 
 
 def simGames(
@@ -35,11 +31,7 @@ def simGames(
     """
     games = []
     for gamen in range(n_games):
-        mcts1 = MCTS(eec=eec_mcts1, n_searches=n_searches_mcts1)
-        mcts2 = MCTS(eec=eec_mcts2, n_searches=n_searches_mcts2)
-
-        moves = 0
-        prior_states = deque(maxlen=4)
+        prior_states = deque(maxlen=5)
         alphamcts1 = AlphaMCTS(
             model=AlphaModel(), eec=eec_mcts1, n_searches=n_searches_mcts1
         )
@@ -53,27 +45,20 @@ def simGames(
         mcts1_player = np.random.choice(["white", "black"], 1)
 
         while not done:
-            moves += 1
             prior_states.append(game.board)
             if verbose:
                 game.render()
             print("GAME: ", gamen + 1)
 
             if game.player == mcts1_player:
-                if moves < 4:
-                    if verbose:
-                        print("Building Tree...")
-                    mcts1.build_tree(game)
-                    action = mcts1.get_action()
-                else:
-                    if verbose:
-                        print("Building Tree...")
-                    alphamcts1.build_tree(game, prior_states)
-                    action = alphamcts1.get_action()
+                if verbose:
+                    print("Building Tree...")
+                alphamcts1.alpha_build_tree(game, prior_states)
+                action = alphamcts1.get_action()
 
                 if verbose:
                     print(
-                        f"""WHITE'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}\n
+                        f"""WHITE'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}
                         TO:{CheckersGame.convert_rowcol_to_user(*action[1])}"""
                     )
 
@@ -88,18 +73,14 @@ def simGames(
                     games.append("mcts2")
 
             else:
-                if moves < 4:
-                    mcts2.build_tree(game)
-                    action = mcts2.get_action()
-                else:
-                    if verbose:
-                        print("Building Tree...")
-                    alphamcts2.build_tree(game, prior_states)
-                    action = alphamcts2.get_action()
+                if verbose:
+                    print("Building Tree...")
+                alphamcts2.alpha_build_tree(game, prior_states)
+                action = alphamcts2.get_action()
 
                 if verbose:
                     print(
-                        f"""BLACK'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}\n 
+                        f"""BLACK'S MOVE:\n FROM:{CheckersGame.convert_rowcol_to_user(*action[0])}
                         TO:{CheckersGame.convert_rowcol_to_user(*action[1])}"""
                     )
 
@@ -119,4 +100,4 @@ def simGames(
 
 
 if __name__ == "__main__":
-    simGames(1, n_searches_mcts1=10, n_searches_mcts2=10, verbose=1)
+    simGames(1, n_searches_mcts1=100, n_searches_mcts2=10, verbose=1)
