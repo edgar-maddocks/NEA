@@ -1,6 +1,7 @@
 from abc import ABC
 import collections
 import numpy as np
+import pickle
 
 from nea.ml.autograd import Tensor, to_tensor, TensorFunction, tensor_exp, tensor_sum
 from nea.ml.autograd.consts import Tensorable
@@ -73,6 +74,15 @@ class Module(ABC):
                     params.append(param)
 
         return params
+
+    def save(self, file_path: str) -> None:
+        with open(str.join(file_path, ".pkl"), "wb") as fh:
+            pickle.dump(self, fh)
+
+    @staticmethod
+    def load(self, file_path: str) -> None:
+        with open(str.join(file_path, ".pkl"), "rb") as fh:
+            return pickle.load(fh)
 
 
 class ModuleList(Module, collections.abc.Sequence):
