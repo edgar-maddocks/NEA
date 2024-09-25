@@ -1,3 +1,3 @@
-from nea.agent.network import AlphaModel
+from nea.agent.agent import AlphaZero
 
-__all__ = ["AlphaModel"]
+__all__ = ["AlphaZero"]

@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from nea.console_checkers import CheckersGame
 from nea.mcts.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
-from nea.agent import AlphaModel
+from nea.network import AlphaModel
 from nea.ml.autograd import Tensor
 
 
@@ -151,10 +151,6 @@ class MCTS:
         """
 
         self.kwargs = kwargs
-        self.kwargs["n_jobs"] = None
-        if self.kwargs["n_jobs"] is None:
-            self.kwargs["n_jobs"] = 1
-
         self._root: Node = None
 
     def build_tree(self, root: CheckersGame) -> None:
@@ -253,7 +249,7 @@ class AlphaNode(Node):
         for action, prob in np.ndenumerate(policy):
             if prob > 0:
                 child_game = deepcopy(self._game)
-                action = self._convert_action_idx_to_action_game(action)
+                action = AlphaNode._convert_action_idx_to_action_game(action)
                 self._available_moves_left.remove(action)
                 _, _, terminal, reward = child_game.step(action)
 
@@ -284,6 +280,7 @@ class AlphaNode(Node):
         )
         return q
 
+    @staticmethod
     def _convert_action_idx_to_action_game(
         self, action: tuple[int, int, int]
     ) -> ACTION:
@@ -314,8 +311,7 @@ class AlphaMCTS(MCTS):
         self._root = AlphaNode(root, eec=self.kwargs["eec"])
         self.prior_states = prior_states
 
-        actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
-        for _ in tqdm(range(actual_searches)):
+        for _ in tqdm(range(int(self.kwargs["n_searches"]))):
             node = self._root
             policy, value = None, None
 

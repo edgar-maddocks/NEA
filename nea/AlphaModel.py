@@ -1,7 +1,7 @@
 import time as t
 import numpy as np
 
-from nea.agent import AlphaModel
+from nea.network import AlphaModel
 from nea.console_checkers import CheckersGame
 from nea.ml.autograd import Tensor
 from nea.ml.nn import AlphaLoss

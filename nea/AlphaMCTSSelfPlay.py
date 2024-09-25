@@ -4,7 +4,7 @@ import numpy as np
 
 from nea.mcts import AlphaMCTS
 from nea.console_checkers import CheckersGame
-from nea.agent import AlphaModel
+from nea.network import AlphaModel
 
 
 def simGames(

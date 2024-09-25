@@ -12,7 +12,7 @@ from .layers import (
     MSE,
     AlphaLoss,
 )
-from .optimizers import SGD
+from .optimizers import SGD, Optimizer
 
 __all__ = [
     "Parameter",
@@ -26,6 +26,7 @@ __all__ = [
     "Sigmoid",
     "MSE",
     "SGD",
+    "Optimizer",
     "ReLU",
     "AlphaLoss",
 ]
