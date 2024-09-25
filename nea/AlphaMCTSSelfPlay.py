@@ -114,7 +114,9 @@ def simGames(
                     games.append("mcts1")
 
     print(games)
+    print(f"mcts1 was {mcts1_player}")
     return games
 
 
-simGames(1, n_searches_mcts1=500, n_searches_mcts2=500, verbose=1)
+if __name__ == "__main__":
+    simGames(1, n_searches_mcts1=10, n_searches_mcts2=10, verbose=1)

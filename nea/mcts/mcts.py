@@ -259,7 +259,7 @@ class AlphaNode(Node):
             terminal=terminal,
             action_taken=action_taken,
             reward=reward,
-            kwargs=kwargs,
+            **kwargs,
         )
         self.prior_prob = prior_prob
 
@@ -268,6 +268,7 @@ class AlphaNode(Node):
             if prob > 0:
                 child_game = deepcopy(self._game)
                 action = self._convert_action_idx_to_action_game(action)
+                self._available_moves_left.remove(action)
                 _, _, terminal, reward = child_game.step(action)
 
                 child = AlphaNode(
@@ -277,6 +278,7 @@ class AlphaNode(Node):
                     action_taken=action,
                     reward=reward,
                     prior_prob=prob,
+                    **self.kwargs,
                 )
 
                 self.children.append(child)
@@ -340,6 +342,8 @@ class AlphaMCTS(MCTS):
                 node.expand(policy.data)
 
                 value = value.data
+            else:
+                value = node.reward
 
             node.backprop(value)
 
