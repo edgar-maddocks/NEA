@@ -359,7 +359,3 @@ class AlphaMCTS(MCTS):
         data = data[::-1]
 
         return Tensor(data)
-
-
-if __name__ == "__main__":
-    AlphaMCTS(AlphaModel(), eec=1.41)
