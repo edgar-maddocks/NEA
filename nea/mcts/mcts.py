@@ -161,8 +161,7 @@ class MCTS:
         """
         self._root = Node(root, eec=self.kwargs["eec"])
 
-        actual_searches = int(self.kwargs["n_searches"] / self.kwargs["n_jobs"])
-        for _ in tqdm(range(actual_searches)):
+        for _ in tqdm(range(int(self.kwargs["n_searches"]))):
             node = self._root
 
             if node.n_available_moves_left == 0 and node.children:
@@ -281,9 +280,7 @@ class AlphaNode(Node):
         return q
 
     @staticmethod
-    def _convert_action_idx_to_action_game(
-        self, action: tuple[int, int, int]
-    ) -> ACTION:
+    def _convert_action_idx_to_action_game(action: tuple[int, int, int]) -> ACTION:
         idx, row, col = action
 
         direc = IDX_TO_ACTION[idx]

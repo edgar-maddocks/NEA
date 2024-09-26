@@ -397,7 +397,7 @@ class Addition(TensorFunction):
             db = dy
 
             # Rescale gradient to have the same shape as "b":
-            n_dims_db = len(da.shape)
+            n_dims_db = len(db.shape)
             n_dims_b = len(b.shape)
             for dim in range(n_dims_db - n_dims_b):
                 db = db.sum(axis=0)
@@ -756,7 +756,7 @@ class Mean(TensorFunction):
 
         if a.requires_grad:
             da = dy * Tensor.ones(len(a.data))
-            da /= len(a.data)
+            da = da.data / len(a.data)
 
             a.backward(da, y)
 
