@@ -305,18 +305,18 @@ class AlphaMCTS(MCTS):
             return
 
         self._root = AlphaNode(root, eec=self.kwargs["eec"])
-        self.prior_states = prior_states
 
         for _ in range(int(self.kwargs["n_searches"])):
+            prior_states_temp = deepcopy(prior_states)
             node = self._root
             policy, value = None, None
 
             while node.n_available_moves_left == 0 and node.children:
                 node = node.select_child()
+                prior_states_temp.append(node._state)
 
             if not node.terminal:
-                self.prior_states.append(node._state)
-                input_tensor = self._create_input_tensor()
+                input_tensor = self._create_input_tensor(prior_states_temp)
                 with no_grad():
                     policy, value = self.model(input_tensor)
                 policy *= self._get_valid_moves_as_action_tensor(node=node)
@@ -345,7 +345,7 @@ class AlphaMCTS(MCTS):
 
         return Tensor(p)
 
-    def _create_input_tensor(self) -> Tensor:
+    def _create_input_tensor(self, prior_states: deque) -> Tensor:
         """Creates a tensor from the current and previous states
 
         Args:
@@ -355,7 +355,7 @@ class AlphaMCTS(MCTS):
         Returns:
             Tensor: _description_
         """
-        data = list(self.prior_states)
+        data = list(prior_states)
         data = data[::-1]
 
         return Tensor(data)

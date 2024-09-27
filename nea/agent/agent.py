@@ -28,6 +28,7 @@ class AlphaZero:
         eec: float = 1.41,
         n_mcts_searches: int = 100,
         replace_win_pct_threshold: int = 59,
+        verbose: int = 0,
     ) -> None:
         self.prev_model = None
         self.new_model = None
@@ -44,6 +45,7 @@ class AlphaZero:
             "eec": eec,
             "n_mcts_searches": n_mcts_searches,
             "replace_win_pct_threshold": replace_win_pct_threshold,
+            "verbose": verbose,
         }
 
         self.loss = AlphaLoss()
@@ -75,22 +77,18 @@ class AlphaZero:
                     ):
                         break
 
-            print(f"MCTS EPOCH: {mcts_epoch}")
             print("BEGINNING NN TRAINING")
             for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
                 gc.collect()
                 self._train_nn(training_examples)
 
-            print(f"MCTS EPOCH: {mcts_epoch}")
             print("PLAYING COMPARISON GAMES")
-            updated_model = False
             if self._play_compare_games():
-                updated_model = True
                 self.prev_model = self.new_model
 
             gc.collect()
 
-        return self.prev_model, updated_model
+        return self.prev_model
 
     def _get_example_saps(self) -> tuple[deque[SAP], float, str]:
         game = CheckersGame()
@@ -106,6 +104,8 @@ class AlphaZero:
 
         done = False
         while not done:
+            if self.hyperparams["verbose"]:
+                game.render()
             prior_states.append(game.board)
 
             mcts.alpha_build_tree(game, prior_states)
@@ -201,6 +201,8 @@ class AlphaZero:
             prev_nn_player = np.random.choice(["white", "black"], 1)
 
             while not done:
+                if self.hyperparams["verbose"]:
+                    game.render()
                 prior_states.append(game.board)
 
                 if game.player == prev_nn_player:
@@ -227,15 +229,23 @@ class AlphaZero:
                     elif done and reward == -1:
                         prev_nn_wins += 1
 
-        new_nn_win_pct = (new_nn_wins / prev_nn_wins) * 100
+        new_nn_win_pct = (
+            (new_nn_wins / prev_nn_wins) * 100 if prev_nn_wins != 0 else 100
+        )
+        print(f"New model won {new_nn_win_pct}% of games")
         if new_nn_win_pct > self.hyperparams["replace_win_pct_threshold"]:
             return True
         return False
 
 
 if __name__ == "__main__":
-    alphazero = AlphaZero(SGD, mcts_epochs=10)
+    alphazero = AlphaZero(
+        SGD,
+        n_compare_games=2,
+        replace_win_pct_threshold=49,
+        n_mcts_searches=10,
+        mcts_epochs=5,
+        verbose=0,
+    )
     model = AlphaModel()
-    model, updated_model = alphazero.train(model)
-    if updated_model:
-        print("MODEL UPDATED")
+    model = alphazero.train(model)

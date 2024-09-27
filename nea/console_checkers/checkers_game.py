@@ -10,7 +10,8 @@ from nea.console_checkers.consts import (
     NUM_TO_STR,
     USER_DISPLAY_ACTION,
 )
-from nea.console_checkers.utils import clear_window
+
+# from nea.console_checkers.utils import clear_window
 from nea.console_checkers import jit_functions
 
 import numpy as np
@@ -347,7 +348,7 @@ class CheckersGame:
 
     def render(self) -> None:
         """Renders the board"""
-        clear_window()
+        # clear_window()
         cols = ["X", "A", "B", "C", "D", "E", "F", "G", "H"]
         print(str.join(" | ", cols))
         for row in range(SIZE):
