@@ -57,6 +57,8 @@ class AlphaZero:
             training_examples = deque(maxlen=self.hyperparams["max_training_examples"])
 
             gc.collect()
+
+            print(f"MCTS EPOCH: {mcts_epoch}")
             print("GETTING EXAMPLE GAMES")
             for example in tqdm(range(int(self.hyperparams["n_example_games"]))):
                 gc.collect()
@@ -73,14 +75,15 @@ class AlphaZero:
                     ):
                         break
 
+            print(f"MCTS EPOCH: {mcts_epoch}")
             print("BEGINNING NN TRAINING")
             for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
                 gc.collect()
                 self._train_nn(training_examples)
 
+            print(f"MCTS EPOCH: {mcts_epoch}")
             print("PLAYING COMPARISON GAMES")
             updated_model = False
-
             if self._play_compare_games():
                 updated_model = True
                 self.prev_model = self.new_model
