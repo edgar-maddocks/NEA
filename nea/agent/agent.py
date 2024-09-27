@@ -85,6 +85,8 @@ class AlphaZero:
                 updated_model = True
                 self.prev_model = self.new_model
 
+            gc.collect()
+
         return self.prev_model, updated_model
 
     def _get_example_saps(self) -> tuple[deque[SAP], float, str]:
@@ -175,7 +177,8 @@ class AlphaZero:
         new_nn_wins = 0
         prev_nn_wins = 0
 
-        for compare_game in range(int(self.hyperparams["n_compare_games"])):
+        for compare_game in tqdm(range(int(self.hyperparams["n_compare_games"]))):
+            gc.collect()
             game = CheckersGame()
 
             prev_mcts = AlphaMCTS(
