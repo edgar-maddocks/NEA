@@ -3,7 +3,6 @@ from copy import deepcopy
 from collections import deque
 
 import numpy as np
-from tqdm import tqdm
 
 from nea.console_checkers import CheckersGame
 from nea.mcts.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
@@ -161,7 +160,7 @@ class MCTS:
         """
         self._root = Node(root, eec=self.kwargs["eec"])
 
-        for _ in tqdm(range(int(self.kwargs["n_searches"]))):
+        for _ in range(int(self.kwargs["n_searches"])):
             node = self._root
 
             if node.n_available_moves_left == 0 and node.children:
@@ -308,7 +307,7 @@ class AlphaMCTS(MCTS):
         self._root = AlphaNode(root, eec=self.kwargs["eec"])
         self.prior_states = prior_states
 
-        for _ in tqdm(range(int(self.kwargs["n_searches"]))):
+        for _ in range(int(self.kwargs["n_searches"])):
             node = self._root
             policy, value = None, None
 

@@ -2,6 +2,7 @@ import numpy as np
 from tqdm import tqdm
 
 from collections import deque
+import gc
 import itertools
 import random
 
@@ -19,12 +20,13 @@ class AlphaZero:
         self,
         optimizer: Optimizer = None,
         mcts_epochs: int = 50,
-        n_example_games: int = 1,
+        n_example_games: int = 10,
+        max_training_examples: int = 500,
         nn_epochs: int = 10,
         batch_size: int = 32,
         n_compare_games: int = 10,
         eec: float = 1.41,
-        n_mcts_searches: int = 300,
+        n_mcts_searches: int = 100,
         replace_win_pct_threshold: int = 59,
     ) -> None:
         self.prev_model = None
@@ -35,6 +37,7 @@ class AlphaZero:
         self.hyperparams = {
             "mcts_epochs": mcts_epochs,
             "n_example_games": n_example_games,
+            "max_training_examples": max_training_examples,
             "nn_epochs": nn_epochs,
             "batch_size": batch_size,
             "n_compare_games": n_compare_games,
@@ -51,25 +54,38 @@ class AlphaZero:
             self.new_model = initialModel
 
         for mcts_epoch in range(self.hyperparams["mcts_epochs"]):
-            training_examples = deque()
+            training_examples = deque(maxlen=self.hyperparams["max_training_examples"])
 
+            gc.collect()
             print("GETTING EXAMPLE GAMES")
-            for example in range(int(self.hyperparams["n_example_games"])):
+            for example in tqdm(range(int(self.hyperparams["n_example_games"]))):
+                gc.collect()
+
                 game_saps, reward, player = self._get_example_saps()
                 game_spvs = self._convert_saps_to_spvs(game_saps, player, reward)
 
                 for item in game_spvs:
                     training_examples.append(item)
 
+                    if (
+                        len(training_examples)
+                        == self.hyperparams["max_training_examples"]
+                    ):
+                        break
+
             print("BEGINNING NN TRAINING")
             for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
+                gc.collect()
                 self._train_nn(training_examples)
 
             print("PLAYING COMPARISON GAMES")
+            updated_model = False
+
             if self._play_compare_games():
+                updated_model = True
                 self.prev_model = self.new_model
 
-        return self.prev_model
+        return self.prev_model, updated_model
 
     def _get_example_saps(self) -> tuple[deque[SAP], float, str]:
         game = CheckersGame()
@@ -113,7 +129,7 @@ class AlphaZero:
         len_game_saps = len(game_saps)
         game_spvs = deque(maxlen=len_game_saps)
 
-        for idx, item in enumerate(game_saps):
+        for item in game_saps:
             value = reward if item.player == player else reward * -1
             game_spvs.append(SPV(item.state, item.mcts_action_probs, value))
 
@@ -142,7 +158,7 @@ class AlphaZero:
                 if i >= 5:
                     state, mcts_probs, true_value = (
                         Tensor(past_states, requires_grad=True),
-                        Tensor(spv.mcts_action_probs, requires_grad=True),
+                        Tensor(spv.mcts_action_probs),
                         Tensor(spv.true_value),
                     )
 
@@ -212,6 +228,6 @@ class AlphaZero:
 
 
 if __name__ == "__main__":
-    alphazero = AlphaZero(SGD, n_mcts_searches=10)
+    alphazero = AlphaZero(SGD, n_mcts_searches=10, n_example_games=1)
     model = AlphaModel()
-    model = alphazero.train(model)
+    model, updated_model = alphazero.train(model)
