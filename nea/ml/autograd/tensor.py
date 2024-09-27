@@ -1,5 +1,6 @@
 from __future__ import annotations
 from abc import ABC
+import contextlib
 
 import numpy as np
 
@@ -15,6 +16,29 @@ from nea.ml.autograd.jit_functions import fill_padded_array
 # ========
 #  TENSOR
 # ========
+
+_grad_is_enabled = True
+
+
+def is_grad_enabled() -> bool:
+    """Returns if gradient calculations are enabled
+
+    Returns:
+        bool:
+    """
+    return _grad_is_enabled
+
+
+@contextlib.contextmanager
+def no_grad():
+    """context manager to disable gradient calculations"""
+    global _grad_is_enabled
+    prev_state = _grad_is_enabled
+    _grad_is_enabled = False  # Disable gradients
+    try:
+        yield
+    finally:
+        _grad_is_enabled = prev_state  # return to previous
 
 
 def to_tensor(d: Tensorable | Tensor) -> Tensor:
@@ -119,7 +143,9 @@ class Tensor:
             None
         """
         if self.requires_grad is False:
-            return "This tensor has requires_grad set to False"
+            raise ValueError("Tensor has requires grad set to false")
+        if not is_grad_enabled():
+            raise ValueError("no_grad is enabled")
 
         if dy is None:
             dy = np.ones_like(self._data)
@@ -319,12 +345,13 @@ class Addition(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, b)
+        if is_grad_enabled():
+            self.parents = (a, b)
 
-        a.children.append(y)
-        b.children.append(y)
+            a.children.append(y)
+            b.children.append(y)
 
-        self._cache = (a, b)
+            self._cache = (a, b)
 
         return y
 
@@ -428,10 +455,11 @@ class Negation(TensorFunction):
 
         y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
 
-        self.parents = (a,)
-        a.children.append(y)
+        if is_grad_enabled():
+            self.parents = (a,)
+            a.children.append(y)
 
-        self._cache = (a,)
+            self._cache = (a,)
 
         return y
 
@@ -472,11 +500,12 @@ class Multiplication(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self._cache = (a, b)
+        if is_grad_enabled():
+            self._cache = (a, b)
 
-        self.parents = (a, b)
-        a.children.append(y)
-        b.children.append(y)
+            self.parents = (a, b)
+            a.children.append(y)
+            b.children.append(y)
 
         return y
 
@@ -540,11 +569,12 @@ class Division(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, b)
-        a.children.append(y)
-        b.children.append(y)
+        if is_grad_enabled():
+            self.parents = (a, b)
+            a.children.append(y)
+            b.children.append(y)
 
-        self._cache = (a, b)
+            self._cache = (a, b)
 
         return y
 
@@ -607,12 +637,13 @@ class MatrixMultiplication(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, b)
+        if is_grad_enabled():
+            self.parents = (a, b)
 
-        a.children.append(y)
-        b.children.append(y)
+            a.children.append(y)
+            b.children.append(y)
 
-        self._cache = (a, b)
+            self._cache = (a, b)
 
         return y
 
@@ -669,11 +700,12 @@ class Power(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a, b)
-        a.children.append(y)
-        b.children.append(y)
+        if is_grad_enabled():
+            self.parents = (a, b)
+            a.children.append(y)
+            b.children.append(y)
 
-        self._cache = (a, b)
+            self._cache = (a, b)
 
         return y
 
@@ -737,11 +769,12 @@ class Mean(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (a,)
+            self._cache = (a,)
 
         return y
 
@@ -755,8 +788,8 @@ class Mean(TensorFunction):
         (a,) = self._cache
 
         if a.requires_grad:
-            da = dy * Tensor.ones(len(a.data))
-            da = da.data / len(a.data)
+            da = dy * np.ones(len(a.data))
+            da /= len(a.data)
 
             a.backward(da, y)
 
@@ -785,11 +818,12 @@ class Sum(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (a,)
+            self._cache = (a,)
 
         return y
 
@@ -830,11 +864,12 @@ class Log(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (a,)
+            self._cache = (a,)
 
         return y
 
@@ -874,11 +909,12 @@ class Exp(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (a, new_data)
+            self._cache = (a, new_data)
 
         return y
 
@@ -912,11 +948,12 @@ class Transpose(TensorFunction):
 
         y = Tensor(new_data, requires_grad=requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (a,)
+            self._cache = (a,)
 
         return y
 
@@ -959,19 +996,20 @@ class Convolve2D(TensorFunction):
 
         y = Tensor(new_data, requires_grad=True, operation=self)
 
-        self.parents = [
-            x,
-            k,
-        ]
-        if b:
-            self.parents.append(b)
+        if is_grad_enabled():
+            self.parents = [
+                x,
+                k,
+            ]
+            if b:
+                self.parents.append(b)
 
-        x.children.append(y)
-        k.children.append(y)
-        if b:
-            b.children.append(y)
+            x.children.append(y)
+            k.children.append(y)
+            if b:
+                b.children.append(y)
 
-        self._cache = (x, k, b)
+            self._cache = (x, k, b)
 
         return y
 
@@ -1032,11 +1070,12 @@ class Reshape(TensorFunction):
 
         y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (a,)
+            self._cache = (a,)
 
         return y
 
@@ -1061,14 +1100,15 @@ class Pad2D(TensorFunction):
 
         y = Tensor(arr, a.requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (
-            a,
-            padding,
-        )
+            self._cache = (
+                a,
+                padding,
+            )
 
         return y
 
@@ -1100,11 +1140,12 @@ class ReLU(TensorFunction):
 
         y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
 
-        self.parents = (a,)
+        if is_grad_enabled():
+            self.parents = (a,)
 
-        a.children.append(y)
+            a.children.append(y)
 
-        self._cache = (a,)
+            self._cache = (a,)
 
         return y
 
@@ -1114,14 +1155,3 @@ class ReLU(TensorFunction):
         if a.requires_grad:
             da = np.greater(dy, 0.0).astype(np.float64)
             a.backward(da, y)
-
-
-if __name__ == "__main__":
-    x = Tensor([[1, 1], [1, 1]], requires_grad=True)
-
-    y = x.pad2D(1, 0)
-    y += np.full((4, 4), fill_value=8)
-
-    y.backward()
-
-    print(x.grad)

@@ -69,7 +69,7 @@ class AlphaZero:
 
                     if (
                         len(training_examples)
-                        == self.hyperparams["max_training_examples"]
+                        >= self.hyperparams["max_training_examples"]
                     ):
                         break
 
@@ -231,6 +231,8 @@ class AlphaZero:
 
 
 if __name__ == "__main__":
-    alphazero = AlphaZero(SGD, n_mcts_searches=10, n_example_games=1)
+    alphazero = AlphaZero(SGD, mcts_epochs=10)
     model = AlphaModel()
     model, updated_model = alphazero.train(model)
+    if updated_model:
+        print("MODEL UPDATED")

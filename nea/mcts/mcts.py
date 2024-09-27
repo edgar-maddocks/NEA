@@ -7,7 +7,7 @@ import numpy as np
 from nea.console_checkers import CheckersGame
 from nea.mcts.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
 from nea.network import AlphaModel
-from nea.ml.autograd import Tensor
+from nea.ml.autograd import Tensor, no_grad
 
 
 class Node:
@@ -317,7 +317,8 @@ class AlphaMCTS(MCTS):
             if not node.terminal:
                 self.prior_states.append(node._state)
                 input_tensor = self._create_input_tensor()
-                policy, value = self.model(input_tensor)
+                with no_grad():
+                    policy, value = self.model(input_tensor)
                 policy *= self._get_valid_moves_as_action_tensor(node=node)
                 policy /= policy.sum().sum().sum()
 
