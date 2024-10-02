@@ -296,10 +296,10 @@ def user_vs_mcts_game_loop(n_searches: int, eec: float, player_colour: str) -> N
                         moves.push(CheckersGame.convert_action_to_user(action))
         elif gui.player != player_colour:
             if mcts_turns == 0:
-                mcts.build_tree(gui, gui.player)
+                mcts.build_tree(gui)
                 mcts_turns += 1
             else:
-                mcts.build_tree(gui, gui.player)
+                mcts.build_tree(gui)
             action = mcts.get_action()
             moves.push(CheckersGame.convert_action_to_user(action))
             done, reward = gui.evaluate_action(action)
@@ -361,19 +361,19 @@ def mcts_vs_mcts_game_loop(
                     reward = "None"
 
             if mcts_w_turns == 0:
-                mcts_w.build_tree(gui, gui.player)
+                mcts_w.build_tree(gui)
                 mcts_w_turns += 1
             else:
-                mcts_w.build_tree(gui, gui.player)
+                mcts_w.build_tree(gui)
             action = mcts_w.get_action()
             moves.push(CheckersGame.convert_action_to_user(action))
             done, reward = gui.evaluate_action(action)
         elif gui.player == "black":
             if mcts_b_turns == 0:
-                mcts_b.build_tree(gui, gui.player)
+                mcts_b.build_tree(gui)
                 mcts_b_turns += 1
             else:
-                mcts_b.build_tree(gui, gui.player)
+                mcts_b.build_tree(gui)
             action = mcts_b.get_action()
             moves.push(CheckersGame.convert_action_to_user(action))
             done, reward = gui.evaluate_action(action)
