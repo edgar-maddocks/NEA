@@ -222,6 +222,37 @@ class CheckersGUI(CheckersGame):
         return done, reward
 
 
+class MainMenu:
+    def __init__(self) -> None:
+        self.screen = pygame.display.set_mode(
+            (DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE)
+        )
+        self.font = lambda font_size: pygame.font.SysFont(
+            pygame.font.get_default_font(), font_size
+        )
+
+    def display(self) -> None:
+        pygame.init()
+        self.screen.fill(COLOURS.BLACK)
+        self._display_welcome_text()
+
+        open = True
+        while open:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    open = False
+
+            pygame.display.flip()
+
+    def _display_welcome_text(self):
+        welcome_text = self.font(40).render(
+            "Welcome to AI Checkers", False, COLOURS.WHITE
+        )
+        welcome_text_width, welcome_text_height = welcome_text.get_size()
+        welcome_text_rect = welcome_text.get_rect(center=(DISPLAY.SCREEN_SIZE / 2, 55))
+        self.screen.blit(welcome_text, welcome_text_rect)
+
+
 def user_vs_user_game_loop() -> None:
     """main loop that allows a user to play the game
 
@@ -420,6 +451,13 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int, **kwarg
                             eec=kwargs["eec"],
                             player_colour=kwargs["player_colour"],
                         )
+                    elif game_type == GAME_TYPES.MCTS_VS_MCTS:
+                        mcts_vs_mcts_game_loop(
+                            n_searches_1=kwargs["n_searches_1"],
+                            eec_1=kwargs["eec_1"],
+                            n_searches_2=kwargs["n_searches_2"],
+                            eec_2=kwargs["eec_2"],
+                        )
             else:
                 font = pygame.font.SysFont(pygame.font.get_default_font(), 70)
                 game_over_text = font.render(
@@ -452,7 +490,7 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int, **kwarg
                 pygame.display.flip()
 
 
-def main_loop():
+def play_game():
     valid_input = False
     game_type = None
     while not valid_input:
@@ -563,3 +601,8 @@ def _get_valid_eec(colour: str = None) -> float:
             print("Invalid entry")
 
     return eec
+
+
+if __name__ == "__main__":
+    m = MainMenu()
+    m.display()
