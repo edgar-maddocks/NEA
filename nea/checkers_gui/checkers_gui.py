@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 
 from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES
-from nea.checkers_gui.buttons import Button, RectButton
+from nea.checkers_gui.buttons import Button, RectButton, _change_button_text_colour
 from nea.checkers_gui.helpers import (
     get_col_selected,
     get_row_selected,
@@ -373,7 +373,12 @@ class MainMenu:
         for i, v in enumerate([50, 100, 500]):
             buttons += (
                 RectButton(
-                    80, 20, (340 + i * 100, 250), None, text=f"{v}", font_size=20
+                    80,
+                    20,
+                    (340 + i * 100, 250),
+                    _change_button_text_colour,
+                    text=f"{v}",
+                    font_size=20,
                 ),
             )
 
@@ -390,7 +395,12 @@ class MainMenu:
         for i, v in enumerate([0.75, 1.41, 2]):
             buttons += (
                 RectButton(
-                    80, 20, (340 + i * 100, 340), None, text=f"{v}", font_size=20
+                    80,
+                    20,
+                    (340 + i * 100, 340),
+                    _change_button_text_colour,
+                    text=f"{v}",
+                    font_size=20,
                 ),
             )
 
@@ -407,7 +417,12 @@ class MainMenu:
         for i, v in enumerate([100, 500, 1000]):
             buttons += (
                 RectButton(
-                    80, 20, (340 + i * 100, 430), None, text=f"{v}", font_size=20
+                    80,
+                    20,
+                    (340 + i * 100, 430),
+                    _change_button_text_colour,
+                    text=f"{v}",
+                    font_size=20,
                 ),
             )
 
@@ -424,7 +439,12 @@ class MainMenu:
         for i, v in enumerate([5, 10]):
             buttons += (
                 RectButton(
-                    100, 20, (340 + i * 150, 520), None, text=f"{v}", font_size=20
+                    100,
+                    20,
+                    (340 + i * 150, 520),
+                    _change_button_text_colour,
+                    text=f"{v}",
+                    font_size=20,
                 ),
             )
 
@@ -441,7 +461,12 @@ class MainMenu:
         for i, v in enumerate([50, 60]):
             buttons += (
                 RectButton(
-                    100, 20, (340 + i * 150, 610), None, text=f"{v}", font_size=20
+                    100,
+                    20,
+                    (340 + i * 150, 610),
+                    _change_button_text_colour,
+                    text=f"{v}",
+                    font_size=20,
                 ),
             )
 
@@ -487,7 +512,9 @@ class MainMenu:
                         int(value) if parameter != "ec" else float(value)
                     )
 
-                    button.click_fn()  # make it obvious button has been selected (switch text to red)
+                    button.click_fn(
+                        button, self.screen
+                    )  # make it obvious button has been selected (switch text to red)
 
         return params
 
@@ -678,10 +705,8 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int, **kwarg
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 open = False
-            elif e.type == pygame.KEYDOWN:
-                if e.key == pygame.K_r:
-                    m = MainMenu()
-                    m.display()
+                m = MainMenu()
+                m.display()
             else:
                 font = pygame.font.SysFont(pygame.font.get_default_font(), 70)
                 game_over_text = font.render(
@@ -689,142 +714,17 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int, **kwarg
                 )
                 _, game_over_text_height = game_over_text.get_size()
 
-                restart_text = font.render("PRESS R TO RESTART", False, COLOURS.WHITE)
-                _, restart_text_height = restart_text.get_size()
-
-                total_text_height = game_over_text_height + restart_text_height + 15
-
                 game_over_text_rect = game_over_text.get_rect(
                     center=(
                         DISPLAY.SCREEN_SIZE / 2,
-                        (DISPLAY.SCREEN_SIZE / 2) - (total_text_height / 2),
-                    )
-                )
-                restart_text_rect = restart_text.get_rect(
-                    center=(
-                        DISPLAY.SCREEN_SIZE / 2,
-                        (DISPLAY.SCREEN_SIZE / 2) + (total_text_height / 2),
+                        (DISPLAY.SCREEN_SIZE / 2),
                     )
                 )
 
                 screen.fill(COLOURS.BLACK)
                 screen.blit(game_over_text, game_over_text_rect)
-                screen.blit(restart_text, restart_text_rect)
 
                 pygame.display.flip()
-
-
-def play_game():
-    valid_input = False
-    game_type = None
-    while not valid_input:
-        print("==================================================")
-        print(
-            "Select Game Type: \n"
-            "1. User vs User\n"
-            "2. User vs MCTS\n"
-            "3. MCTS vs MCTS"
-        )
-        try:
-            game_type = int(input("Enter Number: "))
-            if 1 <= game_type <= 3:
-                valid_input = True
-        except Exception:
-            print("Invalid selection")
-
-    if game_type == GAME_TYPES.USER_VS_USER:
-        print("==================================================")
-        user_vs_user_game_loop()
-    elif game_type == GAME_TYPES.USER_VS_MCTS:
-        n_searches = _get_valid_num_searches()
-
-        eec = _get_valid_eec()
-
-        valid_input = False
-        colour = None
-        while not valid_input:
-            print("==================================================")
-            print("What colour would you like to play as?")
-            try:
-                colour = input("w/b: ")
-                if colour == ("w" or "b"):
-                    valid_input = True
-                else:
-                    raise ValueError(
-                        "Please enter w to play as white and b to play as black"
-                    )
-            except Exception:
-                print("Invalid entry")
-            print("==================================================")
-
-        player_colour = WHITE if colour == "w" else BLACK
-        user_vs_mcts_game_loop(
-            n_searches=n_searches, eec=eec, player_colour=player_colour
-        )
-    elif game_type == GAME_TYPES.MCTS_VS_MCTS:
-        n_searches_1 = _get_valid_num_searches("white")
-        n_searches_2 = _get_valid_num_searches("black")
-
-        eec_1 = _get_valid_eec("white")
-        eec_2 = _get_valid_eec("black")
-
-        mcts_vs_mcts_game_loop(
-            n_searches_1=n_searches_1,
-            eec_1=eec_1,
-            n_searches_2=n_searches_2,
-            eec_2=eec_2,
-        )
-
-
-def _get_valid_num_searches(colour: str = None) -> int:
-    valid_input = False
-    n_searches = None
-    while not valid_input:
-        print("==================================================")
-        if colour is None:
-            print("Enter Number of Searches for the MCTS \n" "(Between 10 and 10000)")
-        else:
-            print(
-                f"Enter Number of Searches for the {colour} MCTS \n"
-                "(Between 10 and 10000)"
-            )
-        try:
-            n_searches = int(input("Enter Number of Searches: "))
-            if 1 <= n_searches <= 10000:
-                valid_input = True
-            else:
-                raise ValueError("Please enter a number between 1000 and 10000")
-        except Exception:
-            print("Invalid entry")
-
-    return n_searches
-
-
-def _get_valid_eec(colour: str = None) -> float:
-    valid_input = False
-    eec = None
-    while not valid_input:
-        print("==================================================")
-        if colour is None:
-            print(
-                "Enter EEC for MCTS (determines exploration - with higher values = more exploration) \n"
-                "(Between 0.1 and 2)"
-            )
-        else:
-            print(
-                f"Enter EEC for the {colour} MCTS (determines exploration - with higher values = more exploration) \n"
-                "(Between 0.1 and 2)"
-            )
-        try:
-            eec = float(input("Enter EEC: "))
-            if 0.1 <= eec <= 2:
-                valid_input = True
-            else:
-                raise ValueError("Please enter a number between 1 and 3")
-        except Exception:
-            print("Invalid entry")
-
-    return eec
 
 
 if __name__ == "__main__":

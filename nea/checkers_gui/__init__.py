@@ -1,3 +1,3 @@
-from .checkers_gui import CheckersGUI, play_game
+from .checkers_gui import CheckersGUI, MainMenu
 
-__all__ = ["CheckersGUI", "play_game"]
+__all__ = ["CheckersGUI", "MainMenu"]
