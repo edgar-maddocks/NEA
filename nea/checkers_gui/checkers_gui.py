@@ -1,6 +1,7 @@
 import pygame
 
 from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES
+from nea.checkers_gui.buttons import RectButton
 from nea.checkers_gui.helpers import get_col_selected, get_row_selected
 from nea.console_checkers import CheckersGame
 from nea.console_checkers.consts import (
@@ -233,24 +234,84 @@ class MainMenu:
 
     def display(self) -> None:
         pygame.init()
+        buttons = []
+
         self.screen.fill(COLOURS.BLACK)
+
         self._display_welcome_text()
+        self._display_select_params_text()
+
+        params = [
+            "MCTS Searches",
+            "EEC",
+            "Training Examples",
+            "Comparison Games",
+            "% Replace Threshold",
+        ]
+        self._display_param_texts(params)
+
+        buttons.append(self._display_tutorial_button())
+        buttons.append(self._display_all_params_button())
 
         open = True
         while open:
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     open = False
+                if e.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
 
             pygame.display.flip()
 
-    def _display_welcome_text(self):
+    def _display_welcome_text(self) -> None:
         welcome_text = self.font(40).render(
             "Welcome to AI Checkers", False, COLOURS.WHITE
         )
-        welcome_text_width, welcome_text_height = welcome_text.get_size()
         welcome_text_rect = welcome_text.get_rect(center=(DISPLAY.SCREEN_SIZE / 2, 55))
         self.screen.blit(welcome_text, welcome_text_rect)
+
+    def _display_select_params_text(self) -> None:
+        select_param_text = self.font(28).render(
+            "Select Parameters: ", False, COLOURS.WHITE
+        )
+        select_param_rect = select_param_text.get_rect(topleft=(10, 180))
+        self.screen.blit(select_param_text, select_param_rect)
+
+    def _display_params_texts(self, params: list[str]) -> None:
+        for y in range(270, 720, 90):
+            raise NotImplementedError
+
+    def _display_tutorial_button(self) -> RectButton:
+        def tutorial_click_fn() -> None:
+            pass
+
+        tutorial = RectButton(
+            75,
+            30,
+            (DISPLAY.SCREEN_SIZE / 4, 80),
+            tutorial_click_fn,
+            text="Tutorial",
+            font_size=16,
+        )
+        tutorial.draw(screen=self.screen)
+
+        return tutorial
+
+    def _display_all_params_button(self) -> RectButton:
+        def all_params_click_fn() -> None:
+            pass
+
+        all_params = RectButton(
+            75,
+            30,
+            (3 * ((DISPLAY.SCREEN_SIZE - 75) / 4), 80),
+            all_params_click_fn,
+            text="All Params",
+            font_size=16,
+        )
+        all_params.draw(screen=self.screen)
+
+        return all_params
 
 
 def user_vs_user_game_loop() -> None:
