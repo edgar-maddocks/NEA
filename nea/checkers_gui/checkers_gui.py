@@ -1,8 +1,12 @@
 import pygame
+import numpy as np
 
 from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES
-from nea.checkers_gui.buttons import RectButton
-from nea.checkers_gui.helpers import get_col_selected, get_row_selected
+from nea.checkers_gui.buttons import Button, RectButton
+from nea.checkers_gui.helpers import (
+    get_col_selected,
+    get_row_selected,
+)
 from nea.console_checkers import CheckersGame
 from nea.console_checkers.consts import (
     ACTION,
@@ -234,24 +238,38 @@ class MainMenu:
 
     def display(self) -> None:
         pygame.init()
-        buttons = []
 
+        buttons: dict[Button] = {}
         self.screen.fill(COLOURS.BLACK)
 
         self._display_welcome_text()
         self._display_select_params_text()
 
-        params = [
-            "MCTS Searches",
-            "EEC",
-            "Training Examples",
-            "Comparison Games",
-            "% Replace Threshold",
-        ]
+        params = {
+            "MCTS Searches": None,
+            "EEC": None,
+            "Training Examples": None,
+            "Comparison Games": None,
+            "% Replace Threshold": None,
+        }
         self._display_param_texts(params)
 
-        buttons.append(self._display_tutorial_button())
-        buttons.append(self._display_all_params_button())
+        buttons["Tutorial"] = self._display_tutorial_button()
+        buttons["All Params"] = self._display_all_params_button()
+        buttons["User vs User"], buttons["User vs MCTS"], buttons["User vs Agent"] = (
+            self._display_submit_buttons()
+        )
+        buttons["50ns"], buttons["100ns"], buttons["500ns"] = (
+            self._display_mcts_searches_buttons()
+        )
+        buttons["0.75ec"], buttons["1.41ec"], buttons["2ec"] = (
+            self._display_eec_buttons()
+        )
+        buttons["100te"], buttons["500te"], buttons["1000te"] = (
+            self._display_training_examples_buttons()
+        )
+        buttons["5cg"], buttons["10cg"] = self._display_comparison_games_buttons()
+        buttons["50rt"], buttons["60rt"] = self._display_replace_threshold_buttons()
 
         open = True
         while open:
@@ -260,58 +278,218 @@ class MainMenu:
                     open = False
                 if e.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
+                    params = self._manage_click(mouse_pos, buttons, params)
 
             pygame.display.flip()
 
     def _display_welcome_text(self) -> None:
-        welcome_text = self.font(40).render(
+        welcome_text = self.font(64).render(
             "Welcome to AI Checkers", False, COLOURS.WHITE
         )
         welcome_text_rect = welcome_text.get_rect(center=(DISPLAY.SCREEN_SIZE / 2, 55))
         self.screen.blit(welcome_text, welcome_text_rect)
 
     def _display_select_params_text(self) -> None:
-        select_param_text = self.font(28).render(
+        select_param_text = self.font(40).render(
             "Select Parameters: ", False, COLOURS.WHITE
         )
         select_param_rect = select_param_text.get_rect(topleft=(10, 180))
         self.screen.blit(select_param_text, select_param_rect)
 
-    def _display_params_texts(self, params: list[str]) -> None:
-        for y in range(270, 720, 90):
-            raise NotImplementedError
+    def _display_param_texts(self, params: list[str]) -> None:
+        for i, y in enumerate(range(250, 720, 90)):
+            if i < len(params):
+                param_text = self.font(32).render(
+                    f"{list(params.keys())[i]}: ", False, COLOURS.WHITE
+                )
+                param_rect = param_text.get_rect(topright=(320, y))
+                self.screen.blit(param_text, param_rect)
 
     def _display_tutorial_button(self) -> RectButton:
         def tutorial_click_fn() -> None:
             pass
 
         tutorial = RectButton(
-            75,
+            125,
             30,
-            (DISPLAY.SCREEN_SIZE / 4, 80),
+            (DISPLAY.SCREEN_SIZE / 4, 90),
             tutorial_click_fn,
             text="Tutorial",
-            font_size=16,
+            font_size=24,
         )
         tutorial.draw(screen=self.screen)
 
         return tutorial
+
+    def _display_submit_buttons(self) -> tuple[RectButton, RectButton, RectButton]:
+        play_text = self.font(40).render("Play", False, COLOURS.WHITE)
+        play_text_rect = play_text.get_rect(center=(DISPLAY.SCREEN_SIZE / 2, 660))
+        self.screen.blit(play_text, play_text_rect)
+
+        buttons = ()
+        submits = {
+            "User vs User": user_vs_user_game_loop,
+            "User vs MCTS": user_vs_mcts_game_loop,
+            "User vs Agent": None,
+        }  # replace values with functions
+        for i, x in enumerate(range(50, 720, 240)):
+            buttons += (
+                RectButton(
+                    150,
+                    30,
+                    (x, 685),
+                    list(submits.values())[i],
+                    text=list(submits.keys())[i],
+                    font_size=24,
+                ),
+            )
+
+        for b in buttons:
+            b.draw(self.screen)
+
+        return buttons
 
     def _display_all_params_button(self) -> RectButton:
         def all_params_click_fn() -> None:
             pass
 
         all_params = RectButton(
-            75,
+            125,
             30,
-            (3 * ((DISPLAY.SCREEN_SIZE - 75) / 4), 80),
+            (3 * ((DISPLAY.SCREEN_SIZE - 125) / 4), 90),
             all_params_click_fn,
             text="All Params",
-            font_size=16,
+            font_size=24,
         )
         all_params.draw(screen=self.screen)
 
         return all_params
+
+    def _display_mcts_searches_buttons(
+        self,
+    ) -> tuple[RectButton, RectButton, RectButton]:
+        buttons = ()
+
+        for i, v in enumerate([50, 100, 500]):
+            buttons += (
+                RectButton(
+                    80, 20, (340 + i * 100, 250), None, text=f"{v}", font_size=20
+                ),
+            )
+
+        for item in buttons:
+            item.draw(self.screen)
+
+        return buttons
+
+    def _display_eec_buttons(
+        self,
+    ) -> tuple[RectButton, RectButton, RectButton]:
+        buttons = ()
+
+        for i, v in enumerate([0.75, 1.41, 2]):
+            buttons += (
+                RectButton(
+                    80, 20, (340 + i * 100, 340), None, text=f"{v}", font_size=20
+                ),
+            )
+
+        for item in buttons:
+            item.draw(self.screen)
+
+        return buttons
+
+    def _display_training_examples_buttons(
+        self,
+    ) -> tuple[RectButton, RectButton, RectButton]:
+        buttons = ()
+
+        for i, v in enumerate([100, 500, 1000]):
+            buttons += (
+                RectButton(
+                    80, 20, (340 + i * 100, 430), None, text=f"{v}", font_size=20
+                ),
+            )
+
+        for item in buttons:
+            item.draw(self.screen)
+
+        return buttons
+
+    def _display_comparison_games_buttons(
+        self,
+    ) -> tuple[RectButton, RectButton, RectButton]:
+        buttons = ()
+
+        for i, v in enumerate([5, 10]):
+            buttons += (
+                RectButton(
+                    100, 20, (340 + i * 150, 520), None, text=f"{v}", font_size=20
+                ),
+            )
+
+        for item in buttons:
+            item.draw(self.screen)
+
+        return buttons
+
+    def _display_replace_threshold_buttons(
+        self,
+    ) -> tuple[RectButton, RectButton, RectButton]:
+        buttons = ()
+
+        for i, v in enumerate([50, 60]):
+            buttons += (
+                RectButton(
+                    100, 20, (340 + i * 150, 610), None, text=f"{v}", font_size=20
+                ),
+            )
+
+        for item in buttons:
+            item.draw(self.screen)
+
+        return buttons
+
+    def _manage_click(
+        self,
+        mouse_pos: tuple[int, int],
+        buttons: dict[str, Button],
+        params: dict,
+    ):
+        for key, button in buttons.items():
+            if button.in_bounds(mouse_pos):
+                if key in ["Tutorial", "All Params", "User vs User"]:
+                    button.click_fn()
+                elif key == "User vs MCTS":
+                    p = np.random.rand()
+                    if not params["MCTS Searches"] or not params["EEC"]:
+                        continue
+                    button.click_fn(
+                        n_searches=params["MCTS Searches"],
+                        eec=params["EEC"],
+                        player_colour=WHITE if p > 0.5 else BLACK,
+                    )
+                elif key == "User vs Agent":
+                    raise NotImplementedError
+                else:
+                    parameter = key[-2:]
+                    value = key[:-2]
+
+                    placeholders = {
+                        "ns": "MCTS Searches",
+                        "ec": "EEC",
+                        "te": "Training Examples",
+                        "cg": "Comparison Games",
+                        "rt": "% Replace Threshold",
+                    }
+
+                    params[placeholders[parameter]] = (
+                        int(value) if parameter != "ec" else float(value)
+                    )
+
+                    button.click_fn()  # make it obvious button has been selected (switch text to red)
+
+        return params
 
 
 def user_vs_user_game_loop() -> None:
@@ -320,8 +498,6 @@ def user_vs_user_game_loop() -> None:
     Args:
         game (CheckersGame): _description_
     """
-    pygame.init()
-
     screen = pygame.display.set_mode((DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE))
 
     done = False
@@ -504,21 +680,8 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int, **kwarg
                 open = False
             elif e.type == pygame.KEYDOWN:
                 if e.key == pygame.K_r:
-                    if game_type == GAME_TYPES.USER_VS_USER:
-                        user_vs_user_game_loop()
-                    elif game_type == GAME_TYPES.USER_VS_MCTS:
-                        user_vs_mcts_game_loop(
-                            n_searches=kwargs["n_searches"],
-                            eec=kwargs["eec"],
-                            player_colour=kwargs["player_colour"],
-                        )
-                    elif game_type == GAME_TYPES.MCTS_VS_MCTS:
-                        mcts_vs_mcts_game_loop(
-                            n_searches_1=kwargs["n_searches_1"],
-                            eec_1=kwargs["eec_1"],
-                            n_searches_2=kwargs["n_searches_2"],
-                            eec_2=kwargs["eec_2"],
-                        )
+                    m = MainMenu()
+                    m.display()
             else:
                 font = pygame.font.SysFont(pygame.font.get_default_font(), 70)
                 game_over_text = font.render(
