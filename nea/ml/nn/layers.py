@@ -76,12 +76,12 @@ class Module(ABC):
         return params
 
     def save(self, file_path: str) -> None:
-        with open(str.join(file_path, ".pkl"), "wb") as fh:
+        with open(file_path, "wb") as fh:
             pickle.dump(self, fh)
 
     @staticmethod
     def load(self, file_path: str) -> None:
-        with open(str.join(file_path, ".pkl"), "rb") as fh:
+        with open(file_path, "rb") as fh:
             return pickle.load(fh)
 
 

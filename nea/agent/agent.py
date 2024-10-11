@@ -29,6 +29,7 @@ class AlphaZero:
         n_mcts_searches: int = 100,
         replace_win_pct_threshold: int = 59,
         verbose: int = 0,
+        save: bool = False,
     ) -> None:
         self.prev_model = None
         self.new_model = None
@@ -49,6 +50,7 @@ class AlphaZero:
         }
 
         self.loss = AlphaLoss()
+        self.save = save
 
     def train(self, initialModel: AlphaModel) -> None:
         self.prev_model = initialModel
@@ -60,13 +62,16 @@ class AlphaZero:
 
             gc.collect()
 
-            print(f"MCTS EPOCH: {mcts_epoch}")
+            print(f"MCTS EPOCH: {mcts_epoch + 1}")
             print("GETTING EXAMPLE GAMES")
-            for example in tqdm(range(int(self.hyperparams["n_example_games"]))):
+            max_training_examples_reached = False
+            example_game = 0
+            while not max_training_examples_reached:
                 gc.collect()
 
                 game_saps, reward, player = self._get_example_saps()
                 game_spvs = self._convert_saps_to_spvs(game_saps, player, reward)
+                example_game += 1
 
                 for item in game_spvs:
                     training_examples.append(item)
@@ -75,7 +80,11 @@ class AlphaZero:
                         len(training_examples)
                         >= self.hyperparams["max_training_examples"]
                     ):
+                        max_training_examples_reached = True
                         break
+                print(
+                    f"After example game {example_game}, there are {len(training_examples)} training examples"
+                )
 
             print("BEGINNING NN TRAINING")
             for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
@@ -86,6 +95,17 @@ class AlphaZero:
             if self._play_compare_games():
                 self.prev_model = self.new_model
 
+                if self.save:
+                    file_path = (
+                        f"{self.hyperparams["n_mcts_searches"]}ns-"
+                        + f"{self.hyperparams["eec"]}ec-"
+                        + f"{self.hyperparams["max_training_examples"]}te-"
+                        + f"{self.hyperparams["n_compare_games"]}cg-"
+                        + f"{self.hyperparams["replace_win_pct_threshold"]}rt"
+                    )
+                    self.new_model.save(file_path=file_path)
+
+                    print(f"Mode saved to file {file_path}.pkl")
             gc.collect()
 
         return self.prev_model
@@ -171,10 +191,11 @@ class AlphaZero:
 
                     loss += self.loss(true_value, nn_value, mcts_probs, nn_policy)
 
-            loss = loss.mean()
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
+            if isinstance(loss, Tensor):
+                loss = loss.mean()
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
 
     def _play_compare_games(self) -> bool:
         new_nn_wins = 0
@@ -212,6 +233,8 @@ class AlphaZero:
                     valid, _, done, reward = game.step(action)
                     if not valid:
                         print("TRIED TO MAKE INVALID MOVE")
+                        compare_game -= 1
+                        break
                     if done and reward == 1:
                         prev_nn_wins += 1
                     elif done and reward == -1:
@@ -224,6 +247,8 @@ class AlphaZero:
                     valid, _, done, reward = game.step(action)
                     if not valid:
                         print("TRIED TO MAKE INVALID MOVE")
+                        compare_game -= 1
+                        break
                     if done and reward == 1:
                         new_nn_wins += 1
                     elif done and reward == -1:
@@ -233,19 +258,6 @@ class AlphaZero:
             (new_nn_wins / prev_nn_wins) * 100 if prev_nn_wins != 0 else 100
         )
         print(f"New model won {new_nn_win_pct}% of games")
-        if new_nn_win_pct > self.hyperparams["replace_win_pct_threshold"]:
+        if new_nn_win_pct >= self.hyperparams["replace_win_pct_threshold"]:
             return True
         return False
-
-
-if __name__ == "__main__":
-    alphazero = AlphaZero(
-        SGD,
-        n_compare_games=2,
-        replace_win_pct_threshold=49,
-        n_mcts_searches=10,
-        mcts_epochs=5,
-        verbose=0,
-    )
-    model = AlphaModel()
-    model = alphazero.train(model)
