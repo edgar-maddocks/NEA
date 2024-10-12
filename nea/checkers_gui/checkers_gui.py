@@ -1,7 +1,7 @@
 import pygame
 import numpy as np
 
-from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES
+from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES, DICTS, TEXTS
 from nea.checkers_gui.buttons import Button, RectButton, _change_button_text_colour
 from nea.checkers_gui.helpers import (
     get_col_selected,
@@ -229,6 +229,8 @@ class CheckersGUI(CheckersGame):
 
 class MainMenu:
     def __init__(self) -> None:
+        pygame.init()
+
         self.screen = pygame.display.set_mode(
             (DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE)
         )
@@ -237,8 +239,6 @@ class MainMenu:
         )
 
     def display(self) -> None:
-        pygame.init()
-
         buttons: dict[Button] = {}
         self.screen.fill(COLOURS.BLACK)
 
@@ -276,6 +276,7 @@ class MainMenu:
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     open = False
+                    quit()
                 if e.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
                     params = self._manage_click(mouse_pos, buttons, params)
@@ -307,7 +308,21 @@ class MainMenu:
 
     def _display_tutorial_button(self) -> RectButton:
         def tutorial_click_fn() -> None:
-            pass
+            screen = pygame.display.set_mode((DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE))
+
+            tutorial_text = self.font(32).render(TEXTS.tutorial, False, COLOURS.WHITE)
+            tutorial_text_rect = tutorial_text.get_rect(
+                center=(DISPLAY.SCREEN_SIZE / 2, 55)
+            )
+            screen.blit(tutorial_text, tutorial_text_rect)
+
+            pygame.display.flip()
+
+            open = True
+            while open:
+                for e in pygame.event.get():
+                    if e.type == pygame.QUIT:
+                        m.display()
 
         tutorial = RectButton(
             125,
@@ -500,17 +515,13 @@ class MainMenu:
                     parameter = key[-2:]
                     value = key[:-2]
 
-                    placeholders = {
-                        "ns": "MCTS Searches",
-                        "ec": "EEC",
-                        "te": "Training Examples",
-                        "cg": "Comparison Games",
-                        "rt": "% Replace Threshold",
-                    }
-
-                    params[placeholders[parameter]] = (
+                    params[DICTS.param_placeholders[parameter]] = (
                         int(value) if parameter != "ec" else float(value)
                     )
+
+                    for k in buttons.keys():
+                        if k[-2:] == parameter:
+                            buttons[k].set_text_black(self.screen)
 
                     button.click_fn(
                         button, self.screen
