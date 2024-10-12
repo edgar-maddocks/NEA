@@ -1,5 +1,8 @@
 import pygame
 import numpy as np
+import pickle
+
+from collections import deque
 
 from nea.checkers_gui.consts import COLOURS, DISPLAY, GAME_TYPES, DICTS, TEXTS
 from nea.checkers_gui.buttons import Button, RectButton, _change_button_text_colour
@@ -24,7 +27,7 @@ from nea.console_checkers.consts import (
     SIZE as BOARD_SIZE,
 )
 from nea.console_checkers.move_stack import MoveStack
-from nea.mcts import MCTS
+from nea.mcts import MCTS, AlphaMCTS
 
 
 class CheckersGUI(CheckersGame):
@@ -353,7 +356,7 @@ class MainMenu:
         submits = {
             "User vs User": user_vs_user_game_loop,
             "User vs MCTS": user_vs_mcts_game_loop,
-            "User vs Agent": None,
+            "User vs Agent": user_vs_agent_game_loop,
         }  # replace values with functions
         for i, x in enumerate(range(50, 720, 240)):
             buttons += (
@@ -534,15 +537,28 @@ class MainMenu:
                     button.click_fn()
                 elif key == "User vs MCTS":
                     p = np.random.rand()
-                    if not params["MCTS Searches"] or not params["EEC"]:
+                    if (
+                        not params["(UvsM, UvsA) MCTS Searches"]
+                        or not params["(UvsM, UvsA)                     EEC"]
+                    ):
                         continue
                     button.click_fn(
-                        n_searches=params["MCTS Searches"],
-                        eec=params["EEC"],
+                        n_searches=params["(UvsM, UvsA) MCTS Searches"],
+                        eec=params["(UvsM, UvsA)                     EEC"],
                         player_colour=WHITE if p > 0.5 else BLACK,
                     )
                 elif key == "User vs Agent":
-                    raise NotImplementedError
+                    p = np.random.rand()
+                    if any(params.values()) is None:
+                        continue
+                    button.click_fn(
+                        n_searches=params["(UvsM, UvsA) MCTS Searches"],
+                        eec=params["(UvsM, UvsA)                     EEC"],
+                        training_examples=params["(UvsA)       Training Examples"],
+                        comparison_games=params["(UvsA)     Comparison Games"],
+                        replacement_threshold=params["(UvsA)   % Replace Threshold"],
+                        player_colour=WHITE if p > 0.5 else BLACK,
+                    )
                 else:
                     parameter = key[-2:]
                     value = key[:-2]
@@ -739,6 +755,93 @@ def mcts_vs_mcts_game_loop(
         eec_1=eec_1,
         n_searches_2=n_searches_2,
         eec_2=eec_2,
+    )
+
+
+def user_vs_agent_game_loop(
+    n_searches: int,
+    eec: float,
+    training_examples: int,
+    comparison_games: int,
+    replacement_threshold: int,
+    player_colour: str,
+) -> None:
+    pygame.init()
+
+    screen = pygame.display.set_mode((DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE))
+
+    done = False
+
+    gui = CheckersGUI()
+
+    agent_file_path = (
+        f"{n_searches}ns-"
+        + f"{eec}ec-"
+        + f"{training_examples}te-"
+        + f"{comparison_games}cg-"
+        + f"{replacement_threshold}rt"
+    )
+    net = None
+    with open(agent_file_path, "rb") as fh:
+        net = pickle.load(fh)
+
+    agent = AlphaMCTS(net, eec=eec, n_searches=n_searches)
+
+    prior_states = deque(maxlen=5)
+
+    winner = None
+    append_user_state = True
+    append_agent_state = False
+    while not done:
+        if gui.player == player_colour:
+            reward = None
+
+            if append_user_state:
+                prior_states.append(gui.board)
+                append_user_state = False
+                append_agent_state = True
+
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    done = True
+                    reward = "None"
+                if e.type == pygame.MOUSEBUTTONDOWN:
+                    action = gui.click(pygame.mouse.get_pos())
+                    if action:
+                        done, reward = gui.evaluate_action(action)
+        elif gui.player != player_colour:
+            if append_agent_state:
+                prior_states.append(gui.board)
+                append_user_state = True
+                append_agent_state = False
+
+            agent.alpha_build_tree(gui, prior_states)
+            action = agent.get_action()
+
+            done, reward = gui.evaluate_action(action)
+
+        if done:
+            if reward == -1:
+                winner = gui.opposite_player
+                break
+            elif reward == 1:
+                winner = gui.player
+                break
+            elif reward == "None":
+                winner = "no one"
+                break
+
+        screen.fill(COLOURS.BLACK)
+        gui.draw(screen)
+        pygame.display.flip()
+
+    _show_game_over(
+        screen,
+        winner,
+        GAME_TYPES.USER_VS_USER,
+        n_searches=n_searches,
+        eec=eec,
+        player_colour=player_colour,
     )
 
 

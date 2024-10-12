@@ -105,7 +105,7 @@ class AlphaZero:
                     )
                     self.new_model.save(file_path=file_path)
 
-                    print(f"Mode saved to file {file_path}.pkl")
+                    print(f"Model saved to file {file_path}.pkl")
             gc.collect()
 
         return self.prev_model
@@ -233,8 +233,6 @@ class AlphaZero:
                     valid, _, done, reward = game.step(action)
                     if not valid:
                         print("TRIED TO MAKE INVALID MOVE")
-                        compare_game -= 1
-                        break
                     if done and reward == 1:
                         prev_nn_wins += 1
                     elif done and reward == -1:
@@ -247,8 +245,6 @@ class AlphaZero:
                     valid, _, done, reward = game.step(action)
                     if not valid:
                         print("TRIED TO MAKE INVALID MOVE")
-                        compare_game -= 1
-                        break
                     if done and reward == 1:
                         new_nn_wins += 1
                     elif done and reward == -1:
@@ -257,7 +253,7 @@ class AlphaZero:
         new_nn_win_pct = (
             (new_nn_wins / prev_nn_wins) * 100 if prev_nn_wins != 0 else 100
         )
-        print(f"New model won {new_nn_win_pct}% of games")
+        print(f"New model won {round(new_nn_win_pct, 2)}% of games")
         if new_nn_win_pct >= self.hyperparams["replace_win_pct_threshold"]:
             return True
         return False

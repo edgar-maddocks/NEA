@@ -19,15 +19,16 @@ class GAME_TYPES:
     USER_VS_USER = 1
     USER_VS_MCTS = 2
     MCTS_VS_MCTS = 3
+    USER_VS_AGENT = 4
 
 
 class DICTS:
     param_placeholders: dict[str, str] = {
-        "ns": "MCTS Searches",
-        "ec": "EEC",
-        "te": "Training Examples",
-        "cg": "Comparison Games",
-        "rt": "% Replace Threshold",
+        "ns": "(UvsM, UvsA) MCTS Searches",
+        "ec": "(UvsM, UvsA)                     EEC",
+        "te": "(UvsA)       Training Examples",
+        "cg": "(UvsA)     Comparison Games",
+        "rt": "(UvsA)   % Replace Threshold",
     }
     param_placeholder_values: dict[str, list[int | float]] = {
         "ns": [50, 100, 500],

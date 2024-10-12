@@ -300,7 +300,7 @@ class AlphaMCTS(MCTS):
             root (CheckersGame): _description_
             prior_states (list[np.ndarray]): _description_
         """
-        if len(prior_states) < 4:
+        if len(prior_states) < 5:
             self.build_tree(root)
             return
 
