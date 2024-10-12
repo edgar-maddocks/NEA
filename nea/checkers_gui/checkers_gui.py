@@ -374,7 +374,31 @@ class MainMenu:
 
     def _display_all_params_button(self) -> RectButton:
         def all_params_click_fn() -> None:
-            pass
+            screen = pygame.display.set_mode((DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE))
+
+            paramms_text = self.font(64).render("Parameters", False, COLOURS.WHITE)
+            params_text_rect = paramms_text.get_rect(
+                center=(DISPLAY.SCREEN_SIZE / 2, 100 / 2)
+            )
+            screen.blit(paramms_text, params_text_rect)
+
+            line_height = (DISPLAY.SCREEN_SIZE - 100) / (
+                len(TEXTS.changeable_params) + len(TEXTS.defaulted_params)
+            )
+
+            for i, v in enumerate(TEXTS.changeable_params + TEXTS.defaulted_params):
+                text = self.font(25).render(v, False, COLOURS.WHITE)
+                text_rect = text.get_rect(topleft=(10, 100 + (i * line_height)))
+
+                screen.blit(text, text_rect)
+
+            pygame.display.flip()
+
+            open = True
+            while open:
+                for e in pygame.event.get():
+                    if e.type == pygame.QUIT:
+                        m.display()
 
         all_params = RectButton(
             125,

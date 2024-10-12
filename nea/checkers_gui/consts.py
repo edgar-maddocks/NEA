@@ -58,3 +58,22 @@ class TEXTS:
         "11. A double capture must use the same own piece to capture each opposing piece.",
         "12. If one or more piece can capture on the first take - choice is left to the player.",
     ]
+    changeable_params = [
+        "MCTS Searches: The number of different game endings the tree search sees.",
+        "EEC (Exploration Eploitation Coefficient): Determines the level of exploration",
+        "   that the tree search takes where a higher value -> more exploration.",
+        "Training Examples: The number of different states that the neural network",
+        "   trains on during each epoch.",
+        "Comparison Games: The number of games played between the old network and",
+        "   the new one to calculate the % win rate of the newer model.",
+        "% Replacement Threshold: The percentage of comparison games the new network",
+        "   must win to replace the previous network.",
+    ]
+    defaulted_params = [
+        "MCTS Epochs (defaulted to 10): The number of iterations where the network ",
+        "   may be updated.",
+        "NN Epochs (defaulted to 10): The number of iterations the neural network trains for on each",
+        "   batch of training examples.",
+        "Batch Size (defaulted to 32): The size of processing batches which the network takes the mean of",
+        "   for the loss.",
+    ]
