@@ -26,7 +26,7 @@ class DICTS:
     param_placeholders: dict[str, str] = {
         "ns": "(UvsM, UvsA) MCTS Searches",
         "ec": "(UvsM, UvsA)                     EEC",
-        "te": "(UvsA)       Training Examples",
+        "te": "(UvsA)       Examples Games",
         "cg": "(UvsA)     Comparison Games",
         "rt": "(UvsA)   % Replace Threshold",
     }
@@ -63,7 +63,7 @@ class TEXTS:
         "MCTS Searches: The number of different game endings the tree search sees.",
         "EEC (Exploration Eploitation Coefficient): Determines the level of exploration",
         "   that the tree search takes where a higher value -> more exploration.",
-        "Training Examples: The number of different states that the neural network",
+        "Example Games: The number of different games that the neural network",
         "   trains on during each epoch.",
         "Comparison Games: The number of games played between the old network and",
         "   the new one to calculate the % win rate of the newer model.",

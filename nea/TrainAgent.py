@@ -6,8 +6,7 @@ if __name__ == "__main__":
     a = AlphaZero(
         optimizer=SGD,
         mcts_epochs=10,
-        n_example_games=10,
-        max_training_examples=100,
+        n_example_games=100,
         nn_epochs=10,
         batch_size=32,
         n_compare_games=5,

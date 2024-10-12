@@ -251,7 +251,7 @@ class MainMenu:
         params = {
             "(UvsM, UvsA) MCTS Searches": None,
             "(UvsM, UvsA)                     EEC": None,
-            "(UvsA)       Training Examples": None,
+            "(UvsA)         Examples Games": None,
             "(UvsA)     Comparison Games": None,
             "(UvsA)   % Replace Threshold": None,
         }
@@ -269,7 +269,7 @@ class MainMenu:
             self._display_eec_buttons()
         )
         buttons["100te"], buttons["500te"], buttons["1000te"] = (
-            self._display_training_examples_buttons()
+            self._display_example_games_buttons()
         )
         buttons["5cg"], buttons["10cg"] = self._display_comparison_games_buttons()
         buttons["50rt"], buttons["60rt"] = self._display_replace_threshold_buttons()
@@ -459,7 +459,7 @@ class MainMenu:
 
         return buttons
 
-    def _display_training_examples_buttons(
+    def _display_example_games_buttons(
         self,
     ) -> tuple[RectButton, RectButton, RectButton]:
         buttons = ()
@@ -554,7 +554,7 @@ class MainMenu:
                     button.click_fn(
                         n_searches=params["(UvsM, UvsA) MCTS Searches"],
                         eec=params["(UvsM, UvsA)                     EEC"],
-                        training_examples=params["(UvsA)       Training Examples"],
+                        example_games=params["(UvsA)       Examples Games"],
                         comparison_games=params["(UvsA)     Comparison Games"],
                         replacement_threshold=params["(UvsA)   % Replace Threshold"],
                         player_colour=WHITE if p > 0.5 else BLACK,
@@ -761,7 +761,7 @@ def mcts_vs_mcts_game_loop(
 def user_vs_agent_game_loop(
     n_searches: int,
     eec: float,
-    training_examples: int,
+    example_games: int,
     comparison_games: int,
     replacement_threshold: int,
     player_colour: str,
@@ -777,7 +777,7 @@ def user_vs_agent_game_loop(
     agent_file_path = (
         f"{n_searches}ns-"
         + f"{eec}ec-"
-        + f"{training_examples}te-"
+        + f"{example_games}te-"
         + f"{comparison_games}cg-"
         + f"{replacement_threshold}rt"
     )

@@ -39,7 +39,6 @@ class AlphaZero:
         self.hyperparams = {
             "mcts_epochs": mcts_epochs,
             "n_example_games": n_example_games,
-            "max_training_examples": max_training_examples,
             "nn_epochs": nn_epochs,
             "batch_size": batch_size,
             "n_compare_games": n_compare_games,
@@ -57,30 +56,21 @@ class AlphaZero:
             self.new_model = initialModel
 
         for mcts_epoch in range(self.hyperparams["mcts_epochs"]):
-            training_examples = deque(maxlen=self.hyperparams["max_training_examples"])
+            training_examples = deque()
 
             gc.collect()
 
             print(f"MCTS EPOCH: {mcts_epoch + 1}")
             print("GETTING EXAMPLE GAMES")
-            max_training_examples_reached = False
-            example_game = 0
-            while not max_training_examples_reached:
+            for example_game in tqdm(range(self.hyperparams["n_example_games"])):
                 game_saps, reward, player = self._get_example_saps()
                 game_spvs = self._convert_saps_to_spvs(game_saps, player, reward)
-                example_game += 1
 
                 for item in game_spvs:
                     training_examples.append(item)
-
-                    if (
-                        len(training_examples)
-                        >= self.hyperparams["max_training_examples"]
-                    ):
-                        max_training_examples_reached = True
-                        break
                 print(
-                    f"After example game {example_game}, there are {len(training_examples)} training examples"
+                    f"After example game {example_game + 1}, there are {len(training_examples)} training examples",
+                    end="\r",
                 )
 
             print("BEGINNING NN TRAINING")
@@ -96,7 +86,7 @@ class AlphaZero:
                     file_path = (
                         f"{self.hyperparams["n_mcts_searches"]}ns-"
                         + f"{self.hyperparams["eec"]}ec-"
-                        + f"{self.hyperparams["max_training_examples"]}te-"
+                        + f"{self.hyperparams["n_example_games"]}te-"
                         + f"{self.hyperparams["n_compare_games"]}cg-"
                         + f"{self.hyperparams["replace_win_pct_threshold"]}rt"
                     )
