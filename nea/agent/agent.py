@@ -5,6 +5,7 @@ from collections import deque
 import gc
 import itertools
 import random
+import math
 
 from nea.ml.nn import Optimizer, SGD, AlphaLoss
 from nea.ml.autograd import Tensor
@@ -28,7 +29,6 @@ class AlphaZero:
         eec: float = 1.41,
         n_mcts_searches: int = 100,
         replace_win_pct_threshold: int = 60,
-        verbose: int = 0,
         save: bool = False,
     ) -> None:
         self.prev_model = None
@@ -46,7 +46,6 @@ class AlphaZero:
             "eec": eec,
             "n_mcts_searches": n_mcts_searches,
             "replace_win_pct_threshold": replace_win_pct_threshold,
-            "verbose": verbose,
         }
 
         self.loss = AlphaLoss()
@@ -67,8 +66,6 @@ class AlphaZero:
             max_training_examples_reached = False
             example_game = 0
             while not max_training_examples_reached:
-                gc.collect()
-
                 game_saps, reward, player = self._get_example_saps()
                 game_spvs = self._convert_saps_to_spvs(game_saps, player, reward)
                 example_game += 1
@@ -124,14 +121,12 @@ class AlphaZero:
 
         done = False
         while not done:
-            if self.hyperparams["verbose"]:
-                game.render()
             prior_states.append(game.board)
 
             mcts.alpha_build_tree(game, prior_states)
             action_probs = mcts.get_action_probs()
 
-            if len(prior_states) < 4:
+            if len(prior_states) < 5:
                 idx_choice = np.random.choice(8)
                 x_choice = np.random.choice(8)
                 y_choice = np.random.choice(8)
@@ -222,8 +217,6 @@ class AlphaZero:
             prev_nn_player = np.random.choice(["white", "black"], 1)
 
             while not done:
-                if self.hyperparams["verbose"]:
-                    game.render()
                 prior_states.append(game.board)
 
                 if game.player == prev_nn_player:
@@ -253,7 +246,7 @@ class AlphaZero:
         new_nn_win_pct = (
             (new_nn_wins / prev_nn_wins) * 100 if prev_nn_wins != 0 else 100
         )
-        print(f"New model won {round(new_nn_win_pct, 2)}% of games")
+        print(f"New model won {math.floor(new_nn_win_pct * 100) / 100}% of games")
         if new_nn_win_pct >= self.hyperparams["replace_win_pct_threshold"]:
             return True
         return False

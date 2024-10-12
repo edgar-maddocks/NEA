@@ -44,7 +44,13 @@ class Node:
             list[ACTION]: list of avaialble moves
         """
         valids = self._game.get_all_valid_moves()
-        out = valids["takes"] if len(valids["takes"]) > 0 else valids["simple"]
+        out = None
+        if len(valids["takes"]) > 0:
+            out = valids["takes"]
+            if self._game._last_moved_piece is not None:
+                out = [x for x in out if x[0] == self._game._last_moved_piece]
+        else:
+            out = valids["simple"]
         return out
 
     @property
@@ -104,7 +110,7 @@ class Node:
         random_move_idx = np.random.choice(self.n_available_moves_left)
         random_action = self._available_moves_left[random_move_idx]
 
-        self._available_moves_left.remove(random_action)  #
+        self._available_moves_left.remove(random_action)
 
         child_game = deepcopy(self._game)
         _, _, terminal, reward = child_game.step(random_action)
