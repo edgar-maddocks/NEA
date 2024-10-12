@@ -310,11 +310,19 @@ class MainMenu:
         def tutorial_click_fn() -> None:
             screen = pygame.display.set_mode((DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE))
 
-            tutorial_text = self.font(32).render(TEXTS.tutorial, False, COLOURS.WHITE)
-            tutorial_text_rect = tutorial_text.get_rect(
-                center=(DISPLAY.SCREEN_SIZE / 2, 55)
+            rules_text = self.font(64).render("Rules", False, COLOURS.WHITE)
+            rules_text_rect = rules_text.get_rect(
+                center=(DISPLAY.SCREEN_SIZE / 2, 100 / 2)
             )
-            screen.blit(tutorial_text, tutorial_text_rect)
+            screen.blit(rules_text, rules_text_rect)
+
+            line_height = (DISPLAY.SCREEN_SIZE - 100) / len(TEXTS.tutorial)
+
+            for i, v in enumerate(TEXTS.tutorial):
+                text = self.font(26).render(v, False, COLOURS.WHITE)
+                text_rect = text.get_rect(topleft=(10, 100 + (i * line_height)))
+
+                screen.blit(text, text_rect)
 
             pygame.display.flip()
 

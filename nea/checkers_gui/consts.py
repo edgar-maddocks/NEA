@@ -39,35 +39,22 @@ class DICTS:
 
 
 class TEXTS:
-    tutorial = """
-    1. Pieces only move diagonally\n
-    2. The aim is to take all of the opposing players pieces, or to put the\n
-        opposing player in a position with no possible moves.\n
-    3. Players take turns moving their shade of pieces.\n
-    4. If a player’s piece reaches the opposing players edge of the board, the piece becomes a'King'\n
-    5. Unless a piece is crowned it may only move and take pieces diagonally forwards.\n 
-    6. Kings may move and take both forwards and backwards.\n
-    7. If an adjacent square has an opponents piece and the square immediately\n
-    beyond the oppositions piece is empty, the opponents piece may be\n
-    captured.\n
-    8. If the player whose go it is, has the opportunity to capture one\n
-    or more pieces, then they must do so.\n
-    9. A piece is taken by moving your own piece over the opposing player's, into the vacant square
-
-Unlike a regular move, a capturing move may make more than
-one ’hop’. This is if the capture places the piece in a position where
-another capture is possible. In this case, the additional capture must
-be made. The capture sequence can only be made by one piece per
-move. i.e. You cannot make one capture with one piece, and then
-another capture with another piece in the same move.
-However, if more than one piece can capture, the player has free
-choice over which piece to move. Likewise, if one piece can capture in
-multiple directions then the player has the choice in which direction
-to move.
-Note: it is not compulsory for the player to move in the direction,
-or with the piece, that will lead to the greatest number of captures in
-that move.
-A move may only end when the position has no more captures available or an uncrowned piece reaches
-the opposing edge of the board and becomes a King.
-The game ends when all of a players piece’s have been captured, or a player has no available moves.
-"""
+    tutorial = [
+        "1. Pieces only move diagonally.",
+        "2. The aim is to take all of the opposing players pieces, or to put the",
+        "   opposing player in a position with no possible moves.",
+        "3. Players take turns moving their shade of pieces.",
+        "4. If a player’s piece reaches the opposing players edge of the board,",
+        "   the piece becomes a'King'.",
+        "5. Unless a piece is crowned it may only move and take pieces diagonally forwards.",
+        "6. Kings may move and take both forwards and backwards.",
+        "7. If an adjacent square has an opponents piece and the square immediately.",
+        "   beyond the oppositions piece is empty, the opponents piece may be captured.",
+        "8. If the player whose go it is, has the opportunity to capture one.",
+        "   or more pieces, then they must do so.",
+        "9. A piece is taken by moving your own piece over the opposing player's,",
+        "   into the vacant square.",
+        "10. If after taking a piece another capture is available, that move must be made.",
+        "11. A double capture must use the same own piece to capture each opposing piece.",
+        "12. If one or more piece can capture on the first take - choice is left to the player.",
+    ]
