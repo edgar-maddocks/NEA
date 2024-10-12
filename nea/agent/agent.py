@@ -27,7 +27,7 @@ class AlphaZero:
         n_compare_games: int = 10,
         eec: float = 1.41,
         n_mcts_searches: int = 100,
-        replace_win_pct_threshold: int = 59,
+        replace_win_pct_threshold: int = 60,
         verbose: int = 0,
         save: bool = False,
     ) -> None:

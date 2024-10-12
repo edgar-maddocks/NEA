@@ -246,11 +246,11 @@ class MainMenu:
         self._display_select_params_text()
 
         params = {
-            "MCTS Searches": None,
-            "EEC": None,
-            "Training Examples": None,
-            "Comparison Games": None,
-            "% Replace Threshold": None,
+            "(UvsM, UvsA) MCTS Searches": None,
+            "(UvsM, UvsA)                     EEC": None,
+            "(UvsA)       Training Examples": None,
+            "(UvsA)     Comparison Games": None,
+            "(UvsA)   % Replace Threshold": None,
         }
         self._display_param_texts(params)
 
@@ -303,7 +303,7 @@ class MainMenu:
                 param_text = self.font(32).render(
                     f"{list(params.keys())[i]}: ", False, COLOURS.WHITE
                 )
-                param_rect = param_text.get_rect(topright=(320, y))
+                param_rect = param_text.get_rect(topright=(350, y))
                 self.screen.blit(param_text, param_rect)
 
     def _display_tutorial_button(self) -> RectButton:
@@ -422,7 +422,7 @@ class MainMenu:
                 RectButton(
                     80,
                     20,
-                    (340 + i * 100, 250),
+                    (360 + i * 100, 250),
                     _change_button_text_colour,
                     text=f"{v}",
                     font_size=20,
@@ -444,7 +444,7 @@ class MainMenu:
                 RectButton(
                     80,
                     20,
-                    (340 + i * 100, 340),
+                    (360 + i * 100, 340),
                     _change_button_text_colour,
                     text=f"{v}",
                     font_size=20,
@@ -466,7 +466,7 @@ class MainMenu:
                 RectButton(
                     80,
                     20,
-                    (340 + i * 100, 430),
+                    (360 + i * 100, 430),
                     _change_button_text_colour,
                     text=f"{v}",
                     font_size=20,
@@ -488,7 +488,7 @@ class MainMenu:
                 RectButton(
                     100,
                     20,
-                    (340 + i * 150, 520),
+                    (360 + i * 150, 520),
                     _change_button_text_colour,
                     text=f"{v}",
                     font_size=20,
@@ -510,7 +510,7 @@ class MainMenu:
                 RectButton(
                     100,
                     20,
-                    (340 + i * 150, 610),
+                    (360 + i * 150, 610),
                     _change_button_text_colour,
                     text=f"{v}",
                     font_size=20,
