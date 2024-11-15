@@ -171,7 +171,7 @@ class CheckersGame:
         """
         return jit_functions._get_valid_simple_moves(self._board, row, col, player)
 
-    def moves_available_for_opposite_player(self) -> bool:
+    def no_moves_available_for_opposite_player(self) -> bool:
         """Returns a dictionary of take and simple moves available to the other player
 
         Keys:
@@ -294,7 +294,7 @@ class CheckersGame:
             return (True, self._board, True, 0)
         elif self.n_opposite_player_pieces == 0:
             return (True, self._board, True, 1)
-        elif self.moves_available_for_opposite_player():
+        elif self.no_moves_available_for_opposite_player():
             return (True, self._board, True, 1)
         else:
             if self._switch_player:
