@@ -1091,6 +1091,33 @@
             \hline
         \end{tabular}
     \end{center}
+    For a single game of checkers, an upper bound for the number of unique states that can be presented on the board can be calculated as follows (this is useful for getting a gauge
+    of the size of training sets compared to the possible set of states):\\
+
+    \noindent Let $0 <= w <= 12$ and $0 <= b <= 12$  where $w,b \in \mathbb{Z}$\\
+    Then,
+    \begin{align}
+        {32}\choose{w}
+    \end{align}
+    Is the number of ways to play $w$ white pieces on the board, and
+    \begin{align}
+        {32-w}\choose{b}
+    \end{align}
+    Is the number of ways to play $b$ black pieces, given $w$ white pieces already occupy a square.
+    And for each piece, it can be a king or a regular piece, so we multiply by a factor of $2^{w+b}$.
+    Finally to find the number of legal configurations for all $w$ and $b$:
+    \begin{align}
+        \sum_{b=0}^{12}\sum_{w=0}^{12} {{32}\choose{w}} {{32-w}\choose{b}} 2^{w+b} \approx 2.3\times10^{21}
+    \end{align}
+    Note: Not all of these positions can be reached via a sequence of legal moves - and the actual number (from
+    the paper "Checkers is solved") is $\approx 5 \times 10^{20}$
+
+    Additonally, the set of all possible actions can be written as follows:
+    \begin{align}
+        R &= \{0,1, ... ,7\}\\
+        C &= \{A, B ..., H\}\\
+        \text{Possible Actions} &= \{((x,y), (w,z)) \mid x, w \in R \text{^} y,z \in C\}
+    \end{align}
 
     \subsubsubsection{GUI Add-on}
     \begin{center}
@@ -1114,13 +1141,10 @@
 
     \subsubsection{Algorithms}
 
+    \subsubsection{User Interface}
 
-    Set of actions
-    \begin{align}
-        R &= \{0,1, ... ,7\}\\
-        C &= \{A, B ..., H\}\\
-        \text{Possible Actions} &= \{((x,y), (w,z)) \mid x, w \in R \text{^} y,z \in C\}\\
-    \end{align}
+    \subsubsection{Non-standard design}
+    
 
     \subsection{Autodifferentiation Engine}
 
@@ -1137,9 +1161,12 @@
     \pagebreak
     \section{Research Log}
 
-    \subsection{Checkers Rules}
-    \url{https://www.mastersofgames.com/rules/checkers-rules.htm}
-
+    \subsection{Checkers}
+    \subsubsection{Rules}
+    \noindent \url{https://www.mastersofgames.com/rules/checkers-rules.htm}
+    \subsubsection{Possible States}
+    \noindent \url{https://math.stackexchange.com/questions/2240519/how-to-find-the-amount-of-possible-piece-configurations-in-the-game-of-checkers}
+    
     \subsection{Neural Networks}
     \noindent \url{https://www.ibm.com/topics/neural-networks}
 
