@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{breqn}
 \usepackage{amssymb}
+\usepackage{dirtree}
 
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
@@ -42,11 +43,11 @@
         \vspace*{1cm}
             
         \Huge
-        \textbf{Playing draughts using reinforcement learning}
+        \textbf{Playing checkers using reinforcement learning}
             
         \vspace{0.5cm}
         \LARGE
-        An investigation into playing draughts using a reinforcement learning via a neural network library, with an implementation of
+        An investigation into playing checkers using a reinforcement learning via a neural network library, with an implementation of
         automatic differentiation, built from scratch.
             
         \vspace{1.5cm}
@@ -69,7 +70,7 @@
 
     \section{Analysis}
     \subsection{Background}
-    This project is an investigation into the use of reinforcement learning to play games (in this case draughts/checkers).
+    This project is an investigation into the use of reinforcement learning to play games (in this case checkers/checkers).
     The model will use self-play and Monte Carlo tree search algorithms, coupled with a multi-headed neural network to
     understand the game and estimate optimal actions.
 
@@ -81,8 +82,8 @@
 
     \subsubsection{Current systems}
 
-    \subsubsubsection{Draughts} \label{Draughts}
-    Draughts is an English board game played on an 8x8 checkered board, identical to a chessboard.
+    \subsubsubsection{checkers} \label{checkers}
+    checkers is an English board game played on an 8x8 checkered board, identical to a chessboard.
     Each player begins a game with 12 pieces, usually flat round discs.
     The pieces and board are usually black and white, and will be referred to as such.
     The board is first placed between the two players such that the bottom right-hand corner is a white square,
@@ -94,7 +95,7 @@
     \begin{wrapfigure}[15]{l}{0.3\linewidth}
         \centering
         \includegraphics[scale=0.35]{The-starting-position-for-checkers.png}
-        \caption{An image showing the starting position of a game of draughts}
+        \caption{An image showing the starting position of a game of checkers}
     \end{wrapfigure}
     The pieces only move diagonally (so will always be on black squares)
     and the aim is to take all of the opposing players pieces, or to put the opposing player in a position with no possible moves.
@@ -105,7 +106,7 @@
     \begin{wrapfigure}[12]{r}{0.5\linewidth}
         \centering
         \includegraphics[scale=1.15]{piece being taken.png}
-        \caption{Example of a piece being taken in draughts}
+        \caption{Example of a piece being taken in checkers}
     \end{wrapfigure}
     If an adjacent square has an opponents piece and the square immediately beyond the oppositions piece is empty, the opponents piece may be captured.
     If the player whose go it is, has the opportunity to capture one or more pieces, then they must do so. 
@@ -444,13 +445,13 @@
     \begin{wrapfigure}[14]{r}{0.5\linewidth}
         \centering
         \includegraphics[scale=0.145]{1992Tinsleymatch.jpg}
-        \caption{Image of Chinook playing a game of draughts - 1992}
+        \caption{Image of Chinook playing a game of checkers - 1992}
     \end{wrapfigure}
     Chinook is a checkers playing computer program that was developed at the University of Alberta between
     1989 and 2007. The program utilises an opening book, deep-search algorithms alongside a position evaluation function
     and a solved endgame database for positions with 8 pieces or fewer.
     All of Chinook's knowledge has been programmed in by humans, with no use of an artificial intelligence model. Despite this,
-    Chinook managed to beat the draughts world champion at the time of 1995, and after this no longer competed, but instead was
+    Chinook managed to beat the checkers world champion at the time of 1995, and after this no longer competed, but instead was
     tasked with solving checkers. (A solved game is one where the outcome can be predicted from any position) - and this was achieved in 2007.
 
     \begin{wrapfigure}[16]{l}{0.5\linewidth}
@@ -463,7 +464,7 @@
     chess engines which use reinforcement learning, such as Google DeepMind's AlphaZero engine. This engine has also been trained on games
     such as Go and Shogi. AlphaZero is trained mainly using self-play, where the AI plays against itself and then learns from those games.
     In a 100 game match against StockFish (one of the most popular chess engines) AlphaZero won 28 games, lost 0 and drew the remaining 72.
-    This shows the power of reinforcement learning as a tool for board games and its possibility to be used for draughts.
+    This shows the power of reinforcement learning as a tool for board games and its possibility to be used for checkers.
 
     For automatic differentiation, some of the most popular systems include PyTorch's autograd, as well as autodiff by JAX. PyTorch has a very
     well developed library for deep-learning alongside it's autograd, as well as extensive documentation. Additionally, autograd is more similar
@@ -506,14 +507,14 @@
 
     \subsubsection{Identification of Objects}
 
-    \subsubsubsection{Draughts}
-    For draughts, we will need two classes, a checkers board/environment and a checkers game. The environment will be used for training the agent and It will require methods that
+    \subsubsubsection{Checkers}
+    For checkers, we will need two classes, a checkers board/environment and a checkers game. The environment will be used for training the agent and It will require methods that
     execute an action in the environment, as well as functions to compute the available moves and check for a win. An example of UML for this environment can be seen below. 
 
     \begin{figure}[h]
         \centering
         \includegraphics[scale = 0.24]{DraughtsUMLdrawio.png}
-        \caption{UML for draughts/checkers game}
+        \caption{UML for checkers/checkers game}
     \end{figure}
 
     The checkers game varies only slightly and will inherit from the checkers board. It will however add some functionality such as a GUI and the ability to choose different
@@ -884,20 +885,20 @@
     \end{align}
 
     \subsection{Set of objectives}
-    \subsubsection{Draughts Game}
+    \subsubsection{Checkers Game}
     \begin{enumerate}
-        \item An easy-to-use and intuitive graphical interface for the draughts game
+        \item An easy-to-use and intuitive graphical interface for the checkers game
         \begin{enumerate}
-            \item A working version of draughts - obeying all rules stated in \myhy{Draughts}{1.2.1.1}
-            \item A small text tutorial on the rules of draughts
-            \item A visual representation of the draughts board
+            \item A working version of checkers - obeying all rules stated in \myhy{checkers}{1.2.1.1}
+            \item A small text tutorial on the rules of checkers
+            \item A visual representation of the checkers board
             \item A method of displaying all legal available moves in a selected position
             \item Informative error messages if an illegal move is attempted
         \end{enumerate}
         \item Implementation of various decision-making agents for users to play against
         \begin{enumerate}
             \item Option for the user to choose which agent to play against (MCTS, Full Agent)
-            \item Ability to adjust hyperparameters of the agents from the draughts game interface (see \myhy{RLS Objs}{RLS Objectives a-e})
+            \item Ability to adjust hyperparameters of the agents from the checkers game interface (see \myhy{RLS Objs}{RLS Objectives a-e})
             \item Information printed to the user pertaining to the agent's decision-making progress
         \end{enumerate}
     \end{enumerate}
@@ -962,7 +963,158 @@
     \end{enumerate}
 
     \section{Design}
-    
+
+    \subsection{File Structure and Project Organisation}
+    \dirtree{%
+        .1 *ns-*eec-*te-*cg-*rt.
+        .1 poetry.lock.
+        .1 pyproject.toml.
+    }
+    At the very top level of my file structure I have a poetry.lock and a pyproject.toml file. These files are automatically generated by
+    a python package called poetry. This package provides exceptionally easy dependency and virtual environment management. Allowing me to
+    setup machines other than my own - to train the model - more easily. 
+    The final file inside of this directory actually represents a collection of files - with each * denoting a different value that each of the 
+    parameters for the final model can take (with the two letters allowing me to identify said parameter). These files are created using python's built in pickle object serialization library.
+    \dirtree{%
+        .1 nea-code.
+        .2 AlphaMCTSSelfPlay.py.
+        .2 AlphaModel.py.
+        .2 CheckersGamePvP.py.
+        .2 CheckersGuiGame.py.
+        .2 MCTSSelfPlay.py.
+        .2 PvMCTS.py.
+        .2 TestNNXOR.py.
+        .2 TrainAgent.py.
+    }
+    At one level inside of my main code-storing file I have files that run main operations in my code. This includes specific game loops, such as getting the user to play 
+    vs MCTS - as well as processes such as beginning agent training and testing of the Neural Network Library using a simple problem such as XOR.
+    \dirtree{%
+        .1 nea-code.
+        .2 agent.
+        .3 agent.py.
+        .3 consts.py.
+        .3 memory_types.py.
+        .3 __init__.py.
+    }
+    Inside of nea-code I also create a subdirectory for each module of my project. In the above example this modeule is the agent class. As well as storing the file which defines the agent class (agent.py)
+    it also contains an \_\_init\_\_.py file (which allows python to recognise the subdirectory of nea-code as a module and defines what dependencies to import when this module is called), a consts.py (which contains
+    values, and functions to create values, which do not change throughout the running of the code) and a memory_types.py file, where dataclasses such as SAP and SPV (which will be defined later on. hereTODO ADD LINK) are defined.
+    \dirtree{%
+        .1 nea-code.
+        .2 checkers_gui.
+        .3 buttons.py.
+        .3 checkers_gui.py.
+        .3 consts.py.
+        .3 helpers.py.
+        .3 __init__.py.
+        .4 media.
+        .5 images.
+        .6 black_k.png.
+        .6 black_r.png.
+        .6 checkers_board_no_pieces.png.
+        .6 white_k.png.
+        .6 white_r.png.
+    }
+    The next module is the GUI add-on for the checkers game. Similarly to the agent module, it contains \_\_init\_\_.py, consts.py, a main class definition file (checkers\_gui.py) and other class definitions file (buttons.py). 
+    However, the checkers GUI module also contains a helpers.py file - which holds onto functions that are helpful relevant to the module as well as a subtree of media/images/ which contains the .png's of the different sprites used in the GUI.
+    \dirtree{%
+        .1 nea-code.
+        .2 console_checkers.
+        .3 checkers_game.py.
+        .3 consts.py.
+        .3 jit_functions.py.
+        .3 utils.py.
+        .3 __init__.py.
+    }
+    Inside of the next module (console\_checkers) we have again an init, consts and main defintion file. On the other hand, instead of a helpers.py file there is a utils.py. The difference here is that
+    utils.py contains utility functions not strictly relevant to the module. For example, this utils.py contains a funtion which clears the console (a process which would not be limited to the console\_checkers module).
+    Another difference is the presence of the jit_functions.py file. Inside of this module there are lots of functions which run only using primitive types, and have a polynomial time complexity. To reduce the impact this 
+    has on performance I use a python package called numba, which contains a just-in-time compiler (jit) to speed up these functions.
+    \dirtree{%
+        .1 nea-code.
+        .2 mcts.
+        .3 consts.py.
+        .3 mcts.py.
+        .3 __init__.py.
+    }
+    This MCTS module contains definitions of the MCTS classes, again with a consts and init file.
+    \dirtree{%
+        .1 nea-code.
+        .2 ml.
+        .3 __init__.py.
+        .3 autograd.
+        .4 consts.py.
+        .4 convolve_funcs.py.
+        .4 jit_functions.py.
+        .4 tensor.py.
+        .4 test_autograd.py.
+        .4 helpers.py.
+        .4 __init__.py.
+        .3 nn.
+        .4 layers.py.
+        .4 optimizers.py.
+        .4 __init__.py.
+    }
+    In the above snippet I have defined a module named ml (for machine learning), which contains two submodules of autograd and nn - which contain the autodifferentiation engine and neural
+    network library respectively. The nn submodule has a similar contents as the modules talked about previously, with layers.py defining the main classes, and optimizers.py then defining classes
+    of optimizers to be used alongside the defined layers. The autograd submodule however has a few differences. It also has a jit_functions and helpers file but additionally contains a convolve_funcs.py and
+    test_autograd.py file. These files are unique to the autograd module. The convolve_funcs has definitions for complex matrix operations such as convvolution and cross-correlation, and the test_autograd file
+    contains unit tests (run using pytest) to evaluate and ensure the accuracy of the autodifferentiation engine.
+    \dirtree{%
+        .1 nea-code.
+        .2 network.
+        .3 network.py.
+        .3 __init__.py.
+    }
+    The final module is network, which contains the definitions for compositions of different layers from the nn module - which then build to form the model that is contained within the reinforcement
+    learning agent.
+    \subsection{Checkers}
+    The checkers game solution will be split into a console based version (that will be the main way for the agent to interact with the game) and
+    an additonal class built ontop of this console solution which provides a GUI.
+
+    \subsubsection{Data Structures}
+    When defining data structures such as tuples, a comma followed by an ellipses indicates another item which is of the same type as most recently defined item
+    in the tuple. e.g. tuple[int,...] = tuple[int, int]
+    \subsubsubsection{Console Solution}
+    \begin{center}
+        \begin{tabular}{|m{10em} | m{12em} | m{15em}|}
+            \hline 
+                Item & Data Structure & Reasoning and Usage \\
+            \hline
+            \hline
+                Board & 2D Array & Easy and logical to index into specific squares as well as render. \\
+            \hline
+                Last Moved Piece & tuple[int,...] & Represents position of the piece most recently moved - easy to reaccess.\\
+            \hline
+                Action & tuple[tuple[int,...],...] & First tuple inside of the outer tuple represents the piece being moved, and the second
+                inside tuple represents where it is being moved to which allows for easy indexing into the board array.\\
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \subsubsubsection{GUI Add-on}
+    \begin{center}
+        \begin{tabular}{|m{10em} | m{12em} | m{15em}|}
+            \hline 
+                Item & Data Structure & Reasoning and Usage \\
+            \hline
+            \hline
+                CheckersGUI & Class & Inherits from console solution and stores information about the game such as the piece the user has selected. \\
+            \hline
+                Selected Piece & tuple[int,...] & Represents position of the selected piece - easy to index into board array. \\
+            \hline
+                Main Menu & Class & Stores, displays and allows user to change information regarding the parameters and game mode that the user would like to play with. Also initiates game loops.\\
+            \hline
+                Button & Class & Provides a simpler to use and understand interface between pygame surfaces and user interactions. \\
+            \hline
+                Constants & Class[T] & Stored in classes named relevant to the constant. These classes contain constant attributes of whatever type that constant is defined as (e.g to get the rgb code for red would require COLOURS.RED and would return (255, 0, 0)) \\
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \subsubsection{Algorithms}
+
+
     Set of actions
     \begin{align}
         R &= \{0,1, ... ,7\}\\
@@ -970,16 +1122,23 @@
         \text{Possible Actions} &= \{((x,y), (w,z)) \mid x, w \in R \text{^} y,z \in C\}\\
     \end{align}
 
+    \subsection{Autodifferentiation Engine}
+
+    \subsection{Neural Network Library}
+
+    \subsection{Reinforcement Learning Solution}
     \begin{figure}
         \centering
         \includegraphics[scale=0.45]{NetworkPassThrough.drawio.png}
         \caption{A representation of the AlphaNetwork}
     \end{figure}
 
+    
+    \pagebreak
     \section{Research Log}
 
-    \subsection{Draughts Rules}
-    \url{https://www.mastersofgames.com/rules/draughts-rules.htm}
+    \subsection{Checkers Rules}
+    \url{https://www.mastersofgames.com/rules/checkers-rules.htm}
 
     \subsection{Neural Networks}
     \noindent \url{https://www.ibm.com/topics/neural-networks}
