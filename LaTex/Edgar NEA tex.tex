@@ -964,7 +964,7 @@
 
     \section{Design}
 
-    \subsection{File Structure and Project Organisation}
+    \subsection{File Structure and Project Organisation} \label{File-Structure}
     \dirtree{%
         .1 *ns-*eec-*te-*cg-*rt.
         .1 poetry.lock.
@@ -1140,8 +1140,111 @@
     \end{center}
 
     \subsubsection{Algorithms}
+    The key algorithms for the checkers game are ones which scan the board for all possible moves (divided into two processes, for simple moves and take moves) and the step algorithm which processes an input action for a given board state.
+    Below is pseudocode for the take moves and step functions can be found below.
 
+    \begin{algorithm}
+        \caption{Get Take Moves}
+        \begin{algorithmic}
+            \Function{getValidTakeMoves}{CheckersGame self}
+                \State moves $\gets$ []
+                \For {row in range(BOARD\_SIZE)}
+                    \For {col in range(BOARD\_SIZE)}
+                        \State piece $\gets$ self.board[row, col]
+                        \If {piece is of self.currentColour}
+                            \For {direction in self.piecesLegalDirections(piece)}
+                                \If {self.inBounds(row + 2*direction[row]) and self.inBounds(col + 2*direction[col])}
+                                    \State takingSquare $\gets$ (row + direction[row], col + direction[col])
+                                    \State moveToSquare $\gets$ (row + 2 * direction[row], col + 2 * direction[col])
+                                    \If {self.board[moveToSquare] = 0 and self.board[takingSquare] = opponentsPiece}
+                                        \State moves.append(((row, col), moveToSquare))
+                                    \EndIf
+                                \EndIf
+                            \EndFor
+                        \EndIf
+                    \EndFor
+                \EndFor
+                \State \Return moves
+            \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    The above algorithm is for getting valid take moves. The differences between this algorithm and one that gets
+    valid simple moves is that this multiplies all directions by 2 (representing a move over one square and landing on
+    the square beyond that). For getting simple moves, these directions will not be multplied. Additionally, for getting simple moves,
+    the takingSquare variable is not needed - and therefore the check inside the final if statement verifying that the taking square is
+    an opponents piece, would also not be needed.
+
+
+    \begin{algorithm} 
+        \caption{Checkers Game Step}
+        \begin{algorithmic}
+        \Function{Step}{CheckersGame self, ACTION action}
+        \If{self.lastPieceMoved is None}
+            \State allMoves $\gets$ self.getAllMoves()
+            \If{len(allMoves) = 0}
+                \State \Return gameOver, loss
+            \EndIf
+            \If{action not in allMoves}
+                \State \Return invalidMove
+            \Else
+                \State self.movePiece()
+            \EndIf
+        \ElsIf {self.lastPieceMoved is not None}
+            \State allMoves $\gets$ self.getTakeMoves()
+            \If {action not in allMoves}
+                \State \Return invalidMove
+            \Else
+                \State self.movePiece()
+            \EndIf
+        \EndIf
+
+        \If {self.isTakeMove(action)}
+            \If {self.doubleMoveAvailable()}
+                \State lastMovedPiece $\gets$ action[pieceMoved]
+            \EndIf
+        \EndIf
+
+        \State self.crownPieces()
+        
+        \If {self.movesWithoutCapture = 40}
+            \State \Return draw
+        \ElsIf {self.numberBlackPieces = 1 and self.numberWhitePieces == 1}
+            \State \Return draw
+        \ElsIf {self.numberOppositePlayerPieces = 0}
+            \State \Return win
+        \ElsIf {self.movesAvailableForOpponent is False}
+            \State \Return win
+        \Else
+            \State \Return nextState
+        \EndIf
+
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    \pagebreak
     \subsubsection{User Interface}
+
+    \subsubsubsection{Prototyping} \label{Design-UI-Prototyping}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.35]{MainMenuPrototype.drawio.png}
+        \caption{Prototype Main Menu Design}
+    \end{figure}
+
+
+    \subsubsubsection{Structure, Hierarchy and Flow}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.35]{MainMenuHierachyChart.drawio.png}
+        \caption{Hierarchy chart for the User Interface}
+    \end{figure}
+
+    When the user interface is first shown, it displays the main menu. As seen \myhy{Design-UI-Prototyping}{here}, the main menu will allow
+    users to select various hyperparameters for both the MCTS and complete agent models and then allow the user to begin playing a game of checkers against
+    the desired model. For MCTS, the model will be instantiated inside of the program, and a tree build will be run on each turn of the MCTS. For the agent objects,
+    its instantiation will be stored inside of a respectively named pickle file - see \myhy{File-Structure}{2.1} - and then loaded into the program.
 
     \subsubsection{Non-standard design}
     
