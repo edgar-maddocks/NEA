@@ -378,7 +378,7 @@
     This process of traversing through the graph backwards is known as reverse accumulation auto differentiation, and in practice each of the gradients would be
     stored numerically at computation, rather than computing a symbolic version of the final derivative and plugging the values in.
 
-    \subsubsubsection{Reinforcement Learning (RL)}
+    \subsubsubsection{Reinforcement Learning (RL)} \label{RL Existing Analysis}
     Reinforcement learning aims to capitalize on learning through an environment (similar to how infants learn by playing), without a teacher, to improve computer's
     ability at a given task. Simply put, problems in reinforcement learning involve learning how to map certain situations to certain actions to maximize a reward signal.
     The models are not told what actions to take and instead must explore the environment and available actions to learn what yields the most rewards. In some cases, actions
@@ -1168,13 +1168,19 @@
             \EndFunction
         \end{algorithmic}
     \end{algorithm}
-
     The above algorithm is for getting valid take moves. The differences between this algorithm and one that gets
     valid simple moves is that this multiplies all directions by 2 (representing a move over one square and landing on
-    the square beyond that). For getting simple moves, these directions will not be multplied. Additionally, for getting simple moves,
+    the square beyond that). For getting simple moves, these directions will not be multplied. Additionally for getting simple moves,
     the takingSquare variable is not needed - and therefore the check inside the final if statement verifying that the taking square is
-    an opponents piece, would also not be needed.
+    an opponents piece would also not be needed.
 
+    \pagebreak
+    \vspace*{17.5mm}
+    The step algorithm is key to the console checkers solution. It provides a way for the reinforcement learning model to interact by submitting its actions - 
+    having them processed with the next state and the reward for the submitted action returned. This process is exactly as defined in the \myhy{analysis section}{RL Existing Analysis}, a markov decision process.
+    In the psuedocode, the return statements have been simplified, but in practice the function would most likely return a tuple containing, at minimum: the next state as a 2D array;
+    whether the game is over or not as a bool; the reward for the submitted action in that state ($r, r \in \mathbb{Z} \cap [-1, 1]$)
+    \vspace{5mm}
 
     \begin{algorithm} 
         \caption{Checkers Game Step}
@@ -1233,22 +1239,24 @@
         \caption{Prototype Main Menu Design}
     \end{figure}
 
+    The main menu will provide a starting place for all game loops to begin from - see \myhy{2.2.3.2}{2.2.3.2} for a visualization. This should allow users to begin a game loop
+    only when the needed parameters for that loop have been selected. For 'User vs User play' therefore this would not require any parameters to be selected. For
+    'User vs MCTS' play only the 'EEC' and 'MCTS searches' parameters would require values to be selected, but for 'User vs Agent' play it would require a value to be selected
+    for all of the listed parameters on the main menu page. However, this page does not include all the parameters that are needed for each model. Therefore this information 
+    could be found inside of the 'All Params' button - with a list of each parameter name, and a description of what it dictates.
 
-    \subsubsubsection{Structure, Hierarchy and Flow}
+    \subsubsubsection{Structure, Hierarchy and Flow} \label{2.2.3.2}
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.35]{MainMenuHierachyChart.drawio.png}
+        \includegraphics[scale=0.2]{MainMenuHierachyChart.drawio.png}
         \caption{Hierarchy chart for the User Interface}
     \end{figure}
 
-    When the user interface is first shown, it displays the main menu. As seen \myhy{Design-UI-Prototyping}{here}, the main menu will allow
+    When the user interface is first shown, it displays the main menu. As seen in the most recent section, the main menu will allow
     users to select various hyperparameters for both the MCTS and complete agent models and then allow the user to begin playing a game of checkers against
     the desired model. For MCTS, the model will be instantiated inside of the program, and a tree build will be run on each turn of the MCTS. For the agent objects,
     its instantiation will be stored inside of a respectively named pickle file - see \myhy{File-Structure}{2.1} - and then loaded into the program.
-
-    \subsubsection{Non-standard design}
     
-
     \subsection{Autodifferentiation Engine}
 
     \subsection{Neural Network Library}
