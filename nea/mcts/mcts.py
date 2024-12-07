@@ -250,6 +250,7 @@ class AlphaNode(Node):
         self.prior_prob = prior_prob
 
     def expand(self, policy: np.ndarray) -> AlphaNode:
+        child = None
         for action, prob in np.ndenumerate(policy):
             if prob > 0:
                 child_game = deepcopy(self._game)

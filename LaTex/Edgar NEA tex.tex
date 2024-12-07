@@ -49,6 +49,8 @@
         \LARGE
         An investigation into playing checkers using a reinforcement learning via a neural network library, with an implementation of
         automatic differentiation, built from scratch.
+
+        TODO: 2.3.3 ONWARDS
             
         \vspace{1.5cm}
             
@@ -1287,17 +1289,15 @@
     and correlation operations on matrices, and their derivatives. Some smaller processes include the removing of extra dimensions which are a result of numpys broadcasting.
     Psuedocode for the backward traversal through the computational graph has been seen in the analysis section - \myhy{Analysis-IoA}{here}.
 
-    To understand the process of removing broadcasted dimensions, we must first understand why numpy uses broadcasting.  
-    Given we want to multiply a matrix (with size $3 \times 1$) by a scalar (of $2$) we can complete this operation by iterating over each element in our matrix and
-    multipling it by our scalar. At a larger scale this becomes quite inefficient - especially when it comes to multiplying matrices with each
-    other. To reduce this, the numpy library would broadcast our scalar to a matching $3 \times 1$ matrix and complete a vector multiplication.
-    Using a different example to understand how to remove any broadcasted dimensions, say we have a matrix $a$, and its shape is $3 \times 1 \times 4$ and its initially computed
-    gradient ($da$) has shape $5 \times 3 \times 1 \times 4$ after any broadcasting. We must first sum out any added dimensions using the algorithm below.
+    \subsubsubsection{Unbroadcasting}  
+    The numpy library broadcasts dimensions to allow for vector multiplication which is more efficient than iteration.
+    Using an example where we must remove broadcasted dimensions, say we have a matrix $a$, and its shape is $3 \times 1 \times 4$ and its initially computed
+    gradient ($da$) has shape $5 \times 3 \times 2 \times 4$ after any broadcasting. We must first sum out any added dimensions using the algorithm below.
 
     \begin{algorithm} 
         \caption{Sum Added Dims}
         \begin{algorithmic}
-        \Function{SumBroadcastedDims}{Array a, Array da}
+        \Function{SumAddedDims}{Array a, Array da}
             \State numInDims $\gets$ len(a.shape)
             \State numGradDims $\gets$ len(da.shape)
 
@@ -1308,26 +1308,85 @@
         \end{algorithmic}
     \end{algorithm}
 
-    
-    
-
     \pagebreak
-    \vspace*{5mm}
-    Cross-correlation of 2D matrices has been mentioned and demonstrated in the analysis (\myhy{Analysis-MathematicalFormulae}{Mathematical Formulae}), but in the design I will provide a visual representation of
+    The next step is to reduce any broadcasted dimensions back to singular dimensions. To do this we can use the below algorithm.
+
+    \begin{algorithm} 
+        \caption{Sum Broadcasted Dims}
+        \begin{algorithmic}
+        \Function{SumBroadcastedDims}{Array a, Array da}
+            \For {dim in a.shape} \Comment{a.shape would be equal to (3,1,4)}
+                \If {dim == 1}
+                    \State da $\gets$ da.sum(axis=dim, keepdims=True)
+                \EndIf 
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    Note here that we pass in the axis we want to sum across and we set 'keepdims' equal to true. Since we have removed the added dimensions using the previous
+    algorithm, we now want to keep the number of dimensions the same. 'keepdims' does this by making the summed axis reduce to 1. So after both
+    of these algorithms $da$ would have the same shape as $a$ - which is exactly what we want!
+    
+    \subsubsubsection{Cross-Correlation, Convolution and derivatives}
+    The valid cross-correlation of 2D matrices has been mentioned and demonstrated in the analysis (\myhy{Analysis-MathematicalFormulae}{Mathematical Formulae}), but in the design I will provide a visual representation of
     this process. To put it into writing again, imagine an input matrix of size $(x \times x)$ and a second 'kernel' of size $(k \times k)$. The output of a cross-correlation between these matrices will have a size
     of $(y \times y), y = x - k + 1$. To compute the output, place the kernel ontop of the input so that the top left corners line up, and sum the products of the overlying elements. This number will givee the result
     for the first element of the output matrix. Slide the kernel over and repeat to process, giving the second element of the output. And repeat until the ouput matrix is full.
 
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.35]{Cross-Correlation-Algorithm.drawio.png}
-        \caption{Cross-Correlation Visualization}
+        \includegraphics[scale=0.275]{Cross-Correlation-Algorithm.drawio.png}
+        \caption{Valid Cross-Correlation Visualization}
     \end{figure}
-    \pagebreak
+    
+    The above operation is used in the forward pass of a convolutional layer and its derivative includes a variation of the below version of cross-correlation. 
+    As also mentioned in the analysis section, there is another form of cross-correlation called 'full' cross-correlation, and the first few steps of the 
+    process for this full cross-correlation can be seen below.
 
-    \subsubsection{Structure, Hierarchy and Flow}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.275]{Full-Cross_Correlation-Algorithm.drawio.png}
+        \caption{Initial Steps of a Full Cross-Correlation Visualization}
+    \end{figure}
+    
+    To then complete whats known as a convolution, you would complete the cross-correlation but rotate the kernel 180 degrees. This works for both version of cross-correlation i.e.
+    a full convolution is the same as a full cross-correlation with a rotated kernel and a valid convolution is the same as a valid cross-correlation with a rotated kernel. 
 
-    \subsubsection{Non-standard Design}
+    \subsubsubsection{Tensor Forward and Backward Pass}
+    This section will contain a visualization and paired explanation of how a set of operations on a tensor would be completed and then what would happen if we called
+    the backward function on the final output tensor. 
+
+    Firstly, say we have tensors $a,b,c$ with values $1,2$ and $3$ respectively. We then define tensors $d,e$ with values $a \times b$ and  $b \times c$ respectively, and finally
+    we define our output tensor $y$ with a value of $d \times e$.
+
+    This set of definitions and operations would produce a computational graph of that shown in Figure 22.
+
+    \begin{wrapfigure}[15]{r}{0.52\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{Tensor-forward-example.drawio.png}
+        \caption{Computational graph for a given example}
+    \end{wrapfigure}
+
+    If we then called the backward function from the output tensor $y$. It would first set the gradient of $y$ to 1, as the gradient of a variable with respect to itself is 1.
+    Next it would call the backward function on the instance of the operation class attached to that tensor. So for $y$ this would call the backward function on the specific instance
+    on the multiplication operation attached to $y$. Assuming all of these tensors have the 'requires\_grad' variable set to true, this backward function of this multiplication instance would
+    calculate the gradients for tensor $d$ and then call backward on that tensor. After the backward of function of $d$ is then completed our function would return to being inside the 
+    backward function of the multiplication instance associated with tensor $y$ (seen by the red arrowhead in the diagram below).
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.2]{Tensor-backward1-example.drawio.png}
+        \caption{Part-way through a backward pass of a computational graph for a given example}
+    \end{figure}
+
+    Now, the same process occurs that happened for tensor $d$, but for tensor $e$. Leaving the computational graph in its final, and complete, state as follows:
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.2]{Tensor-backward2-example.drawio.png}
+        \caption{Final state after a backward pass of a computational graph for a given example}
+    \end{figure}
 
     \pagebreak
     \subsection{Neural Network Library}

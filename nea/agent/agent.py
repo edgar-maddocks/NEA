@@ -68,12 +68,8 @@ class AlphaZero:
 
                 for item in game_spvs:
                     training_examples.append(item)
-                print(
-                    f"After example game {example_game + 1}, there are {len(training_examples)} training examples",
-                    end="\r",
-                )
 
-            print("BEGINNING NN TRAINING")
+            print(f"BEGINNING NN TRAINING ON {len(training_examples)} EXAMPLES")
             for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
                 gc.collect()
                 self._train_nn(training_examples)
@@ -234,7 +230,9 @@ class AlphaZero:
                         prev_nn_wins += 1
 
         new_nn_win_pct = (
-            (new_nn_wins / prev_nn_wins) * 100 if prev_nn_wins != 0 else 100
+            (new_nn_wins / (prev_nn_wins + new_nn_wins)) * 100
+            if prev_nn_wins != 0
+            else 100
         )
         print(f"New model won {math.floor(new_nn_win_pct * 100) / 100}% of games")
         if new_nn_win_pct >= self.hyperparams["replace_win_pct_threshold"]:

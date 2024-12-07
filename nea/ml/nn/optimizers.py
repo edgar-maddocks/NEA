@@ -33,8 +33,8 @@ class SGD(Optimizer):
     def __init__(
         self,
         params: list[Tensor | Parameter],
-        lr: float = 0.001,
-        regulization: float = 0,
+        lr: float = 0.0001,
+        regulization: float = 0.0001,
     ) -> None:
         super().__init__(params, lr, regulization)
 
@@ -43,5 +43,5 @@ class SGD(Optimizer):
             param._data = (
                 param._data
                 - (self.lr * param.grad)
-                - (self.lr * self.regulization * param._data)
+                - (self.lr * self.regulization * (param._data ** 2))
             )
