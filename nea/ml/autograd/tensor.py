@@ -78,8 +78,7 @@ class Tensor:
         if self.requires_grad:
             self.grad = np.zeros_like(self._data)
 
-        self.children: list[Tensor] = []
-        self.parents: list[Tensor] = []
+        self.children = []
 
     @property
     def data(self) -> np.ndarray:
@@ -89,16 +88,6 @@ class Tensor:
             np.ndarray: data in tensor
         """
         return self._data
-
-    @property
-    def T(self) -> Tensor:
-        """Returns a copy of the tensor, however the data has been transposed
-
-        Returns:
-            Tensor:
-        """
-        transpose_op = Transpose()
-        return transpose_op.forward(self)
 
     def __repr__(self) -> str:
         return f"Tensor({self._data}, shape = {self.shape})"
@@ -217,6 +206,15 @@ class Tensor:
     def __pow__(self, other: Tensorable) -> Tensor:
         pow_op = Power()
         return pow_op.forward(self, to_tensor(other))
+
+    def T(self) -> Tensor:
+        """Returns a copy of the tensor, however the data has been transposed
+
+        Returns:
+            Tensor:
+        """
+        transpose_op = Transpose()
+        return transpose_op.forward(self)
 
     def mean(self) -> Tensor:
         """Computes the mean of the tensor

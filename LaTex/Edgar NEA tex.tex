@@ -319,7 +319,7 @@
     each set of parameters, as this requires passing the output from the error function backwards through all the layers and processes. To combat this, automatic differentiation
     can be used, which tracks computation dynamically at run time to compute derivatives.
 
-    \subsubsubsection{Automatic Differentiation}
+    \subsubsubsection{Automatic Differentiation} \label{Autodiff-example}
     As mentioned, automatic differentiation tracks computation dynamically and then computes derivatives using a computational graph. This allows models to
     have much more complex forward passes, including decision branches and loops where the length of the loop is decided at runtime.
 
@@ -1258,12 +1258,35 @@
     
     \subsection{Autodifferentiation Engine}
 
-    The autodifferentiation engine is based around one class - the 'Tensor' class. This class replicates types such as floats, integers, and matrices while adding functionality
-    for automatic differentiation of operations on these objects.
+    The autodifferentiation engine is based mainly around one class - the 'Tensor' class. This class replicates types such as floats, integers, and matrices while adding functionality
+    for automatic differentiation of operations on these types. 
 
     \subsubsection{Data Structures}
 
+    \begin{center}
+        \begin{tabular}{|m{10em} | m{12em} | m{15em}|}
+            \hline 
+                Item & Data Structure & Reasoning and Usage \\
+            \hline
+            \hline
+                Tensor Data & 2D Array & Can represent floats, ints and matrices - with a scalar just being a 1x1 matrix. \\
+            \hline
+                Tensor Sape & tuple[int,...] & Represents the shape of the data matrix. Useful for iterating through data. \\
+            \hline
+                Tensor Children + Parents & list[Tensor] & Allows us to store the tensors used to create and created by the given tensor - which then builds the function graph. (see \myhy{Autodiff-example}{example}) \\
+            \hline
+                Tensor Function Graph & Graph & Represents a graph of operations upon or between input tensors, intermediary tensors, and a final output of a composition of operations. Allows for
+                backward traversal and therefore computation of partial derivatives of the output with respect to its inputs. \\
+            \hline
+        \end{tabular}
+    \end{center}
+
     \subsubsection{Algorithms}
+
+    The key algorithms for this module include the search backwards through the function graph - which uses a depth first search and various algorithms relating to convolution
+    and correlation operations on matrices, and their derivatives. Some smaller processes include the removing of extra dimensions which are a result of numpys broadcasting.
+
+
 
     \subsubsection{Structure, Hierarchy and Flow}
 

@@ -281,7 +281,7 @@ class MSE(Module):
 
     def forward(self, predicted: Tensor, true: Tensorable) -> Tensor:
         loss: Tensor = predicted - true
-        loss = (1 / true.shape[0]) * (loss.T @ loss)
+        loss = (1 / true.shape[0]) * (loss.T() @ loss)
         return loss
 
 
@@ -311,5 +311,5 @@ class AlphaLoss(Module):
         net_pol: Tensor,
     ) -> Tensor:
         val_sqe = (true_value - predicted_value) ** 2
-        pol_bcel = mcts_pol.T @ net_pol.log()
+        pol_bcel = mcts_pol.T() @ net_pol.log()
         return val_sqe - pol_bcel
