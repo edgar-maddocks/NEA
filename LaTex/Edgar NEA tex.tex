@@ -573,7 +573,7 @@
 
 
     \pagebreak
-    \subsubsection{Identification of algorithms}
+    \subsubsection{Identification of algorithms} \label{Analysis-IoA}
     \label{sec:IDoA}
     \subsubsubsection{Automatic Differentiation Engine}
     The auto-diff engine will use a recursive DFS of the computational graph to calculate gradients. It uses a DFS as any of the computational graphs that built are directed acyclical graphs,
@@ -740,7 +740,7 @@
 
     
     \pagebreak
-    \subsubsection{Mathematical Formula}
+    \subsubsection{Mathematical Formulae} \label{Analysis-MathematicalFormulae}
     \subsubsubsection{Automatic Differentiation Engine}
     In this section I will simply define the formulas for the forward and backward pass of many different functions that will be implemented
     into the autograd library.
@@ -816,7 +816,7 @@
     \begin{align} Y_i = B_i + \sum_{j=1}^{n}X_j \star K_{ij}, \hspace{1cm} i = 1 \dots d\end{align}
     Similar to the current systems, the star denotes the valid cross-correlation of the two matrices.\\
     \textbf{Example of cross-correlation}\\
-    Cross correlation can be imagined as placed the kernel ontop of the input and summing the products of the elemts which overlap, and then moving the kernel and repeating the process.
+    Cross correlation can be imagined as placing the kernel ontop of the input and summing the products of the elemts which overlap, and then moving the kernel and repeating the process.
     \begin{align}
         \begin{bmatrix}
             1 & 6 & 2 \\
@@ -1283,10 +1283,47 @@
 
     \subsubsection{Algorithms}
 
-    The key algorithms for this module include the search backwards through the function graph - which uses a depth first search and various algorithms relating to convolution
+    The key algorithms for this module include the depth first search backwards through the function graph and various algorithms relating to convolution
     and correlation operations on matrices, and their derivatives. Some smaller processes include the removing of extra dimensions which are a result of numpys broadcasting.
+    Psuedocode for the backward traversal through the computational graph has been seen in the analysis section - \myhy{Analysis-IoA}{here}.
 
+    To understand the process of removing broadcasted dimensions, we must first understand why numpy uses broadcasting.  
+    Given we want to multiply a matrix (with size $3 \times 1$) by a scalar (of $2$) we can complete this operation by iterating over each element in our matrix and
+    multipling it by our scalar. At a larger scale this becomes quite inefficient - especially when it comes to multiplying matrices with each
+    other. To reduce this, the numpy library would broadcast our scalar to a matching $3 \times 1$ matrix and complete a vector multiplication.
+    Using a different example to understand how to remove any broadcasted dimensions, say we have a matrix $a$, and its shape is $3 \times 1 \times 4$ and its initially computed
+    gradient ($da$) has shape $5 \times 3 \times 1 \times 4$ after any broadcasting. We must first sum out any added dimensions using the algorithm below.
 
+    \begin{algorithm} 
+        \caption{Sum Added Dims}
+        \begin{algorithmic}
+        \Function{SumBroadcastedDims}{Array a, Array da}
+            \State numInDims $\gets$ len(a.shape)
+            \State numGradDims $\gets$ len(da.shape)
+
+            \For {n in range(numGradDims - numInDims)} \Comment{This would result in 1 loop}
+                \State da $\gets$ da.sum() \Comment{This would sum out the first dimension leaving da as $3 \times 1 \times 4$}
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    
+    
+
+    \pagebreak
+    \vspace*{5mm}
+    Cross-correlation of 2D matrices has been mentioned and demonstrated in the analysis (\myhy{Analysis-MathematicalFormulae}{Mathematical Formulae}), but in the design I will provide a visual representation of
+    this process. To put it into writing again, imagine an input matrix of size $(x \times x)$ and a second 'kernel' of size $(k \times k)$. The output of a cross-correlation between these matrices will have a size
+    of $(y \times y), y = x - k + 1$. To compute the output, place the kernel ontop of the input so that the top left corners line up, and sum the products of the overlying elements. This number will givee the result
+    for the first element of the output matrix. Slide the kernel over and repeat to process, giving the second element of the output. And repeat until the ouput matrix is full.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.35]{Cross-Correlation-Algorithm.drawio.png}
+        \caption{Cross-Correlation Visualization}
+    \end{figure}
+    \pagebreak
 
     \subsubsection{Structure, Hierarchy and Flow}
 
