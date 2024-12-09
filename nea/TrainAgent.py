@@ -6,11 +6,11 @@ if __name__ == "__main__":
     a = AlphaZero(
         optimizer=SGD,
         mcts_epochs=10,
-        n_example_games=500,
+        n_example_games=100,
         nn_epochs=10,
         batch_size=32,
         n_compare_games=5,
-        eec=2,
+        eec=0.75,
         n_mcts_searches=50,
         replace_win_pct_threshold=60,
         save=True,
