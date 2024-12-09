@@ -12,7 +12,7 @@ if __name__ == "__main__":
         n_compare_games=5,
         eec=2,
         n_mcts_searches=50,
-        replace_win_pct_threshold=50,
+        replace_win_pct_threshold=60,
         save=True,
     )
     n = AlphaModel(n_res_layers=5, num_hidden_conv=32)
