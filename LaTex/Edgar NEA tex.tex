@@ -1372,7 +1372,7 @@
     Next it would call the backward function on the instance of the operation class attached to that tensor. So for $y$ this would call the backward function on the specific instance
     on the multiplication operation attached to $y$. Assuming all of these tensors have the 'requires\_grad' variable set to true, this backward function of this multiplication instance would
     calculate the gradients for tensor $d$ and then call backward on that tensor. After the backward of function of $d$ is then completed our function would return to being inside the 
-    backward function of the multiplication instance associated with tensor $y$ (seen by the red arrowhead in the diagram below).
+    backward function of the multiplication instance associated with tensor $y$ (seen by the red arrowhead in the tensor $y$ of the diagram below).
 
     \begin{figure}[h]
         \centering
@@ -1392,6 +1392,12 @@
     \subsection{Neural Network Library}
 
     \subsubsection{Data Structures}
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.25]{NNLib-Design-UML.drawio.png}
+        \caption{Neural Network Library UML}
+    \end{figure}
 
     \subsubsection{Algorithms}
 
