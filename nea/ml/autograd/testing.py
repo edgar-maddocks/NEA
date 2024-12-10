@@ -5,8 +5,8 @@ if __name__ == "__main__":
     b = Tensor(2, requires_grad=True)
     c = Tensor(3, requires_grad=True)
 
-    e = a * b
-    d = b * c
+    d = a * b
+    e = b * c
 
     y = d * e
     y.backward()

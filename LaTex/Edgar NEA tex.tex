@@ -1371,7 +1371,7 @@
     If we then called the backward function from the output tensor $y$. It would first set the gradient of $y$ to 1, as the gradient of a variable with respect to itself is 1.
     Next it would call the backward function on the instance of the operation class attached to that tensor. So for $y$ this would call the backward function on the specific instance
     on the multiplication operation attached to $y$. Assuming all of these tensors have the 'requires\_grad' variable set to true, this backward function of this multiplication instance would
-    calculate the gradients for tensor $d$ and then call backward on that tensor. After the backward of function of $d$ is then completed our function would return to being inside the 
+    calculate the gradients for tensor $d$ (using processes and formulae defined \myhy{Analysis-MathematicalFormulae}{here} and \myhy{Autodiff-example}{here} respectively) and then call backward on that tensor. After the backward of function of $d$ is then completed our function would return to being inside the 
     backward function of the multiplication instance associated with tensor $y$ (seen by the red arrowhead in the tensor $y$ of the diagram below).
 
     \begin{figure}[h]
@@ -1391,14 +1391,35 @@
     \pagebreak
     \subsection{Neural Network Library}
 
+    The neural network library is also based manily around one class, in this case it is the 'Module' Class. 
+
     \subsubsection{Data Structures}
+
+    The module class is actually an abstract class that provides an interface for different layers and collections of layers.
+    It has a property called 'params' which fetches all of the parameters and tensors that compose that module. This is used by optimizers to
+    update parameter values. Forward is a basic method which takes an input tensor and then applies any operations defined in the specific
+    module, returning the output. Save and load allow the parametes of a module to be saved and loaded using pickle. A module list is similar to a module,
+    as it inherits from module, but is also composed of modules. The main difference is inside of the params property as it loops through each
+    module it is composed of to fetch its parameters. This is useful for creating a block of similar modules.
 
     \begin{figure}[h]
         \centering
-        \includegraphics[scale=0.25]{NNLib-Design-UML.drawio.png}
-        \caption{Neural Network Library UML}
+        \includegraphics[scale=0.23]{NNLib-Design-UML.drawio.png}
+        \caption{Neural Network Library Modules UML}
     \end{figure}
 
+    Another, much smaller, element of the library is the optimizer. This library only implements Stochastic Gradient Descent
+    (SGD) but there are many other optimizing models such as Adam and RMSProp. The abstract optimizer class has methods which update
+    the value of each parameter using their gradients, the learning rate and the regularization (the step method). As well as a method to
+    set all gradients back to 0 - as gradients accumulate with each tensor backward call, they must be reset for each backpropogation.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.22]{NN-Optimizers-Design-UML.drawio.png}
+        \caption{Neural Network Library Optimizers UML}
+    \end{figure}
+
+    \pagebreak
     \subsubsection{Algorithms}
 
     \subsubsection{Structure, Hierarchy and Flow}

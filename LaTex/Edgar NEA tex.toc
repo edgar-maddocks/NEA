@@ -90,22 +90,22 @@
 \contentsline {paragraph}{\numberline {2.3.2.3}Tensor Forward and Backward Pass}{29}{paragraph.2.3.2.3}%
 \contentsline {subsection}{\numberline {2.4}Neural Network Library}{31}{subsection.2.4}%
 \contentsline {subsubsection}{\numberline {2.4.1}Data Structures}{31}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Algorithms}{31}{subsubsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.3}Structure, Hierarchy and Flow}{31}{subsubsection.2.4.3}%
-\contentsline {subsubsection}{\numberline {2.4.4}Non-standard Design}{31}{subsubsection.2.4.4}%
-\contentsline {subsection}{\numberline {2.5}Reinforcement Learning Solution}{32}{subsection.2.5}%
-\contentsline {subsubsection}{\numberline {2.5.1}Data Structures}{32}{subsubsection.2.5.1}%
-\contentsline {subsubsection}{\numberline {2.5.2}Algorithms}{32}{subsubsection.2.5.2}%
-\contentsline {subsubsection}{\numberline {2.5.3}Structure, Hierarchy and Flow}{32}{subsubsection.2.5.3}%
-\contentsline {subsubsection}{\numberline {2.5.4}Non-standard Design}{32}{subsubsection.2.5.4}%
-\contentsline {section}{\numberline {3}Research Log}{34}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Checkers}{34}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Rules}{34}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Possible States}{34}{subsubsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.2}Neural Networks}{34}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Vectorization of summations}{34}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Convolutional Networks}{34}{subsubsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.3}Automatic Differentiation}{34}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}AlphaZero}{34}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Existing Auto differentiation systems}{34}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Reinforcement Learning}{34}{subsection.3.6}%
+\contentsline {subsubsection}{\numberline {2.4.2}Algorithms}{32}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Structure, Hierarchy and Flow}{32}{subsubsection.2.4.3}%
+\contentsline {subsubsection}{\numberline {2.4.4}Non-standard Design}{32}{subsubsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.5}Reinforcement Learning Solution}{33}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Data Structures}{33}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Algorithms}{33}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Structure, Hierarchy and Flow}{33}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}Non-standard Design}{33}{subsubsection.2.5.4}%
+\contentsline {section}{\numberline {3}Research Log}{35}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Checkers}{35}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Rules}{35}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Possible States}{35}{subsubsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.2}Neural Networks}{35}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Vectorization of summations}{35}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Convolutional Networks}{35}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Automatic Differentiation}{35}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}AlphaZero}{35}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Existing Auto differentiation systems}{35}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Reinforcement Learning}{35}{subsection.3.6}%
