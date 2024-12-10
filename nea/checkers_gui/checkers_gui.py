@@ -333,7 +333,7 @@ class MainMenu:
             while open:
                 for e in pygame.event.get():
                     if e.type == pygame.QUIT:
-                        m.display()
+                        self.display()
 
         tutorial = RectButton(
             125,
@@ -401,7 +401,7 @@ class MainMenu:
             while open:
                 for e in pygame.event.get():
                     if e.type == pygame.QUIT:
-                        m.display()
+                        self.display()
 
         all_params = RectButton(
             125,
