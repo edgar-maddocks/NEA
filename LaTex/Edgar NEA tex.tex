@@ -267,7 +267,7 @@
         Y_i = B_i + \sum_{j=1}^{n}X_j \star K_{ij}, \hspace{1cm} i = 1 \dots d
     \end{align}
 
-    \subsubsubsubsection{Gradient Descent}
+    \subsubsubsubsection{Gradient Descent} \label{Analysis-GradientDescent}
 
     Now, to update the weights of our model, we can compute these values in closed form, however, it comes with a large time complexity (greater than $O(n^3)$), and therefore
     a process called gradient descent is usually employed.
@@ -621,7 +621,7 @@
         \end{algorithmic}
     \end{algorithm}
 
-    \subsubsubsection{Neural Network Library}
+    \subsubsubsection{Neural Network Library} \label{Analysis-IofA-NNLib}
     The two main algorithms in the neural network library are the forward pass and the backward pass through a collection of layers. Pseudocode for these can also been seen below.
     \begin{algorithm}
         \caption{Forward pass through collection of layers}\label{alg:cap}
@@ -1421,10 +1421,73 @@
 
     \pagebreak
     \subsubsection{Algorithms}
+    Three of the four key algorithms inside of the neural network library have been mentioned inside of the data structures section; the 'step',
+    'zero_grad' and 'params' functions, and pseudocode for those can be seen below.
 
-    \subsubsection{Structure, Hierarchy and Flow}
+    \begin{algorithm} 
+        \caption{Optimizer Step Function}
+        \begin{algorithmic}
+        \Function{Step}{Optimzier self}
+            \For {param in self.params}
+                \State param.data $\gets$ param.data - self.lr * (param.grad - self.regularization * (param.data ** 2))
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
 
-    \subsubsection{Non-standard Design}
+    This simple function completes the small steps towards a more optimal parameter value - as explained \myhy{Analysis-GradientDescent}{here} in the analysis and
+    is therefore crucial to the library, and the learning process for modules.
+
+    \begin{algorithm} 
+        \caption{Optimizer Zero Grad Function}
+        \begin{algorithmic}
+        \Function{ZeroGrad}{Optimzier self}
+            \For {param in self.params}
+                \State param.grad $\gets$ 0
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    Again, a simple but crucial function. As gradient accumulates, if the gradients are not reset after each training iteration, the values from past iterations
+    may skew the step process and therefore inhibit learning.
+
+    \begin{algorithm} 
+        \caption{Module Params Property Definition}
+        \begin{algorithmic}
+        \Function{Params}{Module self}
+            \State params $\gets$ []
+            \For {param in self.attributes}
+                \If{param is Module or ModuleList}
+                    \State params += param.params
+                \ElsIf{param is Parameter}
+                    \State params.append(param)
+                \ElsIf{param is Tensor and param.requires_grad}
+                    \State params.append(param)
+                \EndIf
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    The params function gets all values associated with a module or module list that are 'trainable parameters'. This means
+    any values which need to get updated during the step process. This property also uses recursion to add parameters from a module
+    which has another module inside of itself.
+
+
+    \begin{wrapfigure}[8]{r}{0.7\linewidth}
+        \centering
+        \includegraphics[scale=0.2]{ModuleTrainingFlow.drawio.png}
+        \caption{Neural Network Library Modules UML}
+    \end{wrapfigure}
+
+    The final key algorithm is the general approach to training a module. This was defined in the analysis and psuedocode can be
+    seen \myhy{Analysis-IofA-NNLib}{in this section}. 
+    
+    \vspace{1mm}
+    To the right, there is also a visualization of one iteration of
+    this learning process.
+    
 
     \pagebreak
     \subsection{Reinforcement Learning Solution}

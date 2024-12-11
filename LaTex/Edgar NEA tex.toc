@@ -91,8 +91,6 @@
 \contentsline {subsection}{\numberline {2.4}Neural Network Library}{31}{subsection.2.4}%
 \contentsline {subsubsection}{\numberline {2.4.1}Data Structures}{31}{subsubsection.2.4.1}%
 \contentsline {subsubsection}{\numberline {2.4.2}Algorithms}{32}{subsubsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.3}Structure, Hierarchy and Flow}{32}{subsubsection.2.4.3}%
-\contentsline {subsubsection}{\numberline {2.4.4}Non-standard Design}{32}{subsubsection.2.4.4}%
 \contentsline {subsection}{\numberline {2.5}Reinforcement Learning Solution}{33}{subsection.2.5}%
 \contentsline {subsubsection}{\numberline {2.5.1}Data Structures}{33}{subsubsection.2.5.1}%
 \contentsline {subsubsection}{\numberline {2.5.2}Algorithms}{33}{subsubsection.2.5.2}%
