@@ -1491,16 +1491,49 @@
 
     \pagebreak
     \subsection{Reinforcement Learning Solution}
-    The reinforcement learning section is the most complex of all the parts. It uses all the classes and builds the learning agent
-    from all the tools defined, and ones that will be defined in this section. The final product is a model that can play checkers at
-    a higher level with the same or less time, than a tree search.
+    The reinforcement learning section is the most complex of all the parts. It uses all the previously defined classes and ones that will be defined in this section,
+    to build the learning agent. The final product is a model that can play checkers at a higher level with the same or less time, than a tree search.
     \subsubsection{Data Structures}
+    \subsubsubsection{MCTS}
+    \begin{center}
+        \begin{tabular}{|m{10em} | m{12em} | m{15em}|}
+            \hline 
+                Item & Data Structure & Reasoning and Usage \\
+            \hline
+            \hline
+                Parent & Node & Represents the parent node - is None if the node is the root. Used for backpropogation. \\
+            \hline
+                Child Nodes & list[Node] & Represents the children of a given node. Used for searching for optimal moves. \\
+            \hline
+                Game Tree & Rooted Tree & Using the parent and children from above, a tree is built with each node representing a different state as a result of a given action in a checkers game.\\
+            \hline
+        \end{tabular}
+    \end{center}
+    
+    \subsubsubsection{Agent}
+    \begin{center}
+        \begin{tabular}{|m{10em} | m{12em} | m{15em}|}
+            \hline 
+                Item & Data Structure & Reasoning and Usage \\
+            \hline
+            \hline
+                SAP & Dataclass & Used for storing a state, MCTS probability distribution and the corresponding player. \\
+            \hline
+                SPV & Dataclass & Similar to SAP but stores the 'true value' (if the game was won or lost) instead of the player. \\
+            \hline
+                Action Space & Array[int, int, int] & Used to represent the probability distribution of different moves.\\
+            \hline
+        \end{tabular}
+    \end{center}
 
     \subsubsection{Algorithms}
+    \subsubsubsection{MCTS}
 
-    \subsubsection{Structure, Hierarchy and Flow}
+    \subsubsubsection{Alpha Network}
+    
+    \subsubsubsection{Agent}
+    
 
-    \subsubsection{Non-standard Design}
 
     \begin{figure}
         \centering

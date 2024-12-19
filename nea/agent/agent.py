@@ -50,10 +50,10 @@ class AlphaZero:
         self.loss = AlphaLoss()
         self.save = save
 
-    def train(self, initialModel: AlphaModel) -> None:
-        self.prev_model = initialModel
+    def train(self, initial_model: AlphaModel) -> None:
+        self.prev_model = initial_model
         if self.new_model is None:
-            self.new_model = initialModel
+            self.new_model = initial_model
 
         for mcts_epoch in range(self.hyperparams["mcts_epochs"]):
             training_examples = deque()

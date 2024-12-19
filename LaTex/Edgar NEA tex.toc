@@ -93,9 +93,12 @@
 \contentsline {subsubsection}{\numberline {2.4.2}Algorithms}{32}{subsubsection.2.4.2}%
 \contentsline {subsection}{\numberline {2.5}Reinforcement Learning Solution}{33}{subsection.2.5}%
 \contentsline {subsubsection}{\numberline {2.5.1}Data Structures}{33}{subsubsection.2.5.1}%
+\contentsline {paragraph}{\numberline {2.5.1.1}MCTS}{33}{paragraph.2.5.1.1}%
+\contentsline {paragraph}{\numberline {2.5.1.2}Agent}{33}{paragraph.2.5.1.2}%
 \contentsline {subsubsection}{\numberline {2.5.2}Algorithms}{33}{subsubsection.2.5.2}%
-\contentsline {subsubsection}{\numberline {2.5.3}Structure, Hierarchy and Flow}{33}{subsubsection.2.5.3}%
-\contentsline {subsubsection}{\numberline {2.5.4}Non-standard Design}{33}{subsubsection.2.5.4}%
+\contentsline {paragraph}{\numberline {2.5.2.1}MCTS}{33}{paragraph.2.5.2.1}%
+\contentsline {paragraph}{\numberline {2.5.2.2}Alpha Network}{33}{paragraph.2.5.2.2}%
+\contentsline {paragraph}{\numberline {2.5.2.3}Agent}{33}{paragraph.2.5.2.3}%
 \contentsline {section}{\numberline {3}Research Log}{35}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Checkers}{35}{subsection.3.1}%
 \contentsline {subsubsection}{\numberline {3.1.1}Rules}{35}{subsubsection.3.1.1}%
