@@ -97,16 +97,18 @@
 \contentsline {paragraph}{\numberline {2.5.1.2}Agent}{33}{paragraph.2.5.1.2}%
 \contentsline {subsubsection}{\numberline {2.5.2}Algorithms}{33}{subsubsection.2.5.2}%
 \contentsline {paragraph}{\numberline {2.5.2.1}MCTS}{33}{paragraph.2.5.2.1}%
-\contentsline {paragraph}{\numberline {2.5.2.2}Alpha Network}{33}{paragraph.2.5.2.2}%
-\contentsline {paragraph}{\numberline {2.5.2.3}Agent}{33}{paragraph.2.5.2.3}%
-\contentsline {section}{\numberline {3}Research Log}{35}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Checkers}{35}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Rules}{35}{subsubsection.3.1.1}%
-\contentsline {subsubsection}{\numberline {3.1.2}Possible States}{35}{subsubsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.2}Neural Networks}{35}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Vectorization of summations}{35}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}Convolutional Networks}{35}{subsubsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.3}Automatic Differentiation}{35}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}AlphaZero}{35}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Existing Auto differentiation systems}{35}{subsection.3.5}%
-\contentsline {subsection}{\numberline {3.6}Reinforcement Learning}{35}{subsection.3.6}%
+\contentsline {subparagraph}{Base Node and MCTS}{33}{section*.46}%
+\contentsline {subparagraph}{Alpha Node and MCTS}{35}{section*.47}%
+\contentsline {paragraph}{\numberline {2.5.2.2}Alpha Network}{35}{paragraph.2.5.2.2}%
+\contentsline {paragraph}{\numberline {2.5.2.3}Agent}{35}{paragraph.2.5.2.3}%
+\contentsline {section}{\numberline {3}Research Log}{37}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Checkers}{37}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Rules}{37}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Possible States}{37}{subsubsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.2}Neural Networks}{37}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Vectorization of summations}{37}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Convolutional Networks}{37}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Automatic Differentiation}{37}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}AlphaZero}{37}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Existing Auto differentiation systems}{37}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Reinforcement Learning}{37}{subsection.3.6}%

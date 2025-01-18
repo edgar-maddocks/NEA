@@ -1490,6 +1490,7 @@
     
 
     \pagebreak
+    \vspace*{7mm}
     \subsection{Reinforcement Learning Solution}
     The reinforcement learning section is the most complex of all the parts. It uses all the previously defined classes and ones that will be defined in this section,
     to build the learning agent. The final product is a model that can play checkers at a higher level with the same or less time, than a tree search.
@@ -1529,11 +1530,160 @@
     \subsubsection{Algorithms}
     \subsubsubsection{MCTS}
 
-    \subsubsubsection{Alpha Network}
-    
-    \subsubsubsection{Agent}
-    
+    The MCTS is based off the main Node and MCTS class, with an additional AlphaNode and AlphaMCTS classes which build on the
+    original Node and MCTS. This section will be split into this base and 'Alpha' section. In both cases, the Node class composes
+    to build the MCTS.
 
+    \subsubsubsubsection{Base Node and MCTS}
+
+    The main algorithm for the base node class is the algorithm contained in the 'expand' function. This algorithm selects a random action and creates a child node
+    which is then used to compose the tree. This tree can then be used to 'see ahead' and search for the most winning position that is available given a root
+    state.
+
+    \pagebreak
+    \vspace*{7mm}
+    \begin{algorithm} 
+        \caption{Node Expansion Function}
+        \begin{algorithmic}
+        \Function{Expand}{Node self}
+            \If {noMovesAvailable and children}
+                \State \Return self.selectChild()
+            \EndIf
+            
+            \State randomAction $\gets$ self.GetRandomAction()
+            \State self.actions.remove(randomAction)
+            
+            \State childGame $\gets$ deepcopy(self.game)
+            \State validMove, nextObs, terminal, reward $\gets$ childGame.step(randomAction)
+
+            \State child $\gets$ new Node(
+                childGame,
+                parent,
+                terminal,
+                randomAction,
+                reward
+            )
+
+            \State self.children.append(child)
+
+            \Return child
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    The next key algorithm of the Node class is the backpropogation. This updates the value
+    and the visit count which store how many times a position lead to a win, and how many times
+    a position was visited respectively. These values are then used when calculating UCB and selecting
+    a child node.
+
+    \begin{algorithm} 
+        \caption{Backpropogation Function}
+        \begin{algorithmic}
+        \Function{Backprop}{Node self, int reward}
+            \State self.visitCount $\gets$ +1
+            \State self.valueCount $\gets$ +1
+
+            \If {self.parent not None}
+                \If {self.parent.colour != self.colour}
+                    \State reward $\gets$ *-1
+                \EndIf
+                \State self.parent.Backprop(reward)
+            \EndIf
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    Now moving onto the two key algorithms inside of the MCTS class, we have the tree building algorithm and
+    the probability generating algorithm. The tree building algorithm is fairly self-explanatory, it uses the
+    Node's expand function to create child nodes, constructing the tree by selecting random actions until a terminal
+    state is reached, at which point it completes the backpropogation through that branch.
+    
+    \begin{algorithm} 
+        \caption{Tree Building Function}
+        \begin{algorithmic}
+        \Function{BuildTree}{MCTS self, CheckersGame root}
+            \State self.root $\gets$ Node(root)
+            
+            \For {search in range(self.kwargs.numSearches)}
+                \State node $\gets$ self.root
+
+                \If {node.numAvailableMoves is 0 and node.children}
+                    \State node = node.SelectChild()
+                \EndIf
+
+                \While {not node.terminal}
+                    \State node $\gets$ node.Expand()
+                \EndWhile
+
+                \State node.Backprop(node.reward)
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    \pagebreak
+    The action probability generating algorithm takes the tree that is built via the previously mentioned function and
+    converts the value and visit counts into a distribution of available actions represented by an 8$\times$8$\times$8
+    array - with the first dimension representing the dimensions a piece moved, and the second two dimensions representing
+    the row and column the piece was moved from respectively. The position $\left(x,y,z\right)$ which has the highest value
+    inside of the distribution is the 'most winning' position.
+
+    \begin{algorithm} 
+        \caption{Action Probability Generating Function}
+        \begin{algorithmic}
+        \Function{GetActionProbs}{MCTS self}
+            \State p $\gets$ arrayOfZeros(8, 8, 8) \Comment Array of zeros with shape (8 $\times$ 8 $\times$ 8)
+            
+            \For {child in self.root.children}
+                \State movedFrom, movedTo $\gets$ child.actionTaken
+                \State direction $\gets$ ConvertToDirection(movedFrom, movedTo)
+                \State directionIndex $\gets$ GetDirectionIndex(direction)
+                \State p[directionIndex, movedFrom[0], movedFrom[1]] $\gets$ child.visitCount
+            \EndFor
+
+            \State p $\gets$ / sum(p) \Comment{Normalization effect}
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+    \subsubsubsubsection{Alpha Node and MCTS}
+    
+    The key difference between the Alpha and base classes in this module is the use of an AlphaNetwork to
+    generate a policy and value, which are used in the Node expansion and backpropogation functions. Since
+    these values are originally computed inside of the modified tree building function, this variation of the
+    algorithm will be seen first, then followed by the node expansion and backpropogation functions - as opposed
+    to the order used in the base class section.
+
+    \begin{algorithm} 
+        \caption{Alpha Tree Building Function}
+        \begin{algorithmic}
+        \Function{AlphaBuildTree}{AlphaMCTS self, CheckersGame root, Deque priorStates}
+            \If {len(priorStates) < 5}
+                \State self.BuildTree(root) \Comment{AlphaMCTS inherits from MCTS so this uses the base build tree function}
+                \State \Return
+            \EndIf
+
+            \State self.root $\gets$ AlphaNode(root)
+
+            \For{search in range(self.kwargs.numSearches)}
+
+                \State priorStatesCopy $\gets$ deepcopy(priorStates)
+                \State node $\gets$ self.root
+                \State policy, value $\gets$ None, None
+
+                \While {node.numMovesAvailable is 0 and Children}
+                    \State node $\gets$ node.SelectChild()
+
+                \EndWhile
+
+            \EndFor
+        \EndFunction
+        \end{algorithmic}
+    \end{algorithm}
+
+
+
+    \subsubsubsection{Alpha Network}
 
     \begin{figure}
         \centering
@@ -1541,6 +1691,7 @@
         \caption{A representation of the AlphaNetwork}
     \end{figure}
 
+    \subsubsubsection{Agent}
     
     \pagebreak
     \section{Research Log}
