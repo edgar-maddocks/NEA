@@ -1,0 +1,148 @@
+=>PYTHONTEX#py#default#defaultverb#0#verbatim#####1791#
+        import numpy as np
+
+
+        class CheckersGame:
+            """
+            Holds basic logic and console rendering of a checkers game
+            """
+
+            def __init__(self) -> None:
+                """
+                Creates a new CheckersGame object
+                """
+                self._board = self._init_board()
+                self._last_moved_piece: tuple[int, int] = None
+                self._player = WHITE
+                self._moves_no_capture = 0
+                self._switch_player = None
+
+            def get_all_valid_moves(self) -> dict[str, list[ACTION]]:
+                """Returns a dictionary of take and simple moves.
+                Does not account for if a double moves are available.
+
+                Keys:
+                    Takes moves: "takes"
+                    Simple moves: "simple"
+
+                Returns:
+                    dict[str, list[ACTION]]: Dictionary of available moves
+                """
+                moves = {"takes": [], "simple": []}
+                for row in range(SIZE):
+                    for col in range(SIZE):
+                        piece = self._board[row, col]
+                        if piece in WHITES and self._player == WHITE:
+                            moves["simple"] += self._get_valid_simple_moves(
+                                row, col, self._player
+                            )
+                            moves["takes"] += self._get_valid_take_moves(row, col, self._player)
+                        elif piece in BLACKS and self._player == BLACK:
+                            moves["simple"] += self._get_valid_simple_moves(
+                                row, col, self._player
+                            )
+                            moves["takes"] += self._get_valid_take_moves(row, col, self._player)
+
+                return moves
+
+            def step(self, action: ACTION) -> tuple[bool, np.ndarray, bool, float]:
+                """Completes a step given an action in the board environment
+
+                Args:
+                    action (ACTION): Desired action to take
+
+                Returns:
+                    tuple[bool, np.ndarray, bool, float]: (valid_move, next_obs, done, reward)
+                """
+                self._switch_player = True
+                rowcol_move_from, rowcol_move_to = action[0], action[1]
+                if self._last_moved_piece is None:
+                    all_valid_moves = self.get_all_valid_moves()
+                    if (
+                        len(all_valid_moves["takes"]) == 0
+                        and len(all_valid_moves["simple"]) == 0
+                    ):
+                        return (True, self._board, True, -1)
+
+                    valid_moves_for_turn = (
+                        all_valid_moves["takes"]
+                        if len(all_valid_moves["takes"]) > 0
+                        else all_valid_moves["simple"]
+                    )
+
+                    if action not in valid_moves_for_turn:
+                        return (False, self._board, False, 0)
+                    else:
+                        self._board[*rowcol_move_to] = self._board[*rowcol_move_from]
+                        self.clear(*rowcol_move_from)
+                        self._moves_no_capture += 1
+
+                elif self._last_moved_piece is not None:
+                    valid_moves_for_turn = self._get_valid_take_moves(
+                        *self._last_moved_piece, self._player
+                    )
+
+                    if action not in valid_moves_for_turn:
+                        return (False, self._board, False, 0)
+                    else:
+                        self._board[*rowcol_move_to] = self._board[*rowcol_move_from]
+                        self.clear(*rowcol_move_from)
+
+                row_from, col_from = rowcol_move_from
+                row_to, col_to = rowcol_move_to
+                if abs(row_to - row_from) == 2:
+                    one_row = 0.5 * (row_to - row_from)
+                    one_col = 0.5 * (col_to - col_from)
+                    self.clear(int(row_from + one_row), int(col_from + one_col))
+                    self._moves_no_capture = 0
+                    self._last_moved_piece = row_to, col_to
+                    double_moves = self._get_valid_take_moves(
+                        *self._last_moved_piece, self._player
+                    )
+                    if len(double_moves) == 0:
+                        self._last_moved_piece = None
+                    else:
+                        self._switch_player = False
+
+                if self._board[row_to, col_to] in WHITES and row_to == 0:
+                    self.crown(row_to, col_to)
+                if self._board[row_to, col_to] in BLACKS and row_to == 7:
+                    self.crown(row_to, col_to)
+
+                if self._moves_no_capture == 40:
+                    return (True, self._board, True, 0)
+                elif self.n_black_pieces == 1 and self.n_white_pieces == 1:
+                    return (True, self._board, True, 0)
+                elif self.n_opposite_player_pieces == 0:
+                    return (True, self._board, True, 1)
+                elif self.no_moves_available_for_opposite_player():
+                    return (True, self._board, True, 1)
+                else:
+                    if self._switch_player:
+                        self._player = self.opposite_player
+                    return (True, self._board, False, 0)
+=>PYTHONTEX:SETTINGS#
+version=0.18
+outputdir=pythontex-files-Edgar-NEA-tex
+workingdir=.
+workingdirset=false
+gobble=none
+rerun=default
+hashdependencies=default
+makestderr=false
+stderrfilename=full
+keeptemps=none
+pyfuture=default
+pyconfuture=none
+pygments=true
+pygglobal=:GLOBAL||
+fvextfile=-1
+pyconbanner=none
+pyconfilename=stdin
+depythontex=false
+pygfamily=py|python3|
+pygfamily=pycon|pycon|
+pygfamily=sympy|python3|
+pygfamily=sympycon|pycon|
+pygfamily=pylab|python3|
+pygfamily=pylabcon|pycon|
