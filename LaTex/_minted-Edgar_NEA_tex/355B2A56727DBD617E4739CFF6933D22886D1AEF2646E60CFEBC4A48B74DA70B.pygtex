@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+        \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.checkers\PYGZus{}gui.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{DISPLAY}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{get\PYGZus{}row\PYGZus{}selected}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}y}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{int}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}y} \PYG{o}{/} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{get\PYGZus{}col\PYGZus{}selected}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}x}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{int}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}x} \PYG{o}{/} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{)}
+\end{Verbatim}

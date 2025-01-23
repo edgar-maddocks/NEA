@@ -1,0 +1,223 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{numba}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{jit}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{time}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{t}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{cpu\PYGZus{}forward\PYGZus{}convolve2d}\PYG{p}{(}
+        \PYG{n}{output}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{k}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{n\PYGZus{}kernels}\PYG{p}{:} \PYG{n+nb}{int}
+    \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Performs the forward pass of the Convolve2D Tensor operation}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            output (np.ndarray):}
+\PYG{l+s+sd}{            x (np.ndarray):}
+\PYG{l+s+sd}{            k (np.ndarray):}
+\PYG{l+s+sd}{            n\PYGZus{}kernels (int):}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            np.ndarray:}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{n\PYGZus{}samples} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}kernels}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}samples}\PYG{p}{):}
+                \PYG{n}{output}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}valid\PYGZus{}cross\PYGZus{}correlate2d}\PYG{p}{(}\PYG{n}{x}\PYG{p}{[}\PYG{n}{j}\PYG{p}{],} \PYG{n}{k}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{])}
+
+        \PYG{k}{return} \PYG{n}{output}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{cpu\PYGZus{}x\PYGZus{}and\PYGZus{}k\PYGZus{}backward\PYGZus{}convolve2d}\PYG{p}{(}
+        \PYG{n}{x\PYGZus{}output}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,}
+        \PYG{n}{k\PYGZus{}output}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,}
+        \PYG{n}{x}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,}
+        \PYG{n}{k}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,}
+        \PYG{n}{dy}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,}
+        \PYG{n}{n\PYGZus{}samples}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,}
+        \PYG{n}{n\PYGZus{}kernels}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,}
+    \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{]:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Calculate the gradients for both input and kernels in the same loop}
+
+\PYG{l+s+sd}{        Should be used if both x and k requires grad.}
+
+\PYG{l+s+sd}{        Reduces runtime from [O(n\PYGZus{}samples*n\PYGZus{}kernels)]\PYGZca{}2 to O(n\PYGZus{}samples*n\PYGZus{}kernels)}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            x\PYGZus{}output (np.ndarray): Array to fill with input grads}
+\PYG{l+s+sd}{            k\PYGZus{}output (np.ndarray): Array to fill with kernel grads}
+\PYG{l+s+sd}{            x (np.ndarray): input}
+\PYG{l+s+sd}{            k (np.ndarray): kernels}
+\PYG{l+s+sd}{            dy (np.ndarray): upstream grad}
+\PYG{l+s+sd}{            n\PYGZus{}samples (int): number of samples in x (x.shape[0])}
+\PYG{l+s+sd}{            n\PYGZus{}kernels (int): number of kernels}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            tuple[np.ndarray, np.ndarray]: x\PYGZus{}grads, k\PYGZus{}grads}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}kernels}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}samples}\PYG{p}{):}
+                \PYG{n}{x\PYGZus{}output}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{o}{+=} \PYG{n}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}convolve2d}\PYG{p}{(}\PYG{n}{dy}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{k}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{])}
+                \PYG{n}{k\PYGZus{}output}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}valid\PYGZus{}cross\PYGZus{}correlate2d}\PYG{p}{(}\PYG{n}{x}\PYG{p}{[}\PYG{n}{j}\PYG{p}{],} \PYG{n}{dy}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+
+        \PYG{k}{return} \PYG{n}{x\PYGZus{}output}\PYG{p}{,} \PYG{n}{k\PYGZus{}output}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{cpu\PYGZus{}k\PYGZus{}backward\PYGZus{}convolve2d}\PYG{p}{(}
+        \PYG{n}{output}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{dy}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{n\PYGZus{}kernels}\PYG{p}{:} \PYG{n+nb}{int}
+    \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Get input gradients for a convolutional layer}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            output (np.ndarray): array to fill with gradients}
+\PYG{l+s+sd}{            x (np.ndarray): input}
+\PYG{l+s+sd}{            dy (np.ndarray): upstream gradient}
+\PYG{l+s+sd}{            n\PYGZus{}kernels (int): number of kernels}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            np.ndarray: gradients}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{n\PYGZus{}samples} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}kernels}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}samples}\PYG{p}{):}
+                \PYG{n}{output}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}valid\PYGZus{}cross\PYGZus{}correlate2d}\PYG{p}{(}\PYG{n}{x}\PYG{p}{[}\PYG{n}{j}\PYG{p}{],} \PYG{n}{dy}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+
+        \PYG{k}{return} \PYG{n}{output}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{cpu\PYGZus{}x\PYGZus{}backward\PYGZus{}convolve2d}\PYG{p}{(}
+        \PYG{n}{output}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{k}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{dy}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{n\PYGZus{}samples}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{n\PYGZus{}kernels}\PYG{p}{:} \PYG{n+nb}{int}
+    \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Get input gradients for a convolutional layer}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            output (np.ndarray): array to fill with gradients}
+\PYG{l+s+sd}{            k (np.ndarray): kernels}
+\PYG{l+s+sd}{            dy (np.ndarray): upstream gradient}
+\PYG{l+s+sd}{            n\PYGZus{}samples (int): number of samples in input}
+\PYG{l+s+sd}{            n\PYGZus{}kernels (int): number of kernels}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            np.ndarray: gradients}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{for} \PYG{n}{i} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}kernels}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}samples}\PYG{p}{):}
+                \PYG{n}{output}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{o}{+=} \PYG{n}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}convolve2d}\PYG{p}{(}\PYG{n}{dy}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{k}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{])}
+
+        \PYG{k}{return} \PYG{n}{output}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}convolve2d}\PYG{p}{(}\PYG{n}{a}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{b}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Returns the 2d convolution of two matrices}
+
+\PYG{l+s+sd}{        (which is equivalent to full cross correlation of a and rot180(b))}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            a (np.ndarray):}
+\PYG{l+s+sd}{            b (np.ndarray):}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            np.ndarray:}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{k}{return} \PYG{n}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}full\PYGZus{}cross\PYGZus{}correlate2d}\PYG{p}{(}\PYG{n}{a}\PYG{p}{,} \PYG{n}{\PYGZus{}jit\PYGZus{}rotate\PYGZus{}180}\PYG{p}{(}\PYG{n}{b}\PYG{p}{))}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}jit\PYGZus{}rotate\PYGZus{}180}\PYG{p}{(}\PYG{n}{b}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Rotates a given matrix by 180 degrees}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            b (np.ndarray): matrix to rotate}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            np.ndarray: rotated matrix}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{rot90} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{rot90}\PYG{p}{(}\PYG{n}{b}\PYG{p}{)}
+        \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{rot90}\PYG{p}{(}\PYG{n}{rot90}\PYG{p}{)}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}full\PYGZus{}cross\PYGZus{}correlate2d}\PYG{p}{(}\PYG{n}{a}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{b}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Performs FULL cross\PYGZhy{}correlation between two numpy arrays.}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            a (np.ndarray):}
+\PYG{l+s+sd}{            b (np.ndarray):}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            np.ndarray:}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{a\PYGZus{}rows}\PYG{p}{,} \PYG{n}{a\PYGZus{}cols} \PYG{o}{=} \PYG{n}{a}\PYG{o}{.}\PYG{n}{shape}
+        \PYG{n}{b\PYGZus{}rows}\PYG{p}{,} \PYG{n}{b\PYGZus{}cols} \PYG{o}{=} \PYG{n}{b}\PYG{o}{.}\PYG{n}{shape}
+
+        \PYG{c+c1}{\PYGZsh{} calculate output sizing (note: a+b\PYGZhy{}1 instead of a \PYGZhy{}b+1 for valid)}
+        \PYG{n}{out\PYGZus{}rows} \PYG{o}{=} \PYG{n}{a\PYGZus{}rows} \PYG{o}{+} \PYG{n}{b\PYGZus{}rows} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}
+        \PYG{n}{out\PYGZus{}cols} \PYG{o}{=} \PYG{n}{a\PYGZus{}cols} \PYG{o}{+} \PYG{n}{b\PYGZus{}cols} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}
+
+        \PYG{n}{out} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{n}{out\PYGZus{}rows}\PYG{p}{,} \PYG{n}{out\PYGZus{}cols}\PYG{p}{),} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float64}\PYG{p}{)}
+
+        \PYG{c+c1}{\PYGZsh{} slide b over a \PYGZhy{} including only partial coverage}
+        \PYG{k}{for} \PYG{n}{m} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{out\PYGZus{}rows}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{n} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{out\PYGZus{}cols}\PYG{p}{):}
+                \PYG{n}{s} \PYG{o}{=} \PYG{l+m+mf}{0.0}  \PYG{c+c1}{\PYGZsh{} sum value}
+
+                \PYG{c+c1}{\PYGZsh{} compute dot product of a and b that overlap}
+                \PYG{k}{for} \PYG{n}{p} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{b\PYGZus{}rows}\PYG{p}{):}
+                    \PYG{k}{for} \PYG{n}{q} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{b\PYGZus{}cols}\PYG{p}{):}
+                        \PYG{c+c1}{\PYGZsh{} get positions in a that correspond with b[p, q]}
+                        \PYG{n}{a\PYGZus{}row} \PYG{o}{=} \PYG{n}{m} \PYG{o}{\PYGZhy{}} \PYG{n}{p}
+                        \PYG{n}{a\PYGZus{}col} \PYG{o}{=} \PYG{n}{n} \PYG{o}{\PYGZhy{}} \PYG{n}{q}
+
+                        \PYG{c+c1}{\PYGZsh{} check the kernel is in bounds}
+                        \PYG{k}{if} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{a\PYGZus{}row} \PYG{o}{\PYGZlt{}} \PYG{n}{a\PYGZus{}rows} \PYG{o+ow}{and} \PYG{l+m+mi}{0} \PYG{o}{\PYGZlt{}=} \PYG{n}{a\PYGZus{}col} \PYG{o}{\PYGZlt{}} \PYG{n}{a\PYGZus{}cols}\PYG{p}{:}
+                            \PYG{n}{s} \PYG{o}{+=} \PYG{n}{a}\PYG{p}{[}\PYG{n}{a\PYGZus{}row}\PYG{p}{,} \PYG{n}{a\PYGZus{}col}\PYG{p}{]} \PYG{o}{*} \PYG{n}{b}\PYG{p}{[}\PYG{n}{p}\PYG{p}{,} \PYG{n}{q}\PYG{p}{]}
+
+                \PYG{n}{out}\PYG{p}{[}\PYG{n}{m}\PYG{p}{,} \PYG{n}{n}\PYG{p}{]} \PYG{o}{=} \PYG{n}{s}  \PYG{c+c1}{\PYGZsh{} add sum to output}
+
+        \PYG{k}{return} \PYG{n}{out}
+
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{nopython}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,} \PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}jit\PYGZus{}cpu\PYGZus{}valid\PYGZus{}cross\PYGZus{}correlate2d}\PYG{p}{(}\PYG{n}{a}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{b}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Performs VALID cross correlation between two numpy arrays}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            a (np.ndarray):}
+\PYG{l+s+sd}{            b (np.ndarray):}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            np.ndarray:}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{a\PYGZus{}rows}\PYG{p}{,} \PYG{n}{a\PYGZus{}cols} \PYG{o}{=} \PYG{n}{a}\PYG{o}{.}\PYG{n}{shape}
+        \PYG{n}{b\PYGZus{}rows}\PYG{p}{,} \PYG{n}{b\PYGZus{}cols} \PYG{o}{=} \PYG{n}{b}\PYG{o}{.}\PYG{n}{shape}
+
+        \PYG{c+c1}{\PYGZsh{} calculate output sizing}
+        \PYG{n}{out\PYGZus{}rows} \PYG{o}{=} \PYG{n}{a\PYGZus{}rows} \PYG{o}{\PYGZhy{}} \PYG{n}{b\PYGZus{}rows} \PYG{o}{+} \PYG{l+m+mi}{1}
+        \PYG{n}{out\PYGZus{}cols} \PYG{o}{=} \PYG{n}{a\PYGZus{}cols} \PYG{o}{\PYGZhy{}} \PYG{n}{b\PYGZus{}cols} \PYG{o}{+} \PYG{l+m+mi}{1}
+
+        \PYG{n}{out} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{n}{out\PYGZus{}rows}\PYG{p}{,} \PYG{n}{out\PYGZus{}cols}\PYG{p}{),} \PYG{n}{dtype}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{float64}\PYG{p}{)}
+
+        \PYG{n}{out\PYGZus{}rows}\PYG{p}{,} \PYG{n}{out\PYGZus{}cols} \PYG{o}{=} \PYG{n}{out}\PYG{o}{.}\PYG{n}{shape}
+
+        \PYG{c+c1}{\PYGZsh{} slide b over a}
+        \PYG{k}{for} \PYG{n}{m} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{out\PYGZus{}rows}\PYG{p}{):}
+            \PYG{k}{for} \PYG{n}{n} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{out\PYGZus{}cols}\PYG{p}{):}
+                \PYG{n}{sub\PYGZus{}matrix} \PYG{o}{=} \PYG{n}{a}\PYG{p}{[}
+                    \PYG{n}{m} \PYG{p}{:} \PYG{n}{m} \PYG{o}{+} \PYG{n}{b\PYGZus{}rows}\PYG{p}{,} \PYG{n}{n} \PYG{p}{:} \PYG{n}{n} \PYG{o}{+} \PYG{n}{b\PYGZus{}cols}
+                \PYG{p}{]}  \PYG{c+c1}{\PYGZsh{} get the parts of a which overlap with b at that time}
+
+                \PYG{n}{s} \PYG{o}{=} \PYG{l+m+mf}{0.0}  \PYG{c+c1}{\PYGZsh{} sum (numpy sum function was producing errors)}
+                \PYG{k}{for} \PYG{n}{p} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{b\PYGZus{}rows}\PYG{p}{):}
+                    \PYG{k}{for} \PYG{n}{q} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{b\PYGZus{}cols}\PYG{p}{):}
+                        \PYG{n}{s} \PYG{o}{+=} \PYG{p}{(}
+                            \PYG{n}{sub\PYGZus{}matrix}\PYG{p}{[}\PYG{n}{p}\PYG{p}{,} \PYG{n}{q}\PYG{p}{]} \PYG{o}{*} \PYG{n}{b}\PYG{p}{[}\PYG{n}{p}\PYG{p}{,} \PYG{n}{q}\PYG{p}{]}
+                        \PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} computes the dot product of sub\PYGZus{}matrix and b}
+
+                \PYG{n}{out}\PYG{p}{[}\PYG{n}{m}\PYG{p}{,} \PYG{n}{n}\PYG{p}{]} \PYG{o}{=} \PYG{n}{s}  \PYG{c+c1}{\PYGZsh{} add to output array}
+
+        \PYG{k}{return} \PYG{n}{out}
+
+\end{Verbatim}

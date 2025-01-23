@@ -26,7 +26,7 @@ class CheckersGame:
         """
         Creates a new CheckersGame object
         """
-        self._board = self._init_board()
+        self._board = self._init_board() # create numeric representation of board
         self._last_moved_piece: tuple[int, int] = None
         self._player = WHITE
         self._moves_no_capture = 0
@@ -127,15 +127,15 @@ class CheckersGame:
         Returns:
             dict[str, list[ACTION]]: Dictionary of available moves
         """
-        moves = {"takes": [], "simple": []}
-        for row in range(SIZE):
-            for col in range(SIZE):
+        moves = {"takes": [], "simple": []} # dictionary containing take and simple moves
+        for row in range(SIZE): # for each row
+            for col in range(SIZE): # and each column
                 piece = self._board[row, col]
                 if piece in WHITES and self._player == WHITE:
                     moves["simple"] += self._get_valid_simple_moves(
                         row, col, self._player
-                    )
-                    moves["takes"] += self._get_valid_take_moves(row, col, self._player)
+                    ) # get simple moves from that square
+                    moves["takes"] += self._get_valid_take_moves(row, col, self._player) # get take moves from that square
                 elif piece in BLACKS and self._player == BLACK:
                     moves["simple"] += self._get_valid_simple_moves(
                         row, col, self._player
@@ -156,7 +156,7 @@ class CheckersGame:
         Returns:
             list: tuple of tuples
         """
-        return jit_functions._get_valid_take_moves(self._board, row, col, player)
+        return jit_functions._get_valid_take_moves(self._board, row, col, player) # use jit function for fast compputation
 
     def _get_valid_simple_moves(self, row: int, col: int, player: str) -> list[ACTION]:
         """Gets all valid simple moves available for a given square
@@ -233,61 +233,63 @@ class CheckersGame:
         Returns:
             tuple[bool, np.ndarray, bool, float]: (valid_move, next_obs, done, reward)
         """
-        self._switch_player = True
-        rowcol_move_from, rowcol_move_to = action[0], action[1]
-        if self._last_moved_piece is None:
+        self._switch_player = True # default switch turn at end of mvoe
+        rowcol_move_from, rowcol_move_to = action[0], action[1] # break action into two tuples
+        if self._last_moved_piece is None: # if this is not a second take
             all_valid_moves = self.get_all_valid_moves()
             if (
                 len(all_valid_moves["takes"]) == 0
                 and len(all_valid_moves["simple"]) == 0
             ):
-                return (True, self._board, True, -1)
+                return (True, self._board, True, -1) # return loss if no moves available
 
             valid_moves_for_turn = (
                 all_valid_moves["takes"]
                 if len(all_valid_moves["takes"]) > 0
                 else all_valid_moves["simple"]
-            )
+            ) # get list of all valid moves
 
             if action not in valid_moves_for_turn:
-                return (False, self._board, False, 0)
+                return (False, self._board, False, 0) # return invalid move
             else:
-                self._board[*rowcol_move_to] = self._board[*rowcol_move_from]
-                self.clear(*rowcol_move_from)
-                self._moves_no_capture += 1
+                self._board[*rowcol_move_to] = self._board[*rowcol_move_from] # update positon
+                self.clear(*rowcol_move_from) 
+                self._moves_no_capture += 1 # add to draw condition
 
-        elif self._last_moved_piece is not None:
+        elif self._last_moved_piece is not None: # if this is a second take move
             valid_moves_for_turn = self._get_valid_take_moves(
                 *self._last_moved_piece, self._player
-            )
+            ) # get valid actions
 
             if action not in valid_moves_for_turn:
-                return (False, self._board, False, 0)
+                return (False, self._board, False, 0) # return invalid moves
             else:
-                self._board[*rowcol_move_to] = self._board[*rowcol_move_from]
+                self._board[*rowcol_move_to] = self._board[*rowcol_move_from] # update position
                 self.clear(*rowcol_move_from)
 
         row_from, col_from = rowcol_move_from
         row_to, col_to = rowcol_move_to
-        if abs(row_to - row_from) == 2:
-            one_row = 0.5 * (row_to - row_from)
-            one_col = 0.5 * (col_to - col_from)
-            self.clear(int(row_from + one_row), int(col_from + one_col))
-            self._moves_no_capture = 0
+        if abs(row_to - row_from) == 2: # if it was a take move
+            one_row = 0.5 * (row_to - row_from) # get the direction horizontally (1 or -1)
+            one_col = 0.5 * (col_to - col_from) # get direction vertically (1 or -1)
+            self.clear(int(row_from + one_row), int(col_from + one_col)) # remove opponent peace
+            self._moves_no_capture = 0 
             self._last_moved_piece = row_to, col_to
             double_moves = self._get_valid_take_moves(
                 *self._last_moved_piece, self._player
-            )
+            ) # check if there is now a second take available
             if len(double_moves) == 0:
                 self._last_moved_piece = None
             else:
-                self._switch_player = False
+                self._switch_player = False 
 
+        # crown pieces if they reach opposite edge of board
         if self._board[row_to, col_to] in WHITES and row_to == 0:
             self.crown(row_to, col_to)
         if self._board[row_to, col_to] in BLACKS and row_to == 7:
-            self.crown(row_to, col_to)
+            self.crown(row_to, col_to) 
 
+        # check win and draw conditions
         if self._moves_no_capture == 40:
             return (True, self._board, True, 0)
         elif self.n_black_pieces == 1 and self.n_white_pieces == 1:

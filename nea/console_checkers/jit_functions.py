@@ -63,7 +63,8 @@ def _init_board() -> np.ndarray:
 def _get_valid_take_moves(
     board: np.ndarray, row: int, col: int, player: str
 ) -> list[ACTION]:
-    WHITES = [3, 4]
+    # have to define constants inside the function for jit to work
+    WHITES = [3, 4] 
     BLACKS = [1, 2]
 
     ALL_LEGAL_DIRS = [(+1, -1), (+1, +1), (-1, +1), (-1, -1)]
@@ -73,7 +74,7 @@ def _get_valid_take_moves(
     piece = board[row, col]
     valid_moves = []
     if player == "black":
-        if piece == 2:
+        if piece == 2: # if the piece is a black king
             for direction in ALL_LEGAL_DIRS:
                 if (
                     row + 2 * direction[0] in range(8)
@@ -81,13 +82,17 @@ def _get_valid_take_moves(
                     and board[row + direction[0], col + direction[1]] in WHITES
                     and board[row + 2 * direction[0], col + 2 * direction[1]] == 0
                 ):
+                    # if square to check is in bounds
+                    # and if the square beyond the one diagonally adjacent is empty
+                    # and the square diagonally adjacent contains an opponent piece
                     valid_moves.append(
                         (
                             (row, col),
                             (row + 2 * direction[0], col + 2 * direction[1]),
                         )
                     )
-        elif piece == 1:
+                    # add this take move to the list of valids
+        elif piece == 1: # if piece is black regular
             for direction in BLACK_R_DIRS:
                 if (
                     row + 2 * direction[0] in range(8)
@@ -102,7 +107,7 @@ def _get_valid_take_moves(
                         )
                     )
     elif player == "white":
-        if piece == 4:
+        if piece == 4: # if pieces is white king
             for direction in ALL_LEGAL_DIRS:
                 if (
                     row + 2 * direction[0] in range(8)
@@ -116,7 +121,7 @@ def _get_valid_take_moves(
                             (row + 2 * direction[0], col + 2 * direction[1]),
                         )
                     )
-        elif piece == 3:
+        elif piece == 3: # if piece is white regular
             for direction in WHITE_R_DIRS:
                 if (
                     row + 2 * direction[0] in range(8)

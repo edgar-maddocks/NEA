@@ -12,7 +12,7 @@ class Button(ABC):
     def click_fn(self, *args): ...
 
 
-class RectButton:
+class RectButton(Button):
     def __init__(
         self,
         width: int,
@@ -50,6 +50,7 @@ class RectButton:
         if self.text != "":
             font = self.font
             text = font.render(self.text, 1, self.text_colour)
+            # draw the text in the middle of the button
             screen.blit(
                 text,
                 (

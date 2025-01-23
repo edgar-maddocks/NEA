@@ -220,27 +220,3 @@ def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray
     return out
 
 
-def _cpu_time(n_kernels: int, kernel_size: int, samples: int, x_size: int):
-    k = np.random.randn(n_kernels, samples, kernel_size, kernel_size)
-    x = np.random.randn(samples, x_size, x_size)
-
-    output_shape = (n_kernels, x.shape[1] - k.shape[2] + 1, x.shape[2] - k.shape[2] + 1)
-
-    new_data = np.zeros(output_shape, dtype=np.float64)
-
-    out = np.zeros(output_shape, dtype=np.float64)
-
-    for i in range(n_kernels):
-        for j in range(x.shape[0]):
-            out[i] = _jit_cpu_valid_cross_correlate2d(x[j], k[i, j])
-
-    s = t.time()
-    new_data = cpu_forward_convolve2d(new_data, x, k, n_kernels)
-    print(new_data)
-    print(new_data.shape)
-    print("RESULT IS SAME AS NUMPY?", np.allclose(out, new_data, rtol=0.01))
-    print("TIME TAKEN: ", t.time() - s)
-
-
-if __name__ == "__main__":
-    _cpu_time(4, 4, 10000, 8)

@@ -391,7 +391,7 @@ class Addition(TensorFunction):
                 da = da.sum(axis=0)
 
             # Then remove singular dimensions (indicates broadcasting)
-            # **Summing over singular dimensions:**
+            # Summing over singular dimensions:
 
             # a.shape = (3, 1, 4)
 

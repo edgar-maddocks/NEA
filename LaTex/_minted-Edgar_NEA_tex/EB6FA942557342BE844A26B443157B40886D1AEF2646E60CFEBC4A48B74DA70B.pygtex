@@ -1,0 +1,83 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{numba}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{jit}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
+
+    \PYG{n+nd}{@jit}\PYG{p}{(}\PYG{n}{cache}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}get\PYGZus{}valid\PYGZus{}take\PYGZus{}moves}\PYG{p}{(}
+        \PYG{n}{board}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n}{row}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{col}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{player}\PYG{p}{:} \PYG{n+nb}{str}
+    \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{list}\PYG{p}{[}\PYG{n}{ACTION}\PYG{p}{]:}
+        \PYG{c+c1}{\PYGZsh{} have to define constants inside the function for jit to work}
+        \PYG{n}{WHITES} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{]}
+        \PYG{n}{BLACKS} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{]}
+
+        \PYG{n}{ALL\PYGZus{}LEGAL\PYGZus{}DIRS} \PYG{o}{=} \PYG{p}{[(}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{p}{(}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)]}
+        \PYG{n}{BLACK\PYGZus{}R\PYGZus{}DIRS} \PYG{o}{=} \PYG{p}{[}\PYG{n}{ALL\PYGZus{}LEGAL\PYGZus{}DIRS}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{ALL\PYGZus{}LEGAL\PYGZus{}DIRS}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]}
+        \PYG{n}{WHITE\PYGZus{}R\PYGZus{}DIRS} \PYG{o}{=} \PYG{p}{[}\PYG{n}{ALL\PYGZus{}LEGAL\PYGZus{}DIRS}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{],} \PYG{n}{ALL\PYGZus{}LEGAL\PYGZus{}DIRS}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]]}
+
+        \PYG{n}{piece} \PYG{o}{=} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{]}
+        \PYG{n}{valid\PYGZus{}moves} \PYG{o}{=} \PYG{p}{[]}
+        \PYG{k}{if} \PYG{n}{player} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{piece} \PYG{o}{==} \PYG{l+m+mi}{2}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} if the piece is a black king}
+                \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{ALL\PYGZus{}LEGAL\PYGZus{}DIRS}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{p}{(}
+                        \PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o+ow}{in} \PYG{n}{WHITES}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o}{==} \PYG{l+m+mi}{0}
+                    \PYG{p}{):}
+                        \PYG{c+c1}{\PYGZsh{} if square to check is in bounds}
+                        \PYG{c+c1}{\PYGZsh{} and if the square beyond the one diagonally adjacent is empty}
+                        \PYG{c+c1}{\PYGZsh{} and the square diagonally adjacent contains an opponent piece}
+                        \PYG{n}{valid\PYGZus{}moves}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}
+                            \PYG{p}{(}
+                                \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{),}
+                                \PYG{p}{(}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]),}
+                            \PYG{p}{)}
+                        \PYG{p}{)}
+                        \PYG{c+c1}{\PYGZsh{} add this take move to the list of valids}
+            \PYG{k}{elif} \PYG{n}{piece} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} if piece is black regular}
+                \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{BLACK\PYGZus{}R\PYGZus{}DIRS}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{p}{(}
+                        \PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o+ow}{in} \PYG{n}{WHITES}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o}{==} \PYG{l+m+mi}{0}
+                    \PYG{p}{):}
+                        \PYG{n}{valid\PYGZus{}moves}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}
+                            \PYG{p}{(}
+                                \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{),}
+                                \PYG{p}{(}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]),}
+                            \PYG{p}{)}
+                        \PYG{p}{)}
+        \PYG{k}{elif} \PYG{n}{player} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}white\PYGZdq{}}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{piece} \PYG{o}{==} \PYG{l+m+mi}{4}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} if pieces is white king}
+                \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{ALL\PYGZus{}LEGAL\PYGZus{}DIRS}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{p}{(}
+                        \PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o+ow}{in} \PYG{n}{BLACKS}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o}{==} \PYG{l+m+mi}{0}
+                    \PYG{p}{):}
+                        \PYG{n}{valid\PYGZus{}moves}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}
+                            \PYG{p}{(}
+                                \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{),}
+                                \PYG{p}{(}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]),}
+                            \PYG{p}{)}
+                        \PYG{p}{)}
+            \PYG{k}{elif} \PYG{n}{piece} \PYG{o}{==} \PYG{l+m+mi}{3}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} if piece is white regular}
+                \PYG{k}{for} \PYG{n}{direction} \PYG{o+ow}{in} \PYG{n}{WHITE\PYGZus{}R\PYGZus{}DIRS}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{p}{(}
+                        \PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{)}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o+ow}{in} \PYG{n}{BLACKS}
+                        \PYG{o+ow}{and} \PYG{n}{board}\PYG{p}{[}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o}{==} \PYG{l+m+mi}{0}
+                    \PYG{p}{):}
+                        \PYG{n}{valid\PYGZus{}moves}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}
+                            \PYG{p}{(}
+                                \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{),}
+                                \PYG{p}{(}\PYG{n}{row} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{col} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n}{direction}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]),}
+                            \PYG{p}{)}
+                        \PYG{p}{)}
+
+        \PYG{k}{return} \PYG{n}{valid\PYGZus{}moves}
+\end{Verbatim}

@@ -1,0 +1,236 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{pygame}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
+
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.checkers\PYGZus{}gui.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{COLOURS}\PYG{p}{,} \PYG{n}{DISPLAY}\PYG{p}{,} \PYG{n}{DICTS}\PYG{p}{,} \PYG{n}{TEXTS}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.checkers\PYGZus{}gui.buttons}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Button}\PYG{p}{,} \PYG{n}{RectButton}\PYG{p}{,} \PYG{n}{\PYGZus{}change\PYGZus{}button\PYGZus{}text\PYGZus{}colour}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.checkers\PYGZus{}gui.helpers}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{p}{(}
+        \PYG{n}{get\PYGZus{}col\PYGZus{}selected}\PYG{p}{,}
+        \PYG{n}{get\PYGZus{}row\PYGZus{}selected}\PYG{p}{,}
+    \PYG{p}{)}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.console\PYGZus{}checkers}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{CheckersGame}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.console\PYGZus{}checkers.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{p}{(}
+        \PYG{n}{ACTION}\PYG{p}{,}
+        \PYG{n}{BLACK}\PYG{p}{,}
+        \PYG{n}{BLACKS}\PYG{p}{,}
+        \PYG{n}{EMPTY}\PYG{p}{,}
+        \PYG{n}{WHITE}\PYG{p}{,}
+        \PYG{n}{WHITES}\PYG{p}{,}
+    \PYG{p}{)}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.console\PYGZus{}checkers.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{p}{(}
+        \PYG{n}{SIZE} \PYG{k}{as} \PYG{n}{BOARD\PYGZus{}SIZE}\PYG{p}{,}
+    \PYG{p}{)}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{CheckersGUI}\PYG{p}{(}\PYG{n}{CheckersGame}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Class that adds extra functionality to the CheckersGame}
+\PYG{l+s+sd}{        which allows it to display a GUI}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{]} \PYG{o}{=} \PYG{k+kc}{None}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{draw}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{screen}\PYG{p}{:} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{Surface}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Draws the checkers board and pieces.}
+
+\PYG{l+s+sd}{            If a piece is selected it scales that piece to be slightly smaller.}
+\PYG{l+s+sd}{            Additionally, available moves for a selected piece are displayed.}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                screen (pygame.Surface): screen to draw to}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{c+c1}{\PYGZsh{} draw the background}
+            \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{):}
+                \PYG{k}{if} \PYG{n}{row} \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{2} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{:}
+                    \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SCREEN\PYGZus{}SIZE}\PYG{p}{,} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE} \PYG{o}{*} \PYG{l+m+mi}{2}\PYG{p}{):}
+                        \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}
+                            \PYG{n}{screen}\PYG{p}{,}
+                            \PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{WHITE}\PYG{p}{,}
+                            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{Rect}\PYG{p}{(}
+                                \PYG{n}{x}\PYG{p}{,}
+                                \PYG{n}{row} \PYG{o}{*} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{,}
+                                \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{,}
+                                \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{,}
+                            \PYG{p}{),}
+                        \PYG{p}{)}
+                \PYG{k}{else}\PYG{p}{:}
+                    \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}
+                        \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{,} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SCREEN\PYGZus{}SIZE}\PYG{p}{,} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE} \PYG{o}{*} \PYG{l+m+mi}{2}
+                    \PYG{p}{):}
+                        \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}
+                            \PYG{n}{screen}\PYG{p}{,}
+                            \PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{WHITE}\PYG{p}{,}
+                            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{Rect}\PYG{p}{(}
+                                \PYG{n}{x}\PYG{p}{,}
+                                \PYG{n}{row} \PYG{o}{*} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{,}
+                                \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{,}
+                                \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SQUARE\PYGZus{}SIZE}\PYG{p}{,}
+                            \PYG{p}{),}
+                        \PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} draw the pieces}
+            \PYG{k}{for} \PYG{n}{y} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{BOARD\PYGZus{}SIZE}\PYG{p}{):}
+                \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{BOARD\PYGZus{}SIZE}\PYG{p}{):}
+                    \PYG{n}{piece} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{board}\PYG{p}{[}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{]}
+                    \PYG{k}{if} \PYG{p}{(}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{)} \PYG{o}{==} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected}\PYG{p}{:}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}draw\PYGZus{}selected\PYGZus{}piece}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{)}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}draw\PYGZus{}available\PYGZus{}moves}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{)}
+                    \PYG{k}{elif} \PYG{n}{piece} \PYG{o}{!=} \PYG{n}{EMPTY}\PYG{p}{:}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}get\PYGZus{}and\PYGZus{}draw\PYGZus{}piece}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{,} \PYG{n}{piece}\PYG{o}{=}\PYG{n}{piece}\PYG{p}{,} \PYG{n}{x}\PYG{o}{=}\PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{o}{=}\PYG{n}{y}\PYG{p}{)}
+
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{set\PYGZus{}caption}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}IT IS }\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{player}\PYG{o}{.}\PYG{n}{upper}\PYG{p}{()}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZsq{}S MOVE\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{click}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{ACTION}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Evaulates a users click and selects/deselects a piece if needed}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            mouse\PYGZus{}pos (tuple[int, int]): mouse position when click occurs}
+
+\PYG{l+s+sd}{        Returns:}
+\PYG{l+s+sd}{            ACTION: action user wants to take \PYGZhy{} if None then a piece has been selected to move}
+\PYG{l+s+sd}{                                              \PYGZhy{} if not None then a move of the selected piece has been made}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+        \PYG{n}{mouse\PYGZus{}x}\PYG{p}{,} \PYG{n}{mouse\PYGZus{}y} \PYG{o}{=} \PYG{n}{mouse\PYGZus{}pos}
+        \PYG{c+c1}{\PYGZsh{} convert mouse click to row and column click}
+        \PYG{n}{row}\PYG{p}{,} \PYG{n}{col} \PYG{o}{=} \PYG{n}{get\PYGZus{}row\PYGZus{}selected}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}y}\PYG{o}{=}\PYG{n}{mouse\PYGZus{}y}\PYG{p}{),} \PYG{n}{get\PYGZus{}col\PYGZus{}selected}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}x}\PYG{o}{=}\PYG{n}{mouse\PYGZus{}x}\PYG{p}{)}
+        \PYG{n}{action}\PYG{p}{:} \PYG{n}{ACTION} \PYG{o}{=} \PYG{k+kc}{None}
+
+        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n}{valid\PYGZus{}moves} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{get\PYGZus{}all\PYGZus{}valid\PYGZus{}moves}\PYG{p}{()}
+            \PYG{n}{valid\PYGZus{}moves} \PYG{o}{=} \PYG{p}{(}
+                \PYG{n}{valid\PYGZus{}moves}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}takes\PYGZdq{}}\PYG{p}{]}
+                \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{valid\PYGZus{}moves}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}takes\PYGZdq{}}\PYG{p}{])} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}
+                \PYG{k}{else} \PYG{n}{valid\PYGZus{}moves}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}simple\PYGZdq{}}\PYG{p}{]}
+            \PYG{p}{)} \PYG{c+c1}{\PYGZsh{} get the set of valid moves}
+            \PYG{n}{valid\PYGZus{}selections} \PYG{o}{=} \PYG{p}{[}\PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n}{valid\PYGZus{}moves}\PYG{p}{]}
+            \PYG{k}{if} \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n}{valid\PYGZus{}selections}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} check piece selected is a valid piece to move}
+                \PYG{c+c1}{\PYGZsh{} check user has selected their own piece}
+                \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{player} \PYG{o}{==} \PYG{n}{WHITE}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{board}\PYG{p}{[}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n}{WHITES}\PYG{p}{:}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected} \PYG{o}{=} \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{)}
+                \PYG{k}{elif} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{player} \PYG{o}{==} \PYG{n}{BLACK}\PYG{p}{:}
+                    \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{board}\PYG{p}{[}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{]} \PYG{o+ow}{in} \PYG{n}{BLACKS}\PYG{p}{:}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected} \PYG{o}{=} \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{)}
+        \PYG{k}{else}\PYG{p}{:}
+            \PYG{k}{if} \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{)} \PYG{o}{!=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected}\PYG{p}{:}
+                \PYG{n}{action} \PYG{o}{=} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected}\PYG{p}{,} \PYG{p}{(}\PYG{n}{row}\PYG{p}{,} \PYG{n}{col}\PYG{p}{))}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{piece\PYGZus{}selected} \PYG{o}{=} \PYG{k+kc}{None}
+
+        \PYG{k}{return} \PYG{n}{action}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MainMenu}\PYG{p}{:}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{init}\PYG{p}{()}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{screen} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{set\PYGZus{}mode}\PYG{p}{(}
+                \PYG{p}{(}\PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SCREEN\PYGZus{}SIZE}\PYG{p}{,} \PYG{n}{DISPLAY}\PYG{o}{.}\PYG{n}{SCREEN\PYGZus{}SIZE}\PYG{p}{)}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{font} \PYG{o}{=} \PYG{k}{lambda} \PYG{n}{font\PYGZus{}size}\PYG{p}{:} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{font}\PYG{o}{.}\PYG{n}{SysFont}\PYG{p}{(}
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{font}\PYG{o}{.}\PYG{n}{get\PYGZus{}default\PYGZus{}font}\PYG{p}{(),} \PYG{n}{font\PYGZus{}size}
+            \PYG{p}{)} \PYG{c+c1}{\PYGZsh{} set default font}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{display}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n}{buttons}\PYG{p}{:} \PYG{n+nb}{dict}\PYG{p}{[}\PYG{n}{Button}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{screen}\PYG{o}{.}\PYG{n}{fill}\PYG{p}{(}\PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{BLACK}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} write static text}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}welcome\PYGZus{}text}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}select\PYGZus{}params\PYGZus{}text}\PYG{p}{()}
+
+            \PYG{c+c1}{\PYGZsh{} define parameters that user can adjust}
+            \PYG{n}{params} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+                \PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA) MCTS Searches\PYGZdq{}}\PYG{p}{:} \PYG{k+kc}{None}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA)                     EEC\PYGZdq{}}\PYG{p}{:} \PYG{k+kc}{None}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}(UvsA)         Examples Games\PYGZdq{}}\PYG{p}{:} \PYG{k+kc}{None}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}(UvsA)     Comparison Games\PYGZdq{}}\PYG{p}{:} \PYG{k+kc}{None}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}(UvsA)   \PYGZpc{} Replace Threshold\PYGZdq{}}\PYG{p}{:} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{p}{\PYGZcb{}}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}param\PYGZus{}texts}\PYG{p}{(}\PYG{n}{params}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} get and display buttons}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Tutorial\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}tutorial\PYGZus{}button}\PYG{p}{()}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}All Params\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}all\PYGZus{}params\PYGZus{}button}\PYG{p}{()}
+            \PYG{c+c1}{\PYGZsh{} game start buttons}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}User vs User\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}User vs MCTS\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}User vs Agent\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}submit\PYGZus{}buttons}\PYG{p}{()}
+            \PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} store buttons in a dic where key defines their parameter}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}50ns\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}100ns\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}500ns\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}mcts\PYGZus{}searches\PYGZus{}buttons}\PYG{p}{()}
+            \PYG{p}{)}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}0.75ec\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}1.41ec\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}2ec\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}eec\PYGZus{}buttons}\PYG{p}{()}
+            \PYG{p}{)}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}100te\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}500te\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}1000te\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}example\PYGZus{}games\PYGZus{}buttons}\PYG{p}{()}
+            \PYG{p}{)}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}5cg\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}10cg\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}comparison\PYGZus{}games\PYGZus{}buttons}\PYG{p}{()}
+            \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}50rt\PYGZdq{}}\PYG{p}{],} \PYG{n}{buttons}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}60rt\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}display\PYGZus{}replace\PYGZus{}threshold\PYGZus{}buttons}\PYG{p}{()}
+
+            \PYG{c+c1}{\PYGZsh{} event loop}
+            \PYG{n+nb}{open} \PYG{o}{=} \PYG{k+kc}{True}
+            \PYG{k}{while} \PYG{n+nb}{open}\PYG{p}{:}
+                \PYG{k}{for} \PYG{n}{e} \PYG{o+ow}{in} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{event}\PYG{o}{.}\PYG{n}{get}\PYG{p}{():}
+                    \PYG{k}{if} \PYG{n}{e}\PYG{o}{.}\PYG{n}{type} \PYG{o}{==} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{QUIT}\PYG{p}{:}
+                        \PYG{n+nb}{open} \PYG{o}{=} \PYG{k+kc}{False}
+                        \PYG{n}{quit}\PYG{p}{()}
+                    \PYG{k}{if} \PYG{n}{e}\PYG{o}{.}\PYG{n}{type} \PYG{o}{==} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{MOUSEBUTTONDOWN}\PYG{p}{:}
+                        \PYG{n}{mouse\PYGZus{}pos} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{mouse}\PYG{o}{.}\PYG{n}{get\PYGZus{}pos}\PYG{p}{()}
+                        \PYG{n}{params} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}manage\PYGZus{}click}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}pos}\PYG{p}{,} \PYG{n}{buttons}\PYG{p}{,} \PYG{n}{params}\PYG{p}{)}
+
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{flip}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}manage\PYGZus{}click}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{],}
+            \PYG{n}{buttons}\PYG{p}{:} \PYG{n+nb}{dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{Button}\PYG{p}{],}
+            \PYG{n}{params}\PYG{p}{:} \PYG{n+nb}{dict}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{dict}\PYG{p}{:}
+            \PYG{k}{for} \PYG{n}{key}\PYG{p}{,} \PYG{n}{button} \PYG{o+ow}{in} \PYG{n}{buttons}\PYG{o}{.}\PYG{n}{items}\PYG{p}{():}
+                \PYG{k}{if} \PYG{n}{button}\PYG{o}{.}\PYG{n}{in\PYGZus{}bounds}\PYG{p}{(}\PYG{n}{mouse\PYGZus{}pos}\PYG{p}{):}
+                    \PYG{k}{if} \PYG{n}{key} \PYG{o+ow}{in} \PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Tutorial\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}All Params\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}User vs User\PYGZdq{}}\PYG{p}{]:}
+                        \PYG{n}{button}\PYG{o}{.}\PYG{n}{click\PYGZus{}fn}\PYG{p}{()}
+                    \PYG{k}{elif} \PYG{n}{key} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}User vs MCTS\PYGZdq{}}\PYG{p}{:}
+                        \PYG{n}{p} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{rand}\PYG{p}{()}
+                        \PYG{k}{if} \PYG{p}{(}
+                            \PYG{o+ow}{not} \PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA) MCTS Searches\PYGZdq{}}\PYG{p}{]}
+                            \PYG{o+ow}{or} \PYG{o+ow}{not} \PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA)                     EEC\PYGZdq{}}\PYG{p}{]}
+                        \PYG{p}{):} \PYG{c+c1}{\PYGZsh{} check the needed params have been set}
+                            \PYG{k}{continue}
+                        \PYG{n}{button}\PYG{o}{.}\PYG{n}{click\PYGZus{}fn}\PYG{p}{(}
+                            \PYG{n}{n\PYGZus{}searches}\PYG{o}{=}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA) MCTS Searches\PYGZdq{}}\PYG{p}{],}
+                            \PYG{n}{eec}\PYG{o}{=}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA)                     EEC\PYGZdq{}}\PYG{p}{],}
+                            \PYG{n}{player\PYGZus{}colour}\PYG{o}{=}\PYG{n}{WHITE} \PYG{k}{if} \PYG{n}{p} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.5} \PYG{k}{else} \PYG{n}{BLACK}\PYG{p}{,}
+                        \PYG{p}{)} \PYG{c+c1}{\PYGZsh{} run the game}
+                    \PYG{k}{elif} \PYG{n}{key} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}User vs Agent\PYGZdq{}}\PYG{p}{:}
+                        \PYG{n}{p} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{rand}\PYG{p}{()}
+                        \PYG{k}{if} \PYG{n+nb}{any}\PYG{p}{(}\PYG{n}{params}\PYG{o}{.}\PYG{n}{values}\PYG{p}{())} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} check needed params have been set}
+                            \PYG{k}{continue}
+                        \PYG{n}{button}\PYG{o}{.}\PYG{n}{click\PYGZus{}fn}\PYG{p}{(}
+                            \PYG{n}{n\PYGZus{}searches}\PYG{o}{=}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA) MCTS Searches\PYGZdq{}}\PYG{p}{],}
+                            \PYG{n}{eec}\PYG{o}{=}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsM, UvsA)                     EEC\PYGZdq{}}\PYG{p}{],}
+                            \PYG{n}{example\PYGZus{}games}\PYG{o}{=}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsA)       Examples Games\PYGZdq{}}\PYG{p}{],}
+                            \PYG{n}{comparison\PYGZus{}games}\PYG{o}{=}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsA)     Comparison Games\PYGZdq{}}\PYG{p}{],}
+                            \PYG{n}{replacement\PYGZus{}threshold}\PYG{o}{=}\PYG{n}{params}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}(UvsA)   \PYGZpc{} Replace Threshold\PYGZdq{}}\PYG{p}{],}
+                            \PYG{n}{player\PYGZus{}colour}\PYG{o}{=}\PYG{n}{WHITE} \PYG{k}{if} \PYG{n}{p} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.5} \PYG{k}{else} \PYG{n}{BLACK}\PYG{p}{,}
+                        \PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} run the game}
+                    \PYG{k}{else}\PYG{p}{:}
+                        \PYG{c+c1}{\PYGZsh{} split dictionary key into parameter and value}
+                        \PYG{n}{parameter} \PYG{o}{=} \PYG{n}{key}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{:]}
+                        \PYG{n}{value} \PYG{o}{=} \PYG{n}{key}\PYG{p}{[:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+                        \PYG{n}{params}\PYG{p}{[}\PYG{n}{DICTS}\PYG{o}{.}\PYG{n}{param\PYGZus{}placeholders}\PYG{p}{[}\PYG{n}{parameter}\PYG{p}{]]} \PYG{o}{=} \PYG{p}{(}
+                            \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)} \PYG{k}{if} \PYG{n}{parameter} \PYG{o}{!=} \PYG{l+s+s2}{\PYGZdq{}ec\PYGZdq{}} \PYG{k}{else} \PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+                        \PYG{p}{)} \PYG{c+c1}{\PYGZsh{} set parameter to selected value}
+
+                        \PYG{k}{for} \PYG{n}{k} \PYG{o+ow}{in} \PYG{n}{buttons}\PYG{o}{.}\PYG{n}{keys}\PYG{p}{():}
+                            \PYG{k}{if} \PYG{n}{k}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{:]} \PYG{o}{==} \PYG{n}{parameter}\PYG{p}{:}
+                                \PYG{n}{buttons}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]}\PYG{o}{.}\PYG{n}{set\PYGZus{}text\PYGZus{}black}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{screen}\PYG{p}{)}
+
+                        \PYG{n}{button}\PYG{o}{.}\PYG{n}{click\PYGZus{}fn}\PYG{p}{(}
+                            \PYG{n}{button}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{screen}
+                        \PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} make it obvious button has been selected (switch text to red)}
+
+            \PYG{k}{return} \PYG{n}{params}
+\end{Verbatim}

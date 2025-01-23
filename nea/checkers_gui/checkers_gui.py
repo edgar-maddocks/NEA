@@ -189,7 +189,8 @@ class CheckersGUI(CheckersGame):
             ACTION: action user wants to take - if None then a piece has been selected to move
                                               - if not None then a move of the selected piece has been made
         """
-        mouse_x, mouse_y = mouse_pos
+        mouse_x, mouse_y = mouse_pos 
+        # convert mouse click to row and column click
         row, col = get_row_selected(mouse_y=mouse_y), get_col_selected(mouse_x=mouse_x)
         action: ACTION = None
 
@@ -199,9 +200,10 @@ class CheckersGUI(CheckersGame):
                 valid_moves["takes"]
                 if len(valid_moves["takes"]) > 0
                 else valid_moves["simple"]
-            )
+            ) # get the set of valid moves 
             valid_selections = [x[0] for x in valid_moves]
-            if (row, col) in valid_selections:
+            if (row, col) in valid_selections: # check piece selected is a valid piece to move
+                # check user has selected their own piece
                 if self.player == WHITE:
                     if self.board[row, col] in WHITES:
                         self.piece_selected = (row, col)
@@ -239,15 +241,17 @@ class MainMenu:
         )
         self.font = lambda font_size: pygame.font.SysFont(
             pygame.font.get_default_font(), font_size
-        )
+        ) # set default font
 
     def display(self) -> None:
         buttons: dict[Button] = {}
         self.screen.fill(COLOURS.BLACK)
 
+        # write static text
         self._display_welcome_text()
         self._display_select_params_text()
 
+        # define parameters that user can adjust
         params = {
             "(UvsM, UvsA) MCTS Searches": None,
             "(UvsM, UvsA)                     EEC": None,
@@ -257,11 +261,14 @@ class MainMenu:
         }
         self._display_param_texts(params)
 
+        # get and display buttons
         buttons["Tutorial"] = self._display_tutorial_button()
         buttons["All Params"] = self._display_all_params_button()
+        # game start buttons
         buttons["User vs User"], buttons["User vs MCTS"], buttons["User vs Agent"] = (
             self._display_submit_buttons()
         )
+        # store buttons in a dic where key defines their parameter
         buttons["50ns"], buttons["100ns"], buttons["500ns"] = (
             self._display_mcts_searches_buttons()
         )
@@ -274,6 +281,7 @@ class MainMenu:
         buttons["5cg"], buttons["10cg"] = self._display_comparison_games_buttons()
         buttons["50rt"], buttons["60rt"] = self._display_replace_threshold_buttons()
 
+        # event loop
         open = True
         while open:
             for e in pygame.event.get():
@@ -540,16 +548,16 @@ class MainMenu:
                     if (
                         not params["(UvsM, UvsA) MCTS Searches"]
                         or not params["(UvsM, UvsA)                     EEC"]
-                    ):
+                    ): # check the needed params have been set
                         continue
                     button.click_fn(
                         n_searches=params["(UvsM, UvsA) MCTS Searches"],
                         eec=params["(UvsM, UvsA)                     EEC"],
                         player_colour=WHITE if p > 0.5 else BLACK,
-                    )
+                    ) # run the game
                 elif key == "User vs Agent":
                     p = np.random.rand()
-                    if any(params.values()) is None:
+                    if any(params.values()) is None: # check needed params have been set
                         continue
                     button.click_fn(
                         n_searches=params["(UvsM, UvsA) MCTS Searches"],
@@ -558,14 +566,15 @@ class MainMenu:
                         comparison_games=params["(UvsA)     Comparison Games"],
                         replacement_threshold=params["(UvsA)   % Replace Threshold"],
                         player_colour=WHITE if p > 0.5 else BLACK,
-                    )
+                    )  # run the game
                 else:
+                    # split dictionary key into parameter and value
                     parameter = key[-2:]
                     value = key[:-2]
 
                     params[DICTS.param_placeholders[parameter]] = (
                         int(value) if parameter != "ec" else float(value)
-                    )
+                    ) # set parameter to selected value
 
                     for k in buttons.keys():
                         if k[-2:] == parameter:

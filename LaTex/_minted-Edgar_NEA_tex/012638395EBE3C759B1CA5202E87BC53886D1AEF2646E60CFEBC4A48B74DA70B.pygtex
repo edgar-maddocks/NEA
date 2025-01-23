@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{typing}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Union}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ndarray}
+
+    \PYG{n}{Tensorable} \PYG{o}{=} \PYG{n}{Union}\PYG{p}{[}\PYG{n}{ndarray}\PYG{p}{,} \PYG{n+nb}{list}\PYG{p}{,} \PYG{n+nb}{tuple}\PYG{p}{,} \PYG{n+nb}{float}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{]}
+\end{Verbatim}

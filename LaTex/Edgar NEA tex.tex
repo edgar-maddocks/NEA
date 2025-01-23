@@ -905,7 +905,7 @@
             \item Information printed to the user pertaining to the agent's decision-making progress
         \end{enumerate}
     \end{enumerate}
-    \subsubsection{Autodifferentiation engine}
+    \subsubsection{Autodifferentiation engine} \label{AutodifferentiationObjectives}
     \begin{enumerate}
         \item A unit-tested autograd engine capable of calculating derivatives on a variety of functions inlcuding:
         \begin{enumerate}
@@ -944,7 +944,6 @@
             \item Loss Functions:
             \begin{enumerate}
                 \item Mean Squared error
-                \item Binary Cross Entropy Loss
                 \item AlphaZero's Loss Function
             \end{enumerate}
         \end{enumerate}
@@ -1071,7 +1070,7 @@
     }
     The final module is network, which contains the definitions for compositions of different layers from the nn module - which then build to form the model that is contained within the reinforcement
     learning agent.
-    \subsection{Checkers}
+    \subsection{Checkers} \label{CheckersDesignStage}
     The checkers game solution will be split into a console based version (that will be the main way for the agent to interact with the game) and
     an additonal class built ontop of this console solution which provides a GUI.
 
@@ -1122,7 +1121,7 @@
         \text{Possible Actions} &= \{((x,y), (w,z)) \mid x, w \in R \text{^} y,z \in C\}
     \end{align}
 
-    \subsubsubsection{GUI Add-on}
+    \subsubsubsection{GUI Add-on} \label{CheckersGUIDesignStage}
     \begin{center}
         \begin{tabular}{|m{10em} | m{12em} | m{15em}|}
             \hline 
@@ -1232,6 +1231,7 @@
         \end{algorithmic}
     \end{algorithm}
 
+
     \pagebreak
     \subsubsection{User Interface}
 
@@ -1245,7 +1245,7 @@
     The main menu will provide a starting place for all game loops to begin from - see \myhy{2.2.3.2}{2.2.3.2} for a visualization. This should allow users to begin a game loop
     only when the needed parameters for that loop have been selected. For 'User vs User play' therefore this would not require any parameters to be selected. For
     'User vs MCTS' play only the 'EEC' and 'MCTS searches' parameters would require values to be selected, but for 'User vs Agent' play it would require a value to be selected
-    for all of the listed parameters on the main menu page. However, this page does not include all the parameters that are needed for each model. Therefore this information 
+    for all of the listed parameters on the main menu page. Additionally, it should contain functionality so that it is obvious which parameters have been selected. However, this page does not include all the parameters that are needed for each model.Therefore this information 
     could be found inside of the 'All Params' button - with a list of each parameter name, and a description of what it dictates.
 
     \subsubsubsection{Structure, Hierarchy and Flow} \label{2.2.3.2}
@@ -1260,7 +1260,7 @@
     the desired model. For MCTS, the model will be instantiated inside of the program, and a tree build will be run on each turn of the MCTS. For the agent objects,
     its instantiation will be stored inside of a respectively named pickle file - see \myhy{File-Structure}{2.1} - and then loaded into the program.
     
-    \subsection{Autodifferentiation Engine}
+    \subsection{Autodifferentiation Engine} \label{AutodifferentiationDesignStage}
 
     The autodifferentiation engine is based mainly around one class - the 'Tensor' class. This class replicates types such as floats, integers, and matrices while adding functionality
     for automatic differentiation of operations on these types. 
@@ -1275,7 +1275,7 @@
             \hline
                 Tensor Data & 2D Array & Can represent floats, ints and matrices - with a scalar just being a 1x1 matrix. \\
             \hline
-                Tensor Sape & tuple[int,...] & Represents the shape of the data matrix. Useful for iterating through data. \\
+                Tensor Shape & tuple[int,...] & Represents the shape of the data matrix. Useful for iterating through data. \\
             \hline
                 Tensor Children + Parents & list[Tensor] & Allows us to store the tensors used to create and created by the given tensor - which then builds the function graph. (see \myhy{Autodiff-example}{example}) \\
             \hline
@@ -1785,138 +1785,2049 @@
 
     \section{Technical Solution}
 
+    In the technical analysis I will show the code that implements any data structures and algorithms that I have described
+    in the design section.
+
     \subsection{Checkers}
 
+    \subsubsection{Console Checkers}
+    The following sections will contain code from multiple files which holds the key functionality
+    of the console checkers implementation, defined in the \myhy{CheckersDesignStage}{design stage}.
+
+    \textbf{Note: }despite these code snippets having titles of the file names, it does not contain all
+    the code in the file. This can be found in the \myhy{}{appendix}. 
+    \subsubsubsection{nea.console\_checkers.checkers\_game.py}
     \begin{minted}{python}
-import numpy as np
+    from nea.console_checkers.consts import (
+        BLACK,
+        WHITE,
+        SIZE,
+        BLACKS,
+        WHITES,
+        ACTION,
+    )
 
+    from nea.console_checkers import jit_functions
 
-class CheckersGame:
-    """
-    Holds basic logic and console rendering of a checkers game
-    """
+    import numpy as np
 
-    def __init__(self) -> None:
+    class CheckersGame:
         """
-        Creates a new CheckersGame object
+        Holds basic logic and console rendering of a checkers game
         """
-        self._board = self._init_board()
-        self._last_moved_piece: tuple[int, int] = None
-        self._player = WHITE
-        self._moves_no_capture = 0
-        self._switch_player = None
 
-    def get_all_valid_moves(self) -> dict[str, list[ACTION]]:
-        """Returns a dictionary of take and simple moves.
-        Does not account for if a double moves are available.
+        def __init__(self) -> None:
+            """
+            Creates a new CheckersGame object
+            """
+            self._board = self._init_board() # create numeric representation of board
+            self._last_moved_piece: tuple[int, int] = None
+            self._player = WHITE
+            self._moves_no_capture = 0
+            self._switch_player = None
 
-        Keys:
-            Takes moves: "takes"
-            Simple moves: "simple"
+        def _init_board(self) -> np.ndarray:
+            """Method which returns intial state of the board
 
-        Returns:
-            dict[str, list[ACTION]]: Dictionary of available moves
+            Returns:
+                np.ndarray: initial board state
+            """
+            return jit_functions._init_board()
+
+        def get_all_valid_moves(self) -> dict[str, list[ACTION]]:
+            """Returns a dictionary of take and simple moves.
+            Does not account for if a double moves are available.
+
+            Keys:
+                Takes moves: "takes"
+                Simple moves: "simple"
+
+            Returns:
+                dict[str, list[ACTION]]: Dictionary of available moves
+            """
+            moves = {"takes": [], "simple": []} # dictionary containing take and simple moves
+            for row in range(SIZE): # for each row
+                for col in range(SIZE): # and each column
+                    piece = self._board[row, col]
+                    if piece in WHITES and self._player == WHITE:
+                        moves["simple"] += self._get_valid_simple_moves(
+                            row, col, self._player
+                        ) # get simple moves from that square
+                        moves["takes"] += self._get_valid_take_moves(row, col, self._player) 
+                        # get take moves from that square
+                    elif piece in BLACKS and self._player == BLACK:
+                        moves["simple"] += self._get_valid_simple_moves(
+                            row, col, self._player
+                        )
+                        moves["takes"] += self._get_valid_take_moves(row, col, self._player)
+
+            return moves
+
+        def _get_valid_take_moves(self, row: int, col: int, player: str):
+            """
+            Gets all valid take moves available for a given square
+
+            Args:
+                row (int): row the square is on
+                col (int): column the square is on
+                player (str): player to check if moves are available for
+
+            Returns:
+                list: tuple of tuples
+            """
+            # use jit function for faster computation
+            return jit_functions._get_valid_take_moves(self._board, row, col, player) 
+
+        def step(self, action: ACTION) -> tuple[bool, np.ndarray, bool, float]:
+            """Completes a step given an action in the board environment
+
+            Args:
+                action (ACTION): Desired action to take
+
+            Returns:
+                tuple[bool, np.ndarray, bool, float]: (valid_move, next_obs, done, reward)
+            """
+            self._switch_player = True # default switch turn at end of mvoe
+            rowcol_move_from, rowcol_move_to = action[0], action[1] # break action into two tuples
+            if self._last_moved_piece is None: # if this is not a second take
+                all_valid_moves = self.get_all_valid_moves()
+                if (
+                    len(all_valid_moves["takes"]) == 0
+                    and len(all_valid_moves["simple"]) == 0
+                ):
+                    return (True, self._board, True, -1) # return loss if no moves available
+
+                valid_moves_for_turn = (
+                    all_valid_moves["takes"]
+                    if len(all_valid_moves["takes"]) > 0
+                    else all_valid_moves["simple"]
+                ) # get list of all valid moves
+
+                if action not in valid_moves_for_turn:
+                    return (False, self._board, False, 0) # return invalid move
+                else:
+                    self._board[*rowcol_move_to] = self._board[*rowcol_move_from] # update positon
+                    self.clear(*rowcol_move_from) 
+                    self._moves_no_capture += 1 # add to draw condition
+
+            elif self._last_moved_piece is not None: # if this is a second take move
+                valid_moves_for_turn = self._get_valid_take_moves(
+                    *self._last_moved_piece, self._player
+                ) # get valid actions
+
+                if action not in valid_moves_for_turn:
+                    return (False, self._board, False, 0) # return invalid moves
+                else:
+                    self._board[*rowcol_move_to] = self._board[*rowcol_move_from] # update position
+                    self.clear(*rowcol_move_from)
+
+            row_from, col_from = rowcol_move_from
+            row_to, col_to = rowcol_move_to
+            if abs(row_to - row_from) == 2: # if it was a take move
+                one_row = 0.5 * (row_to - row_from) # get the direction horizontally (1 or -1)
+                one_col = 0.5 * (col_to - col_from) # get direction vertically (1 or -1)
+                self.clear(int(row_from + one_row), int(col_from + one_col)) # remove opponent piece
+                self._moves_no_capture = 0 
+                self._last_moved_piece = row_to, col_to
+                double_moves = self._get_valid_take_moves(
+                    *self._last_moved_piece, self._player
+                ) # check if there is now a second take available
+                if len(double_moves) == 0:
+                    self._last_moved_piece = None
+                else:
+                    self._switch_player = False 
+
+            # crown pieces if they reach opposite edge of board
+            if self._board[row_to, col_to] in WHITES and row_to == 0:
+                self.crown(row_to, col_to)
+            if self._board[row_to, col_to] in BLACKS and row_to == 7:
+                self.crown(row_to, col_to) 
+
+            # check win and draw conditions
+            if self._moves_no_capture == 40:
+                return (True, self._board, True, 0)
+            elif self.n_black_pieces == 1 and self.n_white_pieces == 1:
+                return (True, self._board, True, 0)
+            elif self.n_opposite_player_pieces == 0:
+                return (True, self._board, True, 1)
+            elif self.no_moves_available_for_opposite_player():
+                return (True, self._board, True, 1)
+            else:
+                if self._switch_player:
+                    self._player = self.opposite_player
+                return (True, self._board, False, 0)
+
+    
+    \end{minted}
+
+    \subsubsubsection{nea.console\_checkers.jit\_functions.py}
+    \begin{minted}{python}
+    from numba import jit
+    import numpy as np
+
+    @jit(cache=True)
+    def _get_valid_take_moves(
+        board: np.ndarray, row: int, col: int, player: str
+    ) -> list[ACTION]:
+        # have to define constants inside the function for jit to work
+        WHITES = [3, 4] 
+        BLACKS = [1, 2]
+
+        ALL_LEGAL_DIRS = [(+1, -1), (+1, +1), (-1, +1), (-1, -1)]
+        BLACK_R_DIRS = [ALL_LEGAL_DIRS[0], ALL_LEGAL_DIRS[1]]
+        WHITE_R_DIRS = [ALL_LEGAL_DIRS[2], ALL_LEGAL_DIRS[3]]
+
+        piece = board[row, col]
+        valid_moves = []
+        if player == "black":
+            if piece == 2: # if the piece is a black king
+                for direction in ALL_LEGAL_DIRS:
+                    if (
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and board[row + direction[0], col + direction[1]] in WHITES
+                        and board[row + 2 * direction[0], col + 2 * direction[1]] == 0
+                    ):
+                        # if square to check is in bounds
+                        # and if the square beyond the one diagonally adjacent is empty
+                        # and the square diagonally adjacent contains an opponent piece
+                        valid_moves.append(
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
+                        )
+                        # add this take move to the list of valids
+            elif piece == 1: # if piece is black regular
+                for direction in BLACK_R_DIRS:
+                    if (
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and board[row + direction[0], col + direction[1]] in WHITES
+                        and board[row + 2 * direction[0], col + 2 * direction[1]] == 0
+                    ):
+                        valid_moves.append(
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
+                        )
+        elif player == "white":
+            if piece == 4: # if pieces is white king
+                for direction in ALL_LEGAL_DIRS:
+                    if (
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and board[row + direction[0], col + direction[1]] in BLACKS
+                        and board[row + 2 * direction[0], col + 2 * direction[1]] == 0
+                    ):
+                        valid_moves.append(
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
+                        )
+            elif piece == 3: # if piece is white regular
+                for direction in WHITE_R_DIRS:
+                    if (
+                        row + 2 * direction[0] in range(8)
+                        and col + 2 * direction[1] in range(8)
+                        and board[row + direction[0], col + direction[1]] in BLACKS
+                        and board[row + 2 * direction[0], col + 2 * direction[1]] == 0
+                    ):
+                        valid_moves.append(
+                            (
+                                (row, col),
+                                (row + 2 * direction[0], col + 2 * direction[1]),
+                            )
+                        )
+
+        return valid_moves
+    \end{minted}
+
+    \subsubsubsection{nea.console\_checkers.consts.py}
+    \begin{minted}{python}
+    SIZE = 8
+
+    BLACK = "black"
+    WHITE = "white"
+
+    BLACKS = [1, 2]
+    WHITES = [3, 4]
+
+    ACTION = tuple[tuple[int, int], tuple[int, int]]
+    \end{minted}    
+
+    \subsubsection{Checkers GUI}
+    The next set of sections will now contain code for the data structures and algorithms
+    mentioned in the \myhy{CheckersGUIDesignStage}{design stage} of the checkers user interface / GUI add-on.
+
+    \subsubsubsection{nea.checkers\_gui.checkers\_gui.py}
+    \begin{minted}{python}
+    import pygame
+    import numpy as np
+
+    from nea.checkers_gui.consts import COLOURS, DISPLAY, DICTS, TEXTS
+    from nea.checkers_gui.buttons import Button, RectButton, _change_button_text_colour
+    from nea.checkers_gui.helpers import (
+        get_col_selected,
+        get_row_selected,
+    )
+    from nea.console_checkers import CheckersGame
+    from nea.console_checkers.consts import (
+        ACTION,
+        BLACK,
+        BLACKS,
+        EMPTY,
+        WHITE,
+        WHITES,
+    )
+    from nea.console_checkers.consts import (
+        SIZE as BOARD_SIZE,
+    )
+
+
+    class CheckersGUI(CheckersGame):
+        """Class that adds extra functionality to the CheckersGame
+        which allows it to display a GUI
         """
-        moves = {"takes": [], "simple": []}
-        for row in range(SIZE):
-            for col in range(SIZE):
-                piece = self._board[row, col]
-                if piece in WHITES and self._player == WHITE:
-                    moves["simple"] += self._get_valid_simple_moves(
-                        row, col, self._player
-                    )
-                    moves["takes"] += self._get_valid_take_moves(row, col, self._player)
-                elif piece in BLACKS and self._player == BLACK:
-                    moves["simple"] += self._get_valid_simple_moves(
-                        row, col, self._player
-                    )
-                    moves["takes"] += self._get_valid_take_moves(row, col, self._player)
 
-        return moves
+        def __init__(self) -> None:
+            self.piece_selected: tuple[int, int] = None
+            super().__init__()
 
-    def step(self, action: ACTION) -> tuple[bool, np.ndarray, bool, float]:
-        """Completes a step given an action in the board environment
+        def draw(self, screen: pygame.Surface) -> None:
+            """Draws the checkers board and pieces.
+
+            If a piece is selected it scales that piece to be slightly smaller.
+            Additionally, available moves for a selected piece are displayed.
+
+            Args:
+                screen (pygame.Surface): screen to draw to
+            """
+            # draw the background
+            for row in range(8):
+                if row % 2 == 0:
+                    for x in range(0, DISPLAY.SCREEN_SIZE, DISPLAY.SQUARE_SIZE * 2):
+                        pygame.draw.rect(
+                            screen,
+                            COLOURS.WHITE,
+                            pygame.Rect(
+                                x,
+                                row * DISPLAY.SQUARE_SIZE,
+                                DISPLAY.SQUARE_SIZE,
+                                DISPLAY.SQUARE_SIZE,
+                            ),
+                        )
+                else:
+                    for x in range(
+                        DISPLAY.SQUARE_SIZE, DISPLAY.SCREEN_SIZE, DISPLAY.SQUARE_SIZE * 2
+                    ):
+                        pygame.draw.rect(
+                            screen,
+                            COLOURS.WHITE,
+                            pygame.Rect(
+                                x,
+                                row * DISPLAY.SQUARE_SIZE,
+                                DISPLAY.SQUARE_SIZE,
+                                DISPLAY.SQUARE_SIZE,
+                            ),
+                        )
+            # draw the pieces
+            for y in range(BOARD_SIZE):
+                for x in range(BOARD_SIZE):
+                    piece = self.board[x, y]
+                    if (x, y) == self.piece_selected:
+                        self._draw_selected_piece(screen)
+                        self._draw_available_moves(screen)
+                    elif piece != EMPTY:
+                        self._get_and_draw_piece(screen, piece=piece, x=x, y=y)
+
+            pygame.display.set_caption(f"IT IS {self.player.upper()}'S MOVE")
+
+        def click(self, mouse_pos: tuple[int, int]) -> ACTION:
+        """Evaulates a users click and selects/deselects a piece if needed
 
         Args:
-            action (ACTION): Desired action to take
+            mouse_pos (tuple[int, int]): mouse position when click occurs
 
         Returns:
-            tuple[bool, np.ndarray, bool, float]: (valid_move, next_obs, done, reward)
+            ACTION: action user wants to take - if None then a piece has been selected to move
+                                              - if not None then a move of the selected piece has been made
         """
-        self._switch_player = True
-        rowcol_move_from, rowcol_move_to = action[0], action[1]
-        if self._last_moved_piece is None:
-            all_valid_moves = self.get_all_valid_moves()
-            if (
-                len(all_valid_moves["takes"]) == 0
-                and len(all_valid_moves["simple"]) == 0
-            ):
-                return (True, self._board, True, -1)
+        mouse_x, mouse_y = mouse_pos 
+        # convert mouse click to row and column click
+        row, col = get_row_selected(mouse_y=mouse_y), get_col_selected(mouse_x=mouse_x)
+        action: ACTION = None
 
-            valid_moves_for_turn = (
-                all_valid_moves["takes"]
-                if len(all_valid_moves["takes"]) > 0
-                else all_valid_moves["simple"]
-            )
-
-            if action not in valid_moves_for_turn:
-                return (False, self._board, False, 0)
-            else:
-                self._board[*rowcol_move_to] = self._board[*rowcol_move_from]
-                self.clear(*rowcol_move_from)
-                self._moves_no_capture += 1
-
-        elif self._last_moved_piece is not None:
-            valid_moves_for_turn = self._get_valid_take_moves(
-                *self._last_moved_piece, self._player
-            )
-
-            if action not in valid_moves_for_turn:
-                return (False, self._board, False, 0)
-            else:
-                self._board[*rowcol_move_to] = self._board[*rowcol_move_from]
-                self.clear(*rowcol_move_from)
-
-        row_from, col_from = rowcol_move_from
-        row_to, col_to = rowcol_move_to
-        if abs(row_to - row_from) == 2:
-            one_row = 0.5 * (row_to - row_from)
-            one_col = 0.5 * (col_to - col_from)
-            self.clear(int(row_from + one_row), int(col_from + one_col))
-            self._moves_no_capture = 0
-            self._last_moved_piece = row_to, col_to
-            double_moves = self._get_valid_take_moves(
-                *self._last_moved_piece, self._player
-            )
-            if len(double_moves) == 0:
-                self._last_moved_piece = None
-            else:
-                self._switch_player = False
-
-        if self._board[row_to, col_to] in WHITES and row_to == 0:
-            self.crown(row_to, col_to)
-        if self._board[row_to, col_to] in BLACKS and row_to == 7:
-            self.crown(row_to, col_to)
-
-        if self._moves_no_capture == 40:
-            return (True, self._board, True, 0)
-        elif self.n_black_pieces == 1 and self.n_white_pieces == 1:
-            return (True, self._board, True, 0)
-        elif self.n_opposite_player_pieces == 0:
-            return (True, self._board, True, 1)
-        elif self.no_moves_available_for_opposite_player():
-            return (True, self._board, True, 1)
+        if self.piece_selected is None:
+            valid_moves = self.get_all_valid_moves()
+            valid_moves = (
+                valid_moves["takes"]
+                if len(valid_moves["takes"]) > 0
+                else valid_moves["simple"]
+            ) # get the set of valid moves 
+            valid_selections = [x[0] for x in valid_moves]
+            if (row, col) in valid_selections: # check piece selected is a valid piece to move
+                # check user has selected their own piece
+                if self.player == WHITE:
+                    if self.board[row, col] in WHITES:
+                        self.piece_selected = (row, col)
+                elif self.player == BLACK:
+                    if self.board[row, col] in BLACKS:
+                        self.piece_selected = (row, col)
         else:
-            if self._switch_player:
-                self._player = self.opposite_player
-            return (True, self._board, False, 0)
+            if (row, col) != self.piece_selected:
+                action = (self.piece_selected, (row, col))
+            self.piece_selected = None
+
+        return action
+
+
+    class MainMenu:
+        def __init__(self) -> None:
+            pygame.init()
+
+            self.screen = pygame.display.set_mode(
+                (DISPLAY.SCREEN_SIZE, DISPLAY.SCREEN_SIZE)
+            )
+            self.font = lambda font_size: pygame.font.SysFont(
+                pygame.font.get_default_font(), font_size
+            ) # set default font
+
+        def display(self) -> None:
+            buttons: dict[Button] = {}
+            self.screen.fill(COLOURS.BLACK)
+
+            # write static text
+            self._display_welcome_text()
+            self._display_select_params_text()
+
+            # define parameters that user can adjust
+            params = {
+                "(UvsM, UvsA) MCTS Searches": None,
+                "(UvsM, UvsA)                     EEC": None,
+                "(UvsA)         Examples Games": None,
+                "(UvsA)     Comparison Games": None,
+                "(UvsA)   % Replace Threshold": None,
+            }
+            self._display_param_texts(params)
+
+            # get and display buttons
+            buttons["Tutorial"] = self._display_tutorial_button()
+            buttons["All Params"] = self._display_all_params_button()
+            # game start buttons
+            buttons["User vs User"], buttons["User vs MCTS"], buttons["User vs Agent"] = (
+                self._display_submit_buttons()
+            )
+            # store buttons in a dic where key defines their parameter
+            buttons["50ns"], buttons["100ns"], buttons["500ns"] = (
+                self._display_mcts_searches_buttons()
+            )
+            buttons["0.75ec"], buttons["1.41ec"], buttons["2ec"] = (
+                self._display_eec_buttons()
+            )
+            buttons["100te"], buttons["500te"], buttons["1000te"] = (
+                self._display_example_games_buttons()
+            )
+            buttons["5cg"], buttons["10cg"] = self._display_comparison_games_buttons()
+            buttons["50rt"], buttons["60rt"] = self._display_replace_threshold_buttons()
+
+            # event loop
+            open = True
+            while open:
+                for e in pygame.event.get():
+                    if e.type == pygame.QUIT:
+                        open = False
+                        quit()
+                    if e.type == pygame.MOUSEBUTTONDOWN:
+                        mouse_pos = pygame.mouse.get_pos()
+                        params = self._manage_click(mouse_pos, buttons, params)
+
+                pygame.display.flip()
+
+        def _manage_click(
+            self,
+            mouse_pos: tuple[int, int],
+            buttons: dict[str, Button],
+            params: dict,
+        ) -> dict:
+            for key, button in buttons.items():
+                if button.in_bounds(mouse_pos):
+                    if key in ["Tutorial", "All Params", "User vs User"]:
+                        button.click_fn()
+                    elif key == "User vs MCTS":
+                        p = np.random.rand()
+                        if (
+                            not params["(UvsM, UvsA) MCTS Searches"]
+                            or not params["(UvsM, UvsA)                     EEC"]
+                        ): # check the needed params have been set
+                            continue
+                        button.click_fn(
+                            n_searches=params["(UvsM, UvsA) MCTS Searches"],
+                            eec=params["(UvsM, UvsA)                     EEC"],
+                            player_colour=WHITE if p > 0.5 else BLACK,
+                        ) # run the game
+                    elif key == "User vs Agent":
+                        p = np.random.rand()
+                        if any(params.values()) is None: # check needed params have been set
+                            continue
+                        button.click_fn(
+                            n_searches=params["(UvsM, UvsA) MCTS Searches"],
+                            eec=params["(UvsM, UvsA)                     EEC"],
+                            example_games=params["(UvsA)       Examples Games"],
+                            comparison_games=params["(UvsA)     Comparison Games"],
+                            replacement_threshold=params["(UvsA)   % Replace Threshold"],
+                            player_colour=WHITE if p > 0.5 else BLACK,
+                        )  # run the game
+                    else:
+                        # split dictionary key into parameter and value
+                        parameter = key[-2:]
+                        value = key[:-2]
+
+                        params[DICTS.param_placeholders[parameter]] = (
+                            int(value) if parameter != "ec" else float(value)
+                        ) # set parameter to selected value
+
+                        for k in buttons.keys():
+                            if k[-2:] == parameter:
+                                buttons[k].set_text_black(self.screen)
+
+                        button.click_fn(
+                            button, self.screen
+                        )  # make it obvious button has been selected (switch text to red)
+
+            return params
+    \end{minted}
+
+    \subsubsubsection{nea.checkers\_gui.helpers.py}
+    \begin{minted}{python}
+        from nea.checkers_gui.consts import DISPLAY
+
+        def get_row_selected(mouse_y: int) -> int:
+            return int(mouse_y / DISPLAY.SQUARE_SIZE)
+
+        def get_col_selected(mouse_x: int) -> int:
+            return int(mouse_x / DISPLAY.SQUARE_SIZE)
+    \end{minted}
+
+    \subsubsubsection{nea.checkers\_gui.consts.py}
+    \begin{minted}{python}
+    class DISPLAY:
+        SCREEN_SIZE = 720
+        SQUARE_SIZE = 90
+        CIRCLE_RADIUS = 20
+
+
+    class COLOURS:
+        BLACK = (0, 0, 0)
+        WHITE = (255, 255, 255)
+        GREEN = (0, 255, 0)
+        RED = (255, 0, 0)
+        BLUE = (0, 0, 255)
+        YELLOW = (255, 255, 0)
+        BROWN = (131, 106, 76)
+        BONE = (251, 220, 191)
+
+
+    class DICTS:
+        param_placeholders: dict[str, str] = {
+            "ns": "(UvsM, UvsA) MCTS Searches",
+            "ec": "(UvsM, UvsA)                     EEC",
+            "te": "(UvsA)       Examples Games",
+            "cg": "(UvsA)     Comparison Games",
+            "rt": "(UvsA)   % Replace Threshold",
+        }
+        param_placeholder_values: dict[str, list[int | float]] = {
+            "ns": [50, 100, 500],
+            "ec": [0.75, 1.41, 2],
+            "te": [100, 500, 1000],
+            "cg": [5, 10],
+            "rt": [50, 60],
+        }
+
+
+    class TEXTS:
+        tutorial = [
+            "1. Pieces only move diagonally.",
+            "... rest can be seen in appendix",
+        ]
+        changeable_params = [
+            "MCTS Searches: The number of different game endings the tree search sees.",
+            "... rest ca be seen in appendix",
+        ]
+        defaulted_params = [
+            "MCTS Epochs (defaulted to 10): The number of iterations where the network ",
+            "... rest can be seen in appendix",
+        ]
+    \end{minted}
+
+    \subsubsubsection{nea.checkers\_gui.buttons.py}
+    \begin{minted}{python}
+    import pygame
+    from abc import ABC
+
+    from nea.checkers_gui.consts import COLOURS
+
+
+    def _change_button_text_colour(button: RectButton, screen: pygame.Surface):
+        button.text_colour = (
+            COLOURS.RED if button.text_colour == COLOURS.BLACK else COLOURS.BLACK
+        )
+        button.draw(screen)
+
+
+    class Button(ABC):
+        def draw(self, screen: pygame.Surface) -> None: ...
+
+        def in_bounds(self, mouse_pos: tuple[int, int]) -> bool: ...
+
+        def click_fn(self, *args): ...
+
+
+    class RectButton(Button):
+        def __init__(
+            self,
+            width: int,
+            height: int,
+            pos: tuple[int, int],
+            click_func: callable,
+            colour: COLOURS = COLOURS.WHITE,
+            text: str = "",
+            font_size: int = None,
+            text_colour: COLOURS = COLOURS.BLACK,
+        ) -> None:
+            self.width = width
+            self.height = height
+            self.x, self.y = pos
+            self.f = click_func
+            self.colour = colour
+            self.text = text
+            if self.text != "":
+                assert font_size, "Must have font size if text is to be shown."
+                self.text_colour = text_colour
+                self.font = pygame.font.SysFont(pygame.font.get_default_font(), font_size)
+
+        def draw(self, screen: pygame.Surface) -> None:
+            pygame.draw.rect(
+                screen,
+                self.colour,
+                pygame.Rect(
+                    self.x,
+                    self.y,
+                    self.width,
+                    self.height,
+                ),
+            )
+
+            if self.text != "":
+                font = self.font
+                text = font.render(self.text, 1, self.text_colour)
+                # draw the text in the middle of the button
+                screen.blit(
+                    text,
+                    (
+                        self.x + (self.width / 2 - text.get_width() / 2),
+                        self.y + (self.height / 2 - text.get_height() / 2),
+                    ),
+                )
+
+        def in_bounds(self, mouse_pos: tuple[int, int]) -> bool:
+            if mouse_pos[0] > self.x and mouse_pos[0] < self.x + self.width:
+                if mouse_pos[1] > self.y and mouse_pos[1] < self.y + self.height:
+                    return True
+
+            return False
+
+        def click_fn(self, *args, **kwargs):
+            if self.f:
+                self.f(*args, **kwargs)
+    \end{minted}
+
+
+    \subsection{Autodifferentiation engine}
+    Please see \myhy{AutodifferentiationDesignStage}{here} for the design stage related to this following
+    area. Additionally, I will include code which helps to achieve the \myhy{AutodifferentiationObjectives}{autodifferentiation engine objectives}
+
+    \subsubsection{nea.ml.autograd.consts.py}
+    \begin{minted}{python}
+    from typing import Union
+    from numpy import ndarray
+
+    Tensorable = Union[ndarray, list, tuple, float, int]
+    \end{minted}
+
+    \subsubsection{nea.ml.autograd.tensor.py}
+    \begin{minted}{python}
+    from __future__ import annotations
+    from abc import ABC
+    import contextlib
+
+    import numpy as np
+
+    from nea.ml.autograd.consts import Tensorable
+    from nea.ml.autograd.convolve_funcs import (
+        cpu_forward_convolve2d,
+        cpu_k_backward_convolve2d,
+        cpu_x_backward_convolve2d,
+        cpu_x_and_k_backward_convolve2d,
+    )
+    from nea.ml.autograd.jit_functions import fill_padded_array
+
+    # ========
+    #  TENSOR
+    # ========
+
+    _grad_is_enabled = True
+
+
+    def is_grad_enabled() -> bool:
+        """Returns if gradient calculations are enabled
+
+        Returns:
+            bool:
+        """
+        return _grad_is_enabled
+
+
+    @contextlib.contextmanager
+    def no_grad():
+        """context manager to disable gradient calculations"""
+        global _grad_is_enabled
+        prev_state = _grad_is_enabled
+        _grad_is_enabled = False  # Disable gradients
+        try:
+            yield
+        finally:
+            _grad_is_enabled = prev_state  # return to previous
+
+
+    class Tensor:
+        """
+        ====================
+            Tensor class
+        ====================
+        """
+
+        def __init__(
+            self,
+            data: Tensorable,
+            requires_grad: bool = False,
+            operation: TensorFunction = None,
+        ) -> None:
+            self._data: np.ndarray = np.array(data)
+            self.shape = self._data.shape
+            self.operation: TensorFunction = operation
+
+            self.requires_grad: bool = requires_grad
+
+            if self.requires_grad:
+                self.grad = np.zeros_like(self._data)
+
+            self.children = []
+
+        def __repr__(self) -> str:
+            return f"Tensor({self._data}, shape = {self.shape})"
+
+        @staticmethod
+        def zeros(shape: tuple[int], requires_grad: bool = False) -> Tensor:
+            """Returns a tensor of 1s
+
+            Args:
+                shape (tuple[int]): desired shape of tensor
+                requires_grad (bool, optional): if the tensors requires_grad property should be false.
+                Defaults to False.
+
+            Returns:
+                Tensor: tensor of 1s
+            """
+            return Tensor(np.zeros(shape), requires_grad=requires_grad)
+
+        @staticmethod
+        def ones(shape: tuple[int], requries_grad: bool = False) -> Tensor:
+            """Returns a tensor of 0s
+
+            Args:
+                shape (tuple[int]): desired shape of tensor
+                requires_grad (bool, optional): if the tensors requires_grad property should be false.
+                Defaults to False.
+
+            Returns:
+                Tensor: tensor of 0s
+            """
+            return Tensor(np.ones(shape), requires_grad=requries_grad)
+
+        def backward(self, dy=None, y=None) -> None:
+            """Reverse searches the computational graph, computing and updating parent
+            gradients as it goes
+
+            Args:
+                dy (Tensor, optional): _description_. Defaults to None.
+                y (Tensor, optional): _description_. Defaults to None.
+
+            Returns:
+                None
+            """
+            if self.requires_grad is False:
+                raise ValueError("Tensor has requires grad set to false")
+            if not is_grad_enabled():
+                raise ValueError("no_grad is enabled")
+
+            if dy is None: # if no upstream gradient
+                dy = np.ones_like(self._data) # derivative of itself is 1
+
+            if y is not None: 
+                self.children.remove(y) # remove from graph to stop duplicate calculation
+
+            self.grad = self.grad + dy # accumulate grad
+
+            if self.operation:
+                if not self.children: # continue traversing up graph
+                    self.operation.backward(self.grad, self)
+
+        def zero_grad(self) -> None:
+            """
+            Zeros out the gradient of the tensor
+            """
+            self.grad = np.zeros_like(self._data)
+
+        def __eq__(self, other: np.ndarray | int | float):
+            if np.array_equal(self.data, np.array(other)):
+                return True
+
+        def __add__(self, other: Tensorable) -> Tensor:
+            add_op = Addition()
+            return add_op.forward(self, to_tensor(other))
+
+        def __radd__(self, other: Tensorable) -> Tensor:
+            add_op = Addition()
+            return add_op.forward(self, to_tensor(other))
+
+        def __iadd__(self, other: Tensorable) -> Tensor:
+            add_op = Addition()
+            return add_op.forward(self, to_tensor(other))
+
+        def __neg__(self):
+            neg_op = Negation()
+            return neg_op.forward(self)
+
+        def __sub__(self, other: Tensorable) -> Tensor:
+            return self + -to_tensor(other)
+
+        def __rsub__(self, other: Tensorable) -> Tensor:
+            return to_tensor(other) + -self
+
+        def __isub__(self, other: Tensorable) -> Tensor:
+            return self + -to_tensor(other)
+
+        def __mul__(self, other: Tensorable) -> Tensor:
+            mul_op = Multiplication()
+            return mul_op.forward(self, to_tensor(other))
+
+        def __rmul__(self, other: Tensorable) -> Tensor:
+            mul_op = Multiplication()
+            return mul_op.forward(to_tensor(other), self)
+
+        def __imul__(self, other: Tensorable) -> Tensor:
+            mul_op = Multiplication()
+            return mul_op.forward(self, to_tensor(other))
+
+        def __truediv__(self, other: Tensorable) -> Tensor:
+            div_op = Division()
+            return div_op.forward(self, to_tensor(other))
+
+        def __matmul__(self, other: Tensorable) -> Tensor:
+            matmul_op = MatrixMultiplication()
+            return matmul_op.forward(self, to_tensor(other))
+
+        def __pow__(self, other: Tensorable) -> Tensor:
+            pow_op = Power()
+            return pow_op.forward(self, to_tensor(other))
+
+        def T(self) -> Tensor:
+            """Returns a copy of the tensor, however the data has been transposed
+
+            Returns:
+                Tensor:
+            """
+            transpose_op = Transpose()
+            return transpose_op.forward(self)
+
+        def mean(self) -> Tensor:
+            """Computes the mean of the tensor
+
+            Returns:
+                Tensor: _description_
+            """
+            mean_op = Mean()
+            return mean_op.forward(self)
+
+        def sum(self, dim: int = -1, keepdims: bool = False) -> Tensor:
+            """Computes sum of a tensor
+
+            Args:
+                axis (int, optional): axis to sum across. Defaults to -1.
+                keepdims (bool, optional): reduce summed axis to 1?. Defaults to False.
+
+            Returns:
+                Tensor:
+            """
+            sum_op = Sum()
+            return sum_op.forward(self, dim=dim, keepdims=keepdims)
+
+        def log(self) -> Tensor:
+            """Computes element wise log of tensor
+
+            Returns:
+                Tensor: _description_
+            """
+            log_op = Log()
+            return log_op.forward(self)
+
+        def exp(self) -> Tensor:
+            """e^
+
+            Returns:
+                Tensor:
+            """
+            exp_op = Exp()
+            return exp_op.forward(self)
+
+        def convolve2d(self, k: Tensorable, b: Tensorable = None) -> Tensor:
+            """2D convolutional layer of the tensor
+
+            Args:
+                k (Tensor): kernel to use
+                b (Tensor, optional): bias to use. Defaults to None.
+
+            Returns:
+                Tensor:
+            """
+            conv_op = Convolve2D()
+            return conv_op.forward(self, k, b=b)
+
+        def reshape(self, shape: tuple[int, int]) -> Tensor:
+            """Reshapes a tensor
+
+            Args:
+                shape (tuple[int, int]): shape to change to
+
+            Returns:
+                Tensor:
+            """
+            reshape_op = Reshape()
+            return reshape_op.forward(self, shape=shape)
+
+        def pad2D(self, padding: int, value: float) -> Tensor:
+            """Pads a 2D tensor
+
+            Args:
+                padding (int): how much to add to each edge
+                value (float): value to pad with
+
+            Returns:
+                Tensor: padded tensor
+            """
+            pad_op = Pad2D()
+            return pad_op.forward(self, padding=padding, value=value)
+
+        def relu(self) -> Tensor:
+            """Acts as function for relu activation layer
+
+            Returns:
+                Tensor:
+            """
+            relu_op = ReLU()
+            return relu_op.forward(self)
+
+
+    # ==================
+    ## TENSOR FUNCTIONS
+    # ==================
+
+
+    class TensorFunction(ABC):
+        """Abstract class of a TensorFunction, represents the operation performed
+
+        Args:
+            ABC (_type_): Abstrract Class
+        """
+
+        parents: tuple[Tensor] = None
+        _cache: tuple[Tensor] = None
+
+
+    class Addition(TensorFunction):
+        """Operation to add two tensors
+
+        Args:
+            TensorFunction (_type_): _description_
+        """
+
+        def forward(self, a: Tensor, b: Tensor) -> Tensor:
+            """Computes the addition of two tensors
+
+            Args:
+                a (Tensor): one tensor to add
+                b (Tensor): other tensor to add
+
+            Returns:
+                Tensor: tensor where data is addition of parents
+            """
+            new_data = a.data + b.data
+
+            requires_grad = a.requires_grad or b.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a, b)
+
+                a.children.append(y)
+                b.children.append(y)
+
+                self._cache = (a, b)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradients for tensors stored in cache
+
+            Args:
+                dy (np.ndarray): gradient from previous backward (to be used with chain rule)
+                y (Tensor): output tensor
+            """
+            a, b = self._cache  # get tensors used to create output
+
+            if a.requires_grad:
+                da = dy  # 1 * whatever the previous gradient is due to chain rule
+
+                # now need to sum out broadcasted dimensions from numpy
+                # make da the same shape as a
+
+                # To remove broadcast dims first remove added dimensions
+                # **EXAMPLE**
+
+                # 1. Input and Gradient Shapes:
+                # - Suppose a has shape (3, 1, 4).
+                # - The gradient da has shape (5, 3, 1, 4) after operation and broadcasting.
+
+                # 2. Adjustment Process:
+                # in_dim = len(b.shape)  # 3
+                # grad_dim = len(db.shape)  # 4
+
+                # for _ in range(grad_dim - in_dim):  # 4 - 3 = 1 time
+                #     db = db.sum(axis=0)
+
+                # 3. Result:
+                # - After the loop, da would have shape (3, 1, 4), matching b's shape.
+
+                n_dims_da = len(dy.shape)
+                n_dims_a = len(a.shape)
+                for dim in range(n_dims_da - n_dims_a):
+                    da = da.sum(axis=0)
+
+                # Then remove singular dimensions (indicates broadcasting)
+                # Summing over singular dimensions:
+
+                # a.shape = (3, 1, 4)
+
+                # for i, dim in enumerate(a.shape):
+                #     if dim == 1:
+                #         da = da.sum(axis=i, keepdims=True)
+
+                # - This loop only executes for i=1 because dim == 1 at that position.
+                # - da = da.sum(axis=1, keepdims=True)
+
+                # Since da is already of shape (3, 1, 4), summing along `axis=1` with `keepdims=True`
+                # doesn't change its shape but ensures the gradient correctly aligns with the
+                # broadcast structure.
+
+                # This is because the keepdims is a boolean parameter.
+                # If this is set to True, the axes which are reduced are
+                # left in the result as dimensions with size one.
+
+                # Therefore if da had shape (3, 2, 4) for example -
+                # this loop would reduce it to (3, 1 ,4)
+
+                for i, dim in enumerate(a.shape):
+                    if dim == 1:
+                        da = da.sum(axis=i, keepdims=True)
+                a.backward(da, y)
+
+            if b.requires_grad:
+                db = dy
+
+                # Rescale gradient to have the same shape as "b":
+                n_dims_db = len(db.shape)
+                n_dims_b = len(b.shape)
+                for dim in range(n_dims_db - n_dims_b):
+                    db = db.sum(axis=0)
+
+                for i, dim in enumerate(b.shape):
+                    if dim == 1:
+                        db = db.sum(axis=i, keepdims=True)
+                b.backward(db, y)
+
+
+    class Negation(TensorFunction):
+        """Operation to negate a tensor
+
+        Args:
+            TensorFunction (_type_): _description_
+        """
+
+        def forward(self, a: Tensor) -> Tensor:
+            """Computes the negation of a tensor
+
+            Args:
+                a (Tensor): tensor to be negated
+
+            Returns:
+                Tensor: negated tensor
+            """
+            new_data = -a.data
+
+            y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+                a.children.append(y)
+
+                self._cache = (a,)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes the gradient for tensors in cache
+
+            Args:
+                dy (np.ndarray): gradient from upstream
+                y (Tensor): output tensor
+            """
+            (a,) = self._cache
+
+            if a.requires_grad:
+                da = -dy
+                a.backward(da, y)
+
+
+    class Multiplication(TensorFunction):
+        """Operation to multiply two tensors
+
+        Args:
+            TensorFunction (_type_): _description_
+        """
+
+        def forward(self, a: Tensor, b: Tensor) -> Tensor:
+            """Computes the multiplication of two tensors
+
+            Args:
+                a (Tensor):
+                b (Tensor):
+
+            Returns:
+                Tensor: product of a and b
+            """
+            new_data = a.data * b.data
+
+            requires_grad = a.requires_grad or b.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self._cache = (a, b)
+
+                self.parents = (a, b)
+                a.children.append(y)
+                b.children.append(y)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradients for cached tensors
+
+            Args:
+                dy (Tensor): output grad
+                y (Tensor):
+            """
+
+            a, b = self._cache
+
+            if a.requires_grad:
+                da = dy * b.data
+
+                n_dims_da = len(dy.shape)
+                n_dims_a = len(a.shape)
+                for dim in range(n_dims_da - n_dims_a):
+                    da = da.sum(axis=0)
+                for i, dim in enumerate(a.shape):
+                    if dim == 1:
+                        da = da.sum(axis=i, keepdims=True)
+
+                a.backward(da, y)
+
+            if b.requires_grad:
+                db = dy * a.data
+
+                n_dims_db = len(dy.shape)
+                n_dims_b = len(b.shape)
+                for dim in range(n_dims_db - n_dims_b):
+                    db = db.sum(axis=0)
+                for i, dim in enumerate(b.shape):
+                    if dim == 1:
+                        db = db.sum(axis=i, keepdims=True)
+
+                b.backward(db, y)
+
+
+    class Division(TensorFunction):
+        """Division operation
+
+        Args:
+            TensorFunction (_type_): _description_
+        """
+
+        def forward(self, a: Tensor, b: Tensor) -> Tensor:
+            """Computes the division of two tensors
+
+            Args:
+                a (Tensor):
+                b (Tensor):
+
+            Returns:
+                Tensor: tensor a / tensor b
+            """
+            new_data = a.data / b.data
+
+            requires_grad = a.requires_grad or b.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a, b)
+                a.children.append(y)
+                b.children.append(y)
+
+                self._cache = (a, b)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor):
+            """Computes gradients of cached tensors
+
+            Args:
+                dy (Tensor):
+                y (Tensor):
+            """
+            a, b = self._cache
+
+            if a.requires_grad:
+                da = dy * (1 / b.data)
+
+                n_dims_da = len(dy.shape)
+                n_dims_a = len(a.shape)
+                for dim in range(n_dims_da - n_dims_a):
+                    da = da.sum(axis=0)
+                for i, dim in enumerate(a.shape):
+                    if dim == 1:
+                        da = da.sum(axis=i, keepdims=True)
+
+                a.backward(da, y)
+
+            if b.requires_grad:
+                db = dy * -(a.data / (b.data**2))
+
+                n_dims_db = len(dy.shape)
+                n_dims_b = len(b.shape)
+                for dim in range(n_dims_db - n_dims_b):
+                    db = db.sum(axis=0)
+                for i, dim in enumerate(b.shape):
+                    if dim == 1:
+                        db = db.sum(axis=i, keepdims=True)
+
+                b.backward(db, y)
+
+
+    class MatrixMultiplication(TensorFunction):
+        """Matrix Multiplication operation
+
+        Args:
+            TensorFunction (_type_):
+        """
+
+        def forward(self, a: Tensor, b: Tensor) -> Tensor:
+            """Computes the matrix multiplication of two tensors
+
+            Args:
+                a (Tensor):
+                b (Tensor):
+
+            Returns:
+                Tensor: Tensor of a @ b
+            """
+            new_data = a.data @ b.data
+
+            requires_grad = a.requires_grad or b.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a, b)
+
+                a.children.append(y)
+                b.children.append(y)
+
+                self._cache = (a, b)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradients for cached tensors
+
+            Args:
+                dy (Tensor):
+                y (Tensor):
+            """
+            a, b = self._cache
+
+            if a.requires_grad:
+                da = dy @ b.data.swapaxes(-1, -2)
+
+                n_dims_da = len(dy.shape)
+                n_dims_a = len(a.shape)
+                for _ in range(n_dims_da - n_dims_a):
+                    da = da.sum(axis=0)
+
+                a.backward(da, y)
+
+            if b.requires_grad:
+                db = a.data.swapaxes(-1, -2) @ dy
+
+                n_dims_db = len(dy.shape)
+                n_dims_b = len(b.shape)
+                for _ in range(n_dims_db - n_dims_b):
+                    db = db.sum(axis=0)
+
+                b.backward(db, y)
+
+
+    class Power(TensorFunction):
+        """Power function e.g. a^b
+
+        Args:
+            TensorFunction (_type_): _description_
+        """
+
+        def forward(self, a: Tensor, b: Tensor) -> Tensor:
+            """Computes one tensor to the power of another
+
+            Args:
+                a (Tensor):
+                b (Tensor):
+
+            Returns:
+                Tensor: Tensor with a^b
+            """
+            new_data = a.data**b.data
+
+            requires_grad = a.requires_grad or b.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a, b)
+                a.children.append(y)
+                b.children.append(y)
+
+                self._cache = (a, b)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradients of cached tensors
+
+            Args:
+                dy (Tensor): _description_
+                y (Tensor): _description_
+            """
+            a, b = self._cache
+
+            if a.requires_grad:
+                da = dy * (b.data * (a.data ** (b.data - 1)))
+
+                n_dims_da = len(dy.shape)
+                n_dims_a = len(a.shape)
+                for dim in range(n_dims_da - n_dims_a):
+                    da = da.sum(axis=0)
+                for i, dim in enumerate(a.shape):
+                    if dim == 1:
+                        da = da.sum(axis=i, keepdims=True)
+
+                a.backward(da, y)
+
+            if b.requires_grad:
+                db = dy * ((a.data**b.data) * np.log(a.data))
+
+                n_dims_db = len(dy.shape)
+                n_dims_b = len(b.shape)
+                for dim in range(n_dims_db - n_dims_b):
+                    db = db.sum(axis=0)
+                for i, dim in enumerate(b.shape):
+                    if dim == 1:
+                        db = db.sum(axis=i, keepdims=True)
+
+                b.backward(dy, y)
+
+
+    class Mean(TensorFunction):
+        """Mean operation
+
+        Args:
+            TensorFunction (_type_):
+        """
+
+        def forward(self, a: Tensor) -> Tensor:
+            """Computes the mean of a 1D tensor
+
+            Args:
+                a (Tensor):
+
+            Returnws:
+                Tensor: mean of a
+            """
+            new_data = a.data.mean()
+
+            requires_grad = a.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (a,)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradients of cached tensors
+
+            Args:
+                dy (Tensor):
+                y (Tensor):
+            """
+            (a,) = self._cache
+
+            if a.requires_grad:
+                da = dy * np.ones(len(a.data))
+                da /= len(a.data)
+
+                a.backward(da, y)
+
+
+    class Sum(TensorFunction):
+        """Sum of a tensor
+
+        Args:
+            TensorFunction (_type_): _description_
+        """
+
+        def forward(self, a: Tensor, dim: int, keepdims: bool) -> Tensor:
+            """Computes sum of a tensor
+
+            Args:
+                a (Tensor):
+                axis (int): axis to take sum across
+                keepdims (bool): keepdims maintains the number of dimensions 
+                - reduces summed axis to 1
+
+            Returns:
+                Tensor: _description_
+            """
+            new_data = a.data.sum(axis=dim, keepdims=keepdims)
+
+            requires_grad = a.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (a,)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradients of sum function
+
+            Args:
+                dy (np.ndarray): gradient from upstream
+                y (Tensor):
+            """
+            (a,) = self._cache
+
+            if a.requires_grad:
+                da = dy * np.ones(a.shape)
+                a.backward(da, y)
+
+
+    class Log(TensorFunction):
+        """Log operation
+
+        Args:
+            TensorFunction (_type_): _description_
+        """
+
+        def forward(self, a: Tensor) -> Tensor:
+            """Element wise log of a tensor
+
+            Args:
+                a (Tensor):
+
+            Returns:
+                Tensor:
+            """
+
+            new_data = np.log(a.data)
+
+            requires_grad = a.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (a,)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradient of cached tensor
+
+            Args:
+                dy (np.ndarray): gradient from upstream
+                y (Tensor):
+            """
+            (a,) = self._cache
+            if a.requires_grad:
+                da = dy * (1 / a.data)
+
+                a.backward(da, y)
+
+
+    class Exp(TensorFunction):
+        """e^
+
+        Args:
+            TensorFunction (_type_):
+        """
+
+        def forward(self, a: Tensor) -> Tensor:
+            """e^a
+
+            Args:
+                a (Tensor):
+
+            Returns:
+                Tensor:
+            """
+            new_data = np.exp(a.data)
+
+            requires_grad = a.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (a, new_data)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes grads
+
+            Args:
+                dy (np.ndarray):
+                y (Tensor):
+            """
+            a, new_data = self._cache
+
+            if a.requires_grad:
+                da = dy * new_data
+                a.backward(da, y)
+
+
+    class Transpose(TensorFunction):
+        def forward(self, a: Tensor) -> Tensor:
+            """Transposes the data
+
+            Args:
+                x (Tensor):
+
+            Returns:
+                Tensor:
+            """
+            new_data = a.data.T
+
+            requires_grad = a.requires_grad
+
+            y = Tensor(new_data, requires_grad=requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (a,)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            (a,) = self._cache
+
+            if a.requires_grad:
+                da = dy.T
+
+                a.backward(da, y)
+
+
+    class Convolve2D(TensorFunction):
+        """2D convolution layer as tensor function
+
+        Args:
+            TensorFunction (_type_):
+        """
+
+        def forward(self, x: Tensor, k: Tensor, b: Tensor = None) -> Tensor:
+            """2D Convolution layer of X as input
+
+            Args:
+                x (Tensor): Input to layer
+            """
+            self.n_kernels, self.x_samples, self.kernel_size, _ = k.shape
+            x_samples, x_width, x_height = x.shape
+
+            self.output_shape = (
+                self.n_kernels,
+                x_width - self.kernel_size + 1,
+                x_height - self.kernel_size + 1,
+            )
+
+            new_data = np.zeros(self.output_shape)
+            if b:
+                new_data += b.data
+
+            new_data = cpu_forward_convolve2d(new_data, x.data, k.data, self.n_kernels)
+
+            y = Tensor(new_data, requires_grad=True, operation=self)
+
+            if is_grad_enabled():
+                self.parents = [
+                    x,
+                    k,
+                ]
+                if b:
+                    self.parents.append(b)
+
+                x.children.append(y)
+                k.children.append(y)
+                if b:
+                    b.children.append(y)
+
+                self._cache = (x, k, b)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            """Computes gradients of a convolutional layer process
+
+            Args:
+                dy (np.ndarray): upstream grad
+                y (Tensor):
+            """
+            x, k, b = self._cache
+
+            if b:
+                if b.requires_grad:
+                    b.backward(dy, y)
+            if x.requires_grad and k.requires_grad:
+                dx = np.zeros(x.shape)
+                dk = np.zeros(k.shape)
+                dx, dk = cpu_x_and_k_backward_convolve2d(
+                    dx, dk, x.data, k.data, dy, x.shape[0], self.n_kernels
+                )
+
+                x.backward(dx, y)
+                k.backward(dk, y)
+            else:
+                if x.requires_grad:
+                    dx = np.zeros(x.shape)
+                    dx = cpu_x_backward_convolve2d(
+                        dx, k.data, dy, x.shape[0], self.n_kernels
+                    )
+
+                    x.backward(dx, y)
+
+                if k.requires_grad:
+                    dk = np.zeros(k.shape)
+                    dk = cpu_k_backward_convolve2d(dk, x.data, dy, self.n_kernels)
+
+                    k.backward(dk, y)
+
+
+    class Reshape(TensorFunction):
+        """Reshapes a tensor
+
+        Args:
+            TensorFunction :
+        """
+
+        def forward(self, a: Tensor, shape: tuple[int]) -> Tensor:
+            """Reshapes the tensor
+
+            Args:
+                x (Tensor): tensor to reshape
+
+            Returns:
+                Tensor: reshaped tensor
+            """
+            new_data = np.reshape(a.data, shape)
+
+            y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (a,)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            (a,) = self._cache
+
+            if a.requires_grad:
+                da = np.reshape(dy, a.shape)
+                a.backward(da, y)
+
+
+    class Pad2D(TensorFunction):
+        def forward(self, a: Tensor, padding: int, value: float) -> Tensor:
+            a_samples, a_rows, a_cols = a.shape
+
+            new_rows = a_rows + 2 * padding
+            new_cols = a_cols + 2 * padding
+
+            arr = np.full((a_samples, new_rows, new_cols), fill_value=value)
+
+            arr = fill_padded_array(arr, a.data, padding)
+
+            y = Tensor(arr, a.requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (
+                    a,
+                    padding,
+                )
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            (
+                a,
+                padding,
+            ) = self._cache
+
+            if a.requires_grad:
+                if len(dy.shape) == 3:
+                    da = dy[:, padding:-padding, padding:-padding]
+                elif len(dy.shape) == 3:
+                    da = dy[padding:-padding, padding:-padding]
+                a.backward(da, y)
+
+
+    class ReLU(TensorFunction):
+        def forward(self, a: Tensor) -> Tensor:
+            """Specialised function for relu activation
+
+            Args:
+                a (Tensor):
+
+            Returns:
+                Tensor:
+            """
+            new_data = np.maximum(0.0, a.data)
+
+            y = Tensor(new_data, requires_grad=a.requires_grad, operation=self)
+
+            if is_grad_enabled():
+                self.parents = (a,)
+
+                a.children.append(y)
+
+                self._cache = (a,)
+
+            return y
+
+        def backward(self, dy: np.ndarray, y: Tensor) -> None:
+            (a,) = self._cache
+
+            if a.requires_grad:
+                da = np.greater(dy, 0.0).astype(np.float64)
+                a.backward(da, y)
+    \end{minted}
+
+    \subsubsection{nea.ml.autograd.convolve\_funcs.py}
+    \begin{minted}{python}
+    import numpy as np
+    from numba import jit
+    import time as t
+
+
+    @jit(nopython=True, cache=True)
+    def cpu_forward_convolve2d(
+        output: np.ndarray, x: np.ndarray, k: np.ndarray, n_kernels: int
+    ) -> np.ndarray:
+        """Performs the forward pass of the Convolve2D Tensor operation
+
+        Args:
+            output (np.ndarray):
+            x (np.ndarray):
+            k (np.ndarray):
+            n_kernels (int):
+
+        Returns:
+            np.ndarray:
+        """
+        n_samples = x.shape[0]
+        for i in range(n_kernels):
+            for j in range(n_samples):
+                output[i] = _jit_cpu_valid_cross_correlate2d(x[j], k[i, j])
+
+        return output
+
+
+    @jit(nopython=True, cache=True)
+    def cpu_x_and_k_backward_convolve2d(
+        x_output: np.ndarray,
+        k_output: np.ndarray,
+        x: np.ndarray,
+        k: np.ndarray,
+        dy: np.ndarray,
+        n_samples: int,
+        n_kernels: int,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """Calculate the gradients for both input and kernels in the same loop
+
+        Should be used if both x and k requires grad.
+
+        Reduces runtime from [O(n_samples*n_kernels)]^2 to O(n_samples*n_kernels)
+
+        Args:
+            x_output (np.ndarray): Array to fill with input grads
+            k_output (np.ndarray): Array to fill with kernel grads
+            x (np.ndarray): input
+            k (np.ndarray): kernels
+            dy (np.ndarray): upstream grad
+            n_samples (int): number of samples in x (x.shape[0])
+            n_kernels (int): number of kernels
+
+        Returns:
+            tuple[np.ndarray, np.ndarray]: x_grads, k_grads
+        """
+        for i in range(n_kernels):
+            for j in range(n_samples):
+                x_output[j] += _jit_cpu_convolve2d(dy[i], k[i, j])
+                k_output[i, j] = _jit_cpu_valid_cross_correlate2d(x[j], dy[i])
+
+        return x_output, k_output
+
+
+    @jit(nopython=True, cache=True)
+    def cpu_k_backward_convolve2d(
+        output: np.ndarray, x: np.ndarray, dy: np.ndarray, n_kernels: int
+    ) -> np.ndarray:
+        """Get input gradients for a convolutional layer
+
+        Args:
+            output (np.ndarray): array to fill with gradients
+            x (np.ndarray): input
+            dy (np.ndarray): upstream gradient
+            n_kernels (int): number of kernels
+
+        Returns:
+            np.ndarray: gradients
+        """
+        n_samples = x.shape[0]
+        for i in range(n_kernels):
+            for j in range(n_samples):
+                output[i, j] = _jit_cpu_valid_cross_correlate2d(x[j], dy[i])
+
+        return output
+
+
+    @jit(nopython=True, cache=True)
+    def cpu_x_backward_convolve2d(
+        output: np.ndarray, k: np.ndarray, dy: np.ndarray, n_samples: int, n_kernels: int
+    ) -> np.ndarray:
+        """Get input gradients for a convolutional layer
+
+        Args:
+            output (np.ndarray): array to fill with gradients
+            k (np.ndarray): kernels
+            dy (np.ndarray): upstream gradient
+            n_samples (int): number of samples in input
+            n_kernels (int): number of kernels
+
+        Returns:
+            np.ndarray: gradients
+        """
+        for i in range(n_kernels):
+            for j in range(n_samples):
+                output[j] += _jit_cpu_convolve2d(dy[i], k[i, j])
+
+        return output
+
+
+    @jit(nopython=True, cache=True)
+    def _jit_cpu_convolve2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+        """Returns the 2d convolution of two matrices
+
+        (which is equivalent to full cross correlation of a and rot180(b))
+
+        Args:
+            a (np.ndarray):
+            b (np.ndarray):
+
+        Returns:
+            np.ndarray:
+        """
+        return _jit_cpu_full_cross_correlate2d(a, _jit_rotate_180(b))
+
+
+    @jit(nopython=True, cache=True)
+    def _jit_rotate_180(b: np.ndarray) -> np.ndarray:
+        """Rotates a given matrix by 180 degrees
+
+        Args:
+            b (np.ndarray): matrix to rotate
+
+        Returns:
+            np.ndarray: rotated matrix
+        """
+        rot90 = np.rot90(b)
+        return np.rot90(rot90)
+
+
+    @jit(nopython=True, cache=True)
+    def _jit_cpu_full_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+        """Performs FULL cross-correlation between two numpy arrays.
+
+        Args:
+            a (np.ndarray):
+            b (np.ndarray):
+
+        Returns:
+            np.ndarray:
+        """
+        a_rows, a_cols = a.shape
+        b_rows, b_cols = b.shape
+
+        # calculate output sizing (note: a+b-1 instead of a -b+1 for valid)
+        out_rows = a_rows + b_rows - 1
+        out_cols = a_cols + b_cols - 1
+
+        out = np.zeros((out_rows, out_cols), dtype=np.float64)
+
+        # slide b over a - including only partial coverage
+        for m in range(out_rows):
+            for n in range(out_cols):
+                s = 0.0  # sum value
+
+                # compute dot product of a and b that overlap
+                for p in range(b_rows):
+                    for q in range(b_cols):
+                        # get positions in a that correspond with b[p, q]
+                        a_row = m - p
+                        a_col = n - q
+
+                        # check the kernel is in bounds
+                        if 0 <= a_row < a_rows and 0 <= a_col < a_cols:
+                            s += a[a_row, a_col] * b[p, q]
+
+                out[m, n] = s  # add sum to output
+
+        return out
+
+
+    @jit(nopython=True, cache=True)
+    def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
+        """Performs VALID cross correlation between two numpy arrays
+
+        Args:
+            a (np.ndarray):
+            b (np.ndarray):
+
+        Returns:
+            np.ndarray:
+        """
+        a_rows, a_cols = a.shape
+        b_rows, b_cols = b.shape
+
+        # calculate output sizing
+        out_rows = a_rows - b_rows + 1
+        out_cols = a_cols - b_cols + 1
+
+        out = np.zeros((out_rows, out_cols), dtype=np.float64)
+
+        out_rows, out_cols = out.shape
+
+        # slide b over a
+        for m in range(out_rows):
+            for n in range(out_cols):
+                sub_matrix = a[
+                    m : m + b_rows, n : n + b_cols
+                ]  # get the parts of a which overlap with b at that time
+
+                s = 0.0  # sum (numpy sum function was producing errors)
+                for p in range(b_rows):
+                    for q in range(b_cols):
+                        s += (
+                            sub_matrix[p, q] * b[p, q]
+                        )  # computes the dot product of sub_matrix and b
+
+                out[m, n] = s  # add to output array
+
+        return out
 
     \end{minted}
 
-    \subsubsection{Board Class}
+    \subsubsection{nea.ml.autograd.jit\_functions.py}
+    \begin{minted}{python}
+        
+    \end{minted}
 
-    
-    \pagebreak
+
+
+
+
+
+
+
     \section{Research Log}
 
     \subsection{Checkers}

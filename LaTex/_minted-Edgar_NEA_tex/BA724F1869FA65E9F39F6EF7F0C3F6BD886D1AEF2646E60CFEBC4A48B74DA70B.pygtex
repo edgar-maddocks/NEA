@@ -1,0 +1,80 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{pygame}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{abc}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ABC}
+
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.checkers\PYGZus{}gui.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{COLOURS}
+
+
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}change\PYGZus{}button\PYGZus{}text\PYGZus{}colour}\PYG{p}{(}\PYG{n}{button}\PYG{p}{:} \PYG{n}{RectButton}\PYG{p}{,} \PYG{n}{screen}\PYG{p}{:} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{Surface}\PYG{p}{):}
+        \PYG{n}{button}\PYG{o}{.}\PYG{n}{text\PYGZus{}colour} \PYG{o}{=} \PYG{p}{(}
+            \PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{RED} \PYG{k}{if} \PYG{n}{button}\PYG{o}{.}\PYG{n}{text\PYGZus{}colour} \PYG{o}{==} \PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{BLACK} \PYG{k}{else} \PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{BLACK}
+        \PYG{p}{)}
+        \PYG{n}{button}\PYG{o}{.}\PYG{n}{draw}\PYG{p}{(}\PYG{n}{screen}\PYG{p}{)}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Button}\PYG{p}{(}\PYG{n}{ABC}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{draw}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{screen}\PYG{p}{:} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{Surface}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:} \PYG{o}{...}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{in\PYGZus{}bounds}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:} \PYG{o}{...}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{click\PYGZus{}fn}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{):} \PYG{o}{...}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{RectButton}\PYG{p}{(}\PYG{n}{Button}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{width}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,}
+            \PYG{n}{height}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,}
+            \PYG{n}{pos}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{],}
+            \PYG{n}{click\PYGZus{}func}\PYG{p}{:} \PYG{n+nb}{callable}\PYG{p}{,}
+            \PYG{n}{colour}\PYG{p}{:} \PYG{n}{COLOURS} \PYG{o}{=} \PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{WHITE}\PYG{p}{,}
+            \PYG{n}{text}\PYG{p}{:} \PYG{n+nb}{str} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{,}
+            \PYG{n}{font\PYGZus{}size}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{text\PYGZus{}colour}\PYG{p}{:} \PYG{n}{COLOURS} \PYG{o}{=} \PYG{n}{COLOURS}\PYG{o}{.}\PYG{n}{BLACK}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o}{=} \PYG{n}{width}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height} \PYG{o}{=} \PYG{n}{height}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y} \PYG{o}{=} \PYG{n}{pos}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{f} \PYG{o}{=} \PYG{n}{click\PYGZus{}func}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{colour} \PYG{o}{=} \PYG{n}{colour}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{text} \PYG{o}{=} \PYG{n}{text}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{text} \PYG{o}{!=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{:}
+                \PYG{k}{assert} \PYG{n}{font\PYGZus{}size}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Must have font size if text is to be shown.\PYGZdq{}}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{text\PYGZus{}colour} \PYG{o}{=} \PYG{n}{text\PYGZus{}colour}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{font} \PYG{o}{=} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{font}\PYG{o}{.}\PYG{n}{SysFont}\PYG{p}{(}\PYG{n}{pygame}\PYG{o}{.}\PYG{n}{font}\PYG{o}{.}\PYG{n}{get\PYGZus{}default\PYGZus{}font}\PYG{p}{(),} \PYG{n}{font\PYGZus{}size}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{draw}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{screen}\PYG{p}{:} \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{Surface}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{draw}\PYG{o}{.}\PYG{n}{rect}\PYG{p}{(}
+                \PYG{n}{screen}\PYG{p}{,}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{colour}\PYG{p}{,}
+                \PYG{n}{pygame}\PYG{o}{.}\PYG{n}{Rect}\PYG{p}{(}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x}\PYG{p}{,}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y}\PYG{p}{,}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width}\PYG{p}{,}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height}\PYG{p}{,}
+                \PYG{p}{),}
+            \PYG{p}{)}
+
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{text} \PYG{o}{!=} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{:}
+                \PYG{n}{font} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{font}
+                \PYG{n}{text} \PYG{o}{=} \PYG{n}{font}\PYG{o}{.}\PYG{n}{render}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{text}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{text\PYGZus{}colour}\PYG{p}{)}
+                \PYG{c+c1}{\PYGZsh{} draw the text in the middle of the button}
+                \PYG{n}{screen}\PYG{o}{.}\PYG{n}{blit}\PYG{p}{(}
+                    \PYG{n}{text}\PYG{p}{,}
+                    \PYG{p}{(}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width} \PYG{o}{/} \PYG{l+m+mi}{2} \PYG{o}{\PYGZhy{}} \PYG{n}{text}\PYG{o}{.}\PYG{n}{get\PYGZus{}width}\PYG{p}{()} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height} \PYG{o}{/} \PYG{l+m+mi}{2} \PYG{o}{\PYGZhy{}} \PYG{n}{text}\PYG{o}{.}\PYG{n}{get\PYGZus{}height}\PYG{p}{()} \PYG{o}{/} \PYG{l+m+mi}{2}\PYG{p}{),}
+                    \PYG{p}{),}
+                \PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{in\PYGZus{}bounds}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{bool}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZgt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x} \PYG{o+ow}{and} \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{width}\PYG{p}{:}
+                \PYG{k}{if} \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZgt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y} \PYG{o+ow}{and} \PYG{n}{mouse\PYGZus{}pos}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{y} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{height}\PYG{p}{:}
+                    \PYG{k}{return} \PYG{k+kc}{True}
+
+            \PYG{k}{return} \PYG{k+kc}{False}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{click\PYGZus{}fn}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{):}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{f}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{f}\PYG{p}{(}\PYG{o}{*}\PYG{n}{args}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+\end{Verbatim}
