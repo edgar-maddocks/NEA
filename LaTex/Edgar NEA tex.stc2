@@ -1,0 +1,28 @@
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.1}File Structure and Project Organisation}{\reset@font\stcSSfont 21}{subsection.2.1}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.2}Checkers}{\reset@font\stcSSfont 23}{subsection.2.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.1}Data Structures}{\reset@font\stcSSSfont 23}{subsubsection.2.2.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.2.1.1}Console Solution}{\reset@font\stcPfont 24}{paragraph.2.2.1.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.2.1.2}GUI Add-on}{\reset@font\stcPfont 25}{paragraph.2.2.1.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.2}Algorithms}{\reset@font\stcSSSfont 25}{subsubsection.2.2.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.2.3}User Interface}{\reset@font\stcSSSfont 27}{subsubsection.2.2.3}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.2.3.1}Prototyping}{\reset@font\stcPfont 27}{paragraph.2.2.3.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.2.3.2}Structure, Hierarchy and Flow}{\reset@font\stcPfont 27}{paragraph.2.2.3.2}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.3}Autodifferentiation Engine}{\reset@font\stcSSfont 28}{subsection.2.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.3.1}Data Structures}{\reset@font\stcSSSfont 28}{subsubsection.2.3.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.3.2}Algorithms}{\reset@font\stcSSSfont 28}{subsubsection.2.3.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.3.2.1}Unbroadcasting}{\reset@font\stcPfont 28}{paragraph.2.3.2.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.3.2.2}Cross-Correlation, Convolution and derivatives}{\reset@font\stcPfont 29}{paragraph.2.3.2.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.3.2.3}Tensor Forward and Backward Pass}{\reset@font\stcPfont 30}{paragraph.2.3.2.3}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.4}Neural Network Library}{\reset@font\stcSSfont 32}{subsection.2.4}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.4.1}Data Structures}{\reset@font\stcSSSfont 32}{subsubsection.2.4.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.4.2}Algorithms}{\reset@font\stcSSSfont 33}{subsubsection.2.4.2}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {2.5}Reinforcement Learning Solution}{\reset@font\stcSSfont 34}{subsection.2.5}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.5.1}Data Structures}{\reset@font\stcSSSfont 34}{subsubsection.2.5.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.5.1.1}MCTS}{\reset@font\stcPfont 34}{paragraph.2.5.1.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.5.1.2}Agent}{\reset@font\stcPfont 34}{paragraph.2.5.1.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {2.5.2}Algorithms}{\reset@font\stcSSSfont 34}{subsubsection.2.5.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.5.2.1}MCTS}{\reset@font\stcPfont 34}{paragraph.2.5.2.1}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Base Node and MCTS}{\reset@font\stcSPfont 34}{section*.46}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Alpha Node and MCTS}{\reset@font\stcSPfont 36}{section*.47}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.5.2.2}Alpha Network}{\reset@font\stcPfont 37}{paragraph.2.5.2.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {2.5.2.3}Agent}{\reset@font\stcPfont 39}{paragraph.2.5.2.3}}

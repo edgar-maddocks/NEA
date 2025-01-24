@@ -1,0 +1,157 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{\PYGZus{}\PYGZus{}future\PYGZus{}\PYGZus{}}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{annotations}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{copy}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{deepcopy}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{collections}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{deque}
+
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
+
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.console\PYGZus{}checkers}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{CheckersGame}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.mcts.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ACTION}\PYG{p}{,} \PYG{n}{ACTION\PYGZus{}TO\PYGZus{}IDX}\PYG{p}{,} \PYG{n}{IDX\PYGZus{}TO\PYGZus{}ACTION}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Node}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Creates a new Node object\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{game}\PYG{p}{:} \PYG{n}{CheckersGame}\PYG{p}{,}
+            \PYG{n}{parent}\PYG{p}{:} \PYG{n}{Node} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{terminal}\PYG{p}{:} \PYG{n+nb}{bool} \PYG{o}{=} \PYG{k+kc}{False}\PYG{p}{,}
+            \PYG{n}{action\PYGZus{}taken}\PYG{p}{:} \PYG{n}{ACTION} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{reward}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}game} \PYG{o}{=} \PYG{n}{game}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{colour} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}game}\PYG{o}{.}\PYG{n}{player}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}state} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}game}\PYG{o}{.}\PYG{n}{board}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}parent} \PYG{o}{=} \PYG{n}{parent}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{children}\PYG{p}{:} \PYG{n+nb}{list}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Node\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[]}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}action\PYGZus{}taken} \PYG{o}{=} \PYG{n}{action\PYGZus{}taken}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{reward} \PYG{o}{=} \PYG{n}{reward}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}available\PYGZus{}moves\PYGZus{}left} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}init\PYGZus{}available\PYGZus{}moves}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{terminal} \PYG{o}{=} \PYG{n}{terminal}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{visit\PYGZus{}count}\PYG{p}{,} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value\PYGZus{}count} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs} \PYG{o}{=} \PYG{n}{kwargs}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{select\PYGZus{}child}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Node}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Selects the best child from a fully expanded node using UCB}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Node: Best child}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{best\PYGZus{}child} \PYG{o}{=} \PYG{k+kc}{None}
+            \PYG{n}{best\PYGZus{}ucb} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{n}{np}\PYG{o}{.}\PYG{n}{inf}
+
+            \PYG{k}{for} \PYG{n}{child} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{children}\PYG{p}{:}
+                \PYG{n}{ucb} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}calculate\PYGZus{}ucb}\PYG{p}{(}\PYG{n}{child}\PYG{p}{)}
+                \PYG{k}{if} \PYG{n}{ucb} \PYG{o}{\PYGZgt{}} \PYG{n}{best\PYGZus{}ucb}\PYG{p}{:}
+                    \PYG{n}{best\PYGZus{}child} \PYG{o}{=} \PYG{n}{child}
+                    \PYG{n}{best\PYGZus{}ucb} \PYG{o}{=} \PYG{n}{ucb}
+
+            \PYG{k}{return} \PYG{n}{best\PYGZus{}child}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{expand}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Node}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Random expansion of a node}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Node: New child}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}available\PYGZus{}moves\PYGZus{}left} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{o+ow}{and} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{children}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{select\PYGZus{}child}\PYG{p}{()}
+
+            \PYG{c+c1}{\PYGZsh{} get a random action}
+            \PYG{n}{random\PYGZus{}move\PYGZus{}idx} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{choice}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}available\PYGZus{}moves\PYGZus{}left}\PYG{p}{)}
+            \PYG{n}{random\PYGZus{}action} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}available\PYGZus{}moves\PYGZus{}left}\PYG{p}{[}\PYG{n}{random\PYGZus{}move\PYGZus{}idx}\PYG{p}{]}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}available\PYGZus{}moves\PYGZus{}left}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{random\PYGZus{}action}\PYG{p}{)}
+
+            \PYG{n}{child\PYGZus{}game} \PYG{o}{=} \PYG{n}{deepcopy}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}game}\PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} complete the action}
+            \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{terminal}\PYG{p}{,} \PYG{n}{reward} \PYG{o}{=} \PYG{n}{child\PYGZus{}game}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{random\PYGZus{}action}\PYG{p}{)}
+
+            \PYG{c+c1}{\PYGZsh{} create new node for tree after this action}
+            \PYG{n}{child} \PYG{o}{=} \PYG{n}{Node}\PYG{p}{(}
+                \PYG{n}{child\PYGZus{}game}\PYG{p}{,}
+                \PYG{n}{parent}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{p}{,}
+                \PYG{n}{terminal}\PYG{o}{=}\PYG{n}{terminal}\PYG{p}{,}
+                \PYG{n}{action\PYGZus{}taken}\PYG{o}{=}\PYG{n}{random\PYGZus{}action}\PYG{p}{,}
+                \PYG{n}{reward}\PYG{o}{=}\PYG{n}{reward}\PYG{p}{,}
+                \PYG{n}{eec}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}eec\PYGZdq{}}\PYG{p}{],}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{children}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{child}\PYG{p}{)}
+
+            \PYG{k}{return} \PYG{n}{child}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{backprop}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Backpropgates through graph, updating value count, visit count.}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                reward (int): reward of terminal state}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{visit\PYGZus{}count} \PYG{o}{+=} \PYG{l+m+mi}{1}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value\PYGZus{}count} \PYG{o}{+=} \PYG{n}{reward}
+
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}parent} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
+                \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}parent}\PYG{o}{.}\PYG{n}{colour} \PYG{o}{!=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{colour}\PYG{p}{:}
+                    \PYG{n}{reward} \PYG{o}{*=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}parent}\PYG{o}{.}\PYG{n}{backprop}\PYG{p}{(}\PYG{n}{reward}\PYG{p}{)}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MCTS}\PYG{p}{:}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{        Monte Carlo Tree Search class used to search for lines until termination in a given state}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Creates a new MCTS object}
+
+\PYG{l+s+sd}{            Keyword Args:}
+\PYG{l+s+sd}{                eec: exploration constant \PYGZhy{}\PYGZgt{} Higher EEC = more exploration}
+\PYG{l+s+sd}{                n\PYGZus{}searches: number of searches}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs} \PYG{o}{=} \PYG{n}{kwargs}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}root}\PYG{p}{:} \PYG{n}{Node} \PYG{o}{=} \PYG{k+kc}{None}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{build\PYGZus{}tree}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{root}\PYG{p}{:} \PYG{n}{CheckersGame}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Builds a new tree}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                root (CheckersGame): New state to root the tree from}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}root} \PYG{o}{=} \PYG{n}{Node}\PYG{p}{(}\PYG{n}{root}\PYG{p}{,} \PYG{n}{eec}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}eec\PYGZdq{}}\PYG{p}{])}
+
+            \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}searches\PYGZdq{}}\PYG{p}{])):}
+                \PYG{n}{node} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}root}
+
+                \PYG{k}{if} \PYG{n}{node}\PYG{o}{.}\PYG{n}{n\PYGZus{}available\PYGZus{}moves\PYGZus{}left} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{o+ow}{and} \PYG{n}{node}\PYG{o}{.}\PYG{n}{children}\PYG{p}{:}
+                    \PYG{n}{node} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{select\PYGZus{}child}\PYG{p}{()}
+
+                \PYG{k}{while} \PYG{o+ow}{not} \PYG{n}{node}\PYG{o}{.}\PYG{n}{terminal}\PYG{p}{:}
+                    \PYG{n}{node} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{expand}\PYG{p}{()}
+
+                \PYG{n}{node}\PYG{o}{.}\PYG{n}{backprop}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{reward}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{get\PYGZus{}action\PYGZus{}probs}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Gets array of probabilities of action based on tree}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                np.ndarray: Array of probabilities}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{p} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{(}
+                \PYG{p}{(}\PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{)}
+            \PYG{p}{)}  \PYG{c+c1}{\PYGZsh{} (8x8) shows where to take piece from. Final 8 shows what direc e.g.}
+            \PYG{c+c1}{\PYGZsh{} idx 0 = row+1,col+1, idx 1 = row+1, col\PYGZhy{}1 etc.}
+            \PYG{k}{for} \PYG{n}{child} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}root}\PYG{o}{.}\PYG{n}{children}\PYG{p}{:}
+                \PYG{n}{piece\PYGZus{}moved}\PYG{p}{,} \PYG{n}{moved\PYGZus{}to} \PYG{o}{=} \PYG{n}{child}\PYG{o}{.}\PYG{n}{action\PYGZus{}taken}
+                \PYG{n}{row\PYGZus{}change} \PYG{o}{=} \PYG{n}{moved\PYGZus{}to}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{piece\PYGZus{}moved}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+                \PYG{n}{col\PYGZus{}change} \PYG{o}{=} \PYG{n}{moved\PYGZus{}to}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{piece\PYGZus{}moved}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+                \PYG{n}{direc\PYGZus{}idx} \PYG{o}{=} \PYG{n}{ACTION\PYGZus{}TO\PYGZus{}IDX}\PYG{p}{[(}\PYG{n}{row\PYGZus{}change}\PYG{p}{,} \PYG{n}{col\PYGZus{}change}\PYG{p}{)]}
+                \PYG{n}{p}\PYG{p}{[}\PYG{n}{direc\PYGZus{}idx}\PYG{p}{,} \PYG{n}{piece\PYGZus{}moved}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{piece\PYGZus{}moved}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]]} \PYG{o}{=} \PYG{n}{child}\PYG{o}{.}\PYG{n}{visit\PYGZus{}count}
+
+            \PYG{n}{p} \PYG{o}{/=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{p}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{p}
+\end{Verbatim}

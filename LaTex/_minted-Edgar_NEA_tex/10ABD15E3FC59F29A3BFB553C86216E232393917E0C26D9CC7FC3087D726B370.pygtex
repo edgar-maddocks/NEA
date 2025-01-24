@@ -1,0 +1,88 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{x}{    class AlphaNode(Node):}
+\PYG{x}{        def \PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}(}
+\PYG{x}{            self,}
+\PYG{x}{            game: CheckersGame,}
+\PYG{x}{            parent: Node = None,}
+\PYG{x}{            terminal: bool = False,}
+\PYG{x}{            action\PYGZus{}taken: ACTION = None,}
+\PYG{x}{            reward: float = None,}
+\PYG{x}{            prior\PYGZus{}prob: float = None,}
+\PYG{x}{            **kwargs,}
+\PYG{x}{        ) \PYGZhy{}\PYGZgt{} None:}
+\PYG{x}{            super().\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}(}
+\PYG{x}{                game=game,}
+\PYG{x}{                parent=parent,}
+\PYG{x}{                terminal=terminal,}
+\PYG{x}{                action\PYGZus{}taken=action\PYGZus{}taken,}
+\PYG{x}{                reward=reward,}
+\PYG{x}{                **kwargs,}
+\PYG{x}{            )}
+\PYG{x}{            self.prior\PYGZus{}prob = prior\PYGZus{}prob}
+
+\PYG{x}{        def expand(self, policy: np.ndarray) \PYGZhy{}\PYGZgt{} AlphaNode:}
+\PYG{x}{            child = None}
+\PYG{x}{            for action, prob in np.ndenumerate(policy):}
+\PYG{x}{                if prob \PYGZgt{} 0:}
+\PYG{x}{                    child\PYGZus{}game = deepcopy(self.\PYGZus{}game)}
+\PYG{x}{                    action = AlphaNode.\PYGZus{}convert\PYGZus{}action\PYGZus{}idx\PYGZus{}to\PYGZus{}action\PYGZus{}game(action)}
+\PYG{x}{                    self.\PYGZus{}available\PYGZus{}moves\PYGZus{}left.remove(action)}
+\PYG{x}{                    \PYGZus{}, \PYGZus{}, terminal, reward = child\PYGZus{}game.step(action)}
+
+\PYG{x}{                    child = AlphaNode(}
+\PYG{x}{                        game=child\PYGZus{}game,}
+\PYG{x}{                        parent=self,}
+\PYG{x}{                        terminal=terminal,}
+\PYG{x}{                        action\PYGZus{}taken=action,}
+\PYG{x}{                        reward=reward,}
+\PYG{x}{                        prior\PYGZus{}prob=prob,}
+\PYG{x}{                        **self.kwargs,}
+\PYG{x}{                    )}
+
+\PYG{x}{                    self.children.append(child)}
+
+\PYG{x}{            return child}
+
+
+\PYG{x}{    class AlphaMCTS(MCTS):}
+\PYG{x}{        def \PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}(self, model: AlphaModel, **kwargs) \PYGZhy{}\PYGZgt{} None:}
+\PYG{x}{            super().\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}(**kwargs)}
+\PYG{x}{            self.model = model}
+
+\PYG{x}{        def alpha\PYGZus{}build\PYGZus{}tree(self, root: CheckersGame, prior\PYGZus{}states: deque) \PYGZhy{}\PYGZgt{} None:}
+\PYG{x}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}\PYGZus{}summary\PYGZus{}}
+
+\PYG{x}{            Args:}
+\PYG{x}{                root (CheckersGame): \PYGZus{}description\PYGZus{}}
+\PYG{x}{                prior\PYGZus{}states (list[np.ndarray]): \PYGZus{}description\PYGZus{}}
+\PYG{x}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{x}{            if len(prior\PYGZus{}states) \PYGZlt{} 5:}
+\PYG{x}{                self.build\PYGZus{}tree(root)}
+\PYG{x}{                return}
+
+\PYG{x}{            self.\PYGZus{}root = AlphaNode(root, eec=self.kwargs[\PYGZdq{}eec\PYGZdq{}])}
+
+\PYG{x}{            for \PYGZus{} in range(int(self.kwargs[\PYGZdq{}n\PYGZus{}searches\PYGZdq{}])):}
+\PYG{x}{                prior\PYGZus{}states\PYGZus{}temp = deepcopy(prior\PYGZus{}states)}
+\PYG{x}{                node = self.\PYGZus{}root}
+\PYG{x}{                policy, value = None, None}
+
+\PYG{x}{                while node.n\PYGZus{}available\PYGZus{}moves\PYGZus{}left == 0 and node.children:}
+\PYG{x}{                    node = node.select\PYGZus{}child()}
+\PYG{x}{                    prior\PYGZus{}states\PYGZus{}temp.append(node.\PYGZus{}state)}
+
+\PYG{x}{                if not node.terminal:}
+\PYG{x}{                    input\PYGZus{}tensor = self.\PYGZus{}create\PYGZus{}input\PYGZus{}tensor(prior\PYGZus{}states\PYGZus{}temp)}
+\PYG{x}{                    with no\PYGZus{}grad():}
+\PYG{x}{                        policy, value = self.model(input\PYGZus{}tensor)}
+\PYG{x}{                    policy *= self.\PYGZus{}get\PYGZus{}valid\PYGZus{}moves\PYGZus{}as\PYGZus{}action\PYGZus{}tensor(node=node)}
+\PYG{x}{                    policy /= policy.sum().sum().sum()}
+
+\PYG{x}{                    node.expand(policy.data)}
+
+\PYG{x}{                    value = value.data}
+\PYG{x}{                else:}
+\PYG{x}{                    value = node.reward}
+
+\PYG{x}{                node.backprop(value)}
+\end{Verbatim}

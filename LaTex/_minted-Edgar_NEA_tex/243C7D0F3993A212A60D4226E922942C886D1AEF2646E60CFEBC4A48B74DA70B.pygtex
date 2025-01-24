@@ -1,0 +1,180 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
+
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.ml}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{nn}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.ml.autograd}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{Tensorable}
+
+    \PYG{c+c1}{\PYGZsh{} num hidden conv can be changed to preference}
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{ResidualLayer}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{c+c1}{\PYGZsh{} create components that will be used in forward}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2D}\PYG{p}{(}
+                \PYG{p}{(}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{),}
+                \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,}
+                \PYG{n}{n\PYGZus{}kernels}\PYG{o}{=}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{,}
+                \PYG{n}{padding}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{n}{padding\PYGZus{}value}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv2} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2D}\PYG{p}{(}
+                \PYG{p}{(}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{),}
+                \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,}
+                \PYG{n}{n\PYGZus{}kernels}\PYG{o}{=}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{,}
+                \PYG{n}{padding}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{n}{padding\PYGZus{}value}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU2} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Input Shape of (128, 8, 8)}
+
+\PYG{l+s+sd}{            Output Shape of (128, 8, 8)}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                x (Tensorable): input tensor}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Tensor:}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{original\PYGZus{}input} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{data}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{+=} \PYG{n}{original\PYGZus{}input}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} normalisation}
+            \PYG{n}{x} \PYG{o}{/=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{data}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{x}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{ConvolutionalLayer}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}This is only used as the starting block}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            nn (\PYGZus{}type\PYGZus{}):}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{c+c1}{\PYGZsh{} create components that will be used in forward}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2D}\PYG{p}{(}
+                \PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{),}
+                \PYG{n}{n\PYGZus{}kernels}\PYG{o}{=}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{,}
+                \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{,}
+                \PYG{n}{padding}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{n}{padding\PYGZus{}value}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{,}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Input shape of (5, 8, 8)}
+
+\PYG{l+s+sd}{            Output shape of (128, 8, 8)}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                x (Tensor): input tensor}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Tensor:}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{x}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{PolicyHead}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{c+c1}{\PYGZsh{} create components that will be used in forward}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2D}\PYG{p}{((}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{),} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}kernels}\PYG{o}{=}\PYG{l+m+mi}{8}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Softmax} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Softmax}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Input shape of (128, 8, 8)}
+
+\PYG{l+s+sd}{            Output shape of (8, 8, 8)}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                x (Tensor): input tensor}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Tensor:}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Softmax}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{x}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{ValueHead}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{c+c1}{\PYGZsh{} create components that will be used in forward}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Conv2D}\PYG{p}{((}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{),} \PYG{n}{kernel\PYGZus{}size}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{n\PYGZus{}kernels}\PYG{o}{=}\PYG{l+m+mi}{8}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Reshape} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{8} \PYG{o}{*} \PYG{l+m+mi}{8} \PYG{o}{*} \PYG{l+m+mi}{8}\PYG{p}{))}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Dense1} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Dense}\PYG{p}{(}\PYG{l+m+mi}{8} \PYG{o}{*} \PYG{l+m+mi}{8} \PYG{o}{*} \PYG{l+m+mi}{8}\PYG{p}{,} \PYG{l+m+mi}{256}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU2} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ReLU}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Dense2} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Dense}\PYG{p}{(}\PYG{l+m+mi}{256}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Tanh} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{Tanh}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Input shape of (128, 8, 8)}
+
+\PYG{l+s+sd}{            Output is scalar [\PYGZhy{}1, 1]}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                x (Tensor): input tensor}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Tensor:}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Conv1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Reshape}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Dense1}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Dense2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{Tanh}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{x}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{AlphaModel}\PYG{p}{(}\PYG{n}{nn}\PYG{o}{.}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{n\PYGZus{}res\PYGZus{}layers}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{32}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{c+c1}{\PYGZsh{} combine previously defined modules to form new more complex network}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{first\PYGZus{}layer} \PYG{o}{=} \PYG{n}{ConvolutionalLayer}\PYG{p}{(}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{o}{=}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{res\PYGZus{}layers} \PYG{o}{=} \PYG{n}{nn}\PYG{o}{.}\PYG{n}{ModuleList}\PYG{p}{(}
+                \PYG{p}{[}
+                    \PYG{n}{ResidualLayer}\PYG{p}{(}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{o}{=}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{)}
+                    \PYG{k}{for} \PYG{n}{r} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{n\PYGZus{}res\PYGZus{}layers}\PYG{p}{)}
+                \PYG{p}{]}
+            \PYG{p}{)}
+            \PYG{c+c1}{\PYGZsh{} define two output heads}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{policy\PYGZus{}head} \PYG{o}{=} \PYG{n}{PolicyHead}\PYG{p}{(}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{o}{=}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value\PYGZus{}head} \PYG{o}{=} \PYG{n}{ValueHead}\PYG{p}{(}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{o}{=}\PYG{n}{num\PYGZus{}hidden\PYGZus{}conv}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{Tensor}\PYG{p}{]:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Input shape (5, 8, 8)}
+
+\PYG{l+s+sd}{            Output of tuple (policy, value)}
+
+\PYG{l+s+sd}{            Policy has shape (8, 8, 8)}
+
+\PYG{l+s+sd}{            Value is scalar}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                x (Tensor): input tensor}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                tuple[Tensor, Tensor]: (policy, value)}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{first\PYGZus{}layer}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{k}{for} \PYG{n}{res} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{res\PYGZus{}layers}\PYG{p}{:}
+                \PYG{n}{x} \PYG{o}{=} \PYG{n}{res}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{pol} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{policy\PYGZus{}head}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{val} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{value\PYGZus{}head}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{pol}\PYG{p}{,} \PYG{n}{val}
+\end{Verbatim}

@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{dataclasses}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{dataclass}
+
+
+    \PYG{n+nd}{@dataclass}
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{SAP}\PYG{p}{:}
+        \PYG{n}{state}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}
+        \PYG{n}{mcts\PYGZus{}action\PYGZus{}probs}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}
+        \PYG{n}{player}\PYG{p}{:} \PYG{n+nb}{str}
+
+
+    \PYG{n+nd}{@dataclass}
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{SPV}\PYG{p}{:}
+        \PYG{n}{state}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}
+        \PYG{n}{mcts\PYGZus{}action\PYGZus{}probs}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}
+        \PYG{n}{true\PYGZus{}value}\PYG{p}{:} \PYG{n+nb}{float}
+\end{Verbatim}

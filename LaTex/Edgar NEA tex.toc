@@ -1,15 +1,16 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
 \contentsline {section}{\numberline {1}Analysis}{1}{section.1}%
 \contentsline {subsection}{\numberline {1.1}Background}{1}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Evidence of Analysis}{2}{subsection.1.2}%
 \contentsline {subsubsection}{\numberline {1.2.1}Current systems}{2}{subsubsection.1.2.1}%
 \contentsline {paragraph}{\numberline {1.2.1.1}Checkers}{2}{paragraph.1.2.1.1}%
 \contentsline {paragraph}{\numberline {1.2.1.2}Neural Networks}{3}{paragraph.1.2.1.2}%
-\contentsline {subparagraph}{What is a neural Network}{3}{section*.2}%
-\contentsline {subparagraph}{Linear Regression Unit}{3}{section*.3}%
-\contentsline {subparagraph}{Vectorization of processes}{3}{section*.4}%
-\contentsline {subparagraph}{Forward Pass of Dense Layer}{4}{section*.5}%
-\contentsline {subparagraph}{Forward Pass of a Convolutional Layer}{4}{section*.6}%
-\contentsline {subparagraph}{Gradient Descent}{5}{section*.7}%
+\contentsline {subparagraph}{\relax What is a neural Network}{3}{section*.2}%
+\contentsline {subparagraph}{\relax Linear Regression Unit}{3}{section*.3}%
+\contentsline {subparagraph}{\relax Vectorization of processes}{3}{section*.4}%
+\contentsline {subparagraph}{\relax Forward Pass of Dense Layer}{4}{section*.5}%
+\contentsline {subparagraph}{\relax Forward Pass of a Convolutional Layer}{4}{section*.6}%
+\contentsline {subparagraph}{\relax Gradient Descent}{5}{section*.7}%
 \contentsline {paragraph}{\numberline {1.2.1.3}Automatic Differentiation}{6}{paragraph.1.2.1.3}%
 \contentsline {paragraph}{\numberline {1.2.1.4}Reinforcement Learning (RL)}{7}{paragraph.1.2.1.4}%
 \contentsline {paragraph}{\numberline {1.2.1.5}AlphaZero}{8}{paragraph.1.2.1.5}%
@@ -27,46 +28,46 @@
 \contentsline {paragraph}{\numberline {1.3.2.3}Reinforcement Learning Solution}{14}{paragraph.1.3.2.3}%
 \contentsline {subsubsection}{\numberline {1.3.3}Mathematical Formulae}{16}{subsubsection.1.3.3}%
 \contentsline {paragraph}{\numberline {1.3.3.1}Automatic Differentiation Engine}{16}{paragraph.1.3.3.1}%
-\contentsline {subparagraph}{Addition}{16}{section*.8}%
-\contentsline {subparagraph}{Forward}{16}{section*.9}%
-\contentsline {subparagraph}{Backward}{16}{section*.10}%
-\contentsline {subparagraph}{Negation}{16}{section*.11}%
-\contentsline {subparagraph}{Forward}{16}{section*.12}%
-\contentsline {subparagraph}{Backward}{16}{section*.13}%
-\contentsline {subparagraph}{Multiplication}{16}{section*.14}%
-\contentsline {subparagraph}{Forward}{16}{section*.15}%
-\contentsline {subparagraph}{Backward}{16}{section*.16}%
-\contentsline {subparagraph}{Division}{16}{section*.17}%
-\contentsline {subparagraph}{Forward}{16}{section*.18}%
-\contentsline {subparagraph}{Backward}{16}{section*.19}%
-\contentsline {subparagraph}{Matrix multiplication}{17}{section*.20}%
-\contentsline {subparagraph}{Forward}{17}{section*.21}%
-\contentsline {subparagraph}{Backward}{17}{section*.22}%
-\contentsline {subparagraph}{Powers}{17}{section*.23}%
-\contentsline {subparagraph}{Forward}{17}{section*.24}%
-\contentsline {subparagraph}{Backward}{17}{section*.25}%
-\contentsline {subparagraph}{Mean}{17}{section*.26}%
-\contentsline {subparagraph}{Forward}{17}{section*.27}%
-\contentsline {subparagraph}{Backward}{17}{section*.28}%
-\contentsline {subparagraph}{Sum}{17}{section*.29}%
-\contentsline {subparagraph}{Forward}{17}{section*.30}%
-\contentsline {subparagraph}{Backward}{17}{section*.31}%
-\contentsline {subparagraph}{Natural Log}{17}{section*.32}%
-\contentsline {subparagraph}{Forward}{17}{section*.33}%
-\contentsline {subparagraph}{Backward}{18}{section*.34}%
-\contentsline {subparagraph}{Exponentation}{18}{section*.35}%
-\contentsline {subparagraph}{Forward}{18}{section*.36}%
-\contentsline {subparagraph}{Backward}{18}{section*.37}%
-\contentsline {subparagraph}{Conv2D}{18}{section*.38}%
-\contentsline {subparagraph}{Forward}{18}{section*.39}%
-\contentsline {subparagraph}{Backward}{18}{section*.40}%
+\contentsline {subparagraph}{\relax Addition}{16}{section*.8}%
+\contentsline {subparagraph}{\relax Forward}{16}{section*.9}%
+\contentsline {subparagraph}{\relax Backward}{16}{section*.10}%
+\contentsline {subparagraph}{\relax Negation}{16}{section*.11}%
+\contentsline {subparagraph}{\relax Forward}{16}{section*.12}%
+\contentsline {subparagraph}{\relax Backward}{16}{section*.13}%
+\contentsline {subparagraph}{\relax Multiplication}{16}{section*.14}%
+\contentsline {subparagraph}{\relax Forward}{16}{section*.15}%
+\contentsline {subparagraph}{\relax Backward}{16}{section*.16}%
+\contentsline {subparagraph}{\relax Division}{16}{section*.17}%
+\contentsline {subparagraph}{\relax Forward}{16}{section*.18}%
+\contentsline {subparagraph}{\relax Backward}{16}{section*.19}%
+\contentsline {subparagraph}{\relax Matrix multiplication}{17}{section*.20}%
+\contentsline {subparagraph}{\relax Forward}{17}{section*.21}%
+\contentsline {subparagraph}{\relax Backward}{17}{section*.22}%
+\contentsline {subparagraph}{\relax Powers}{17}{section*.23}%
+\contentsline {subparagraph}{\relax Forward}{17}{section*.24}%
+\contentsline {subparagraph}{\relax Backward}{17}{section*.25}%
+\contentsline {subparagraph}{\relax Mean}{17}{section*.26}%
+\contentsline {subparagraph}{\relax Forward}{17}{section*.27}%
+\contentsline {subparagraph}{\relax Backward}{17}{section*.28}%
+\contentsline {subparagraph}{\relax Sum}{17}{section*.29}%
+\contentsline {subparagraph}{\relax Forward}{17}{section*.30}%
+\contentsline {subparagraph}{\relax Backward}{17}{section*.31}%
+\contentsline {subparagraph}{\relax Natural Log}{17}{section*.32}%
+\contentsline {subparagraph}{\relax Forward}{17}{section*.33}%
+\contentsline {subparagraph}{\relax Backward}{18}{section*.34}%
+\contentsline {subparagraph}{\relax Exponentation}{18}{section*.35}%
+\contentsline {subparagraph}{\relax Forward}{18}{section*.36}%
+\contentsline {subparagraph}{\relax Backward}{18}{section*.37}%
+\contentsline {subparagraph}{\relax Conv2D}{18}{section*.38}%
+\contentsline {subparagraph}{\relax Forward}{18}{section*.39}%
+\contentsline {subparagraph}{\relax Backward}{18}{section*.40}%
 \contentsline {paragraph}{\numberline {1.3.3.2}Neural Network Library}{19}{paragraph.1.3.3.2}%
-\contentsline {subparagraph}{Activation Layers}{19}{section*.41}%
-\contentsline {subparagraph}{Tanh}{19}{section*.42}%
-\contentsline {subparagraph}{Sigmoid}{19}{section*.43}%
-\contentsline {subparagraph}{Softmax}{19}{section*.44}%
+\contentsline {subparagraph}{\relax Activation Layers}{19}{section*.41}%
+\contentsline {subparagraph}{\relax Tanh}{19}{section*.42}%
+\contentsline {subparagraph}{\relax Sigmoid}{19}{section*.43}%
+\contentsline {subparagraph}{\relax Softmax}{19}{section*.44}%
 \contentsline {paragraph}{\numberline {1.3.3.3}Reinforcement Learning Solution}{19}{paragraph.1.3.3.3}%
-\contentsline {subparagraph}{UCB Formula}{19}{section*.45}%
+\contentsline {subparagraph}{\relax UCB Formula}{19}{section*.45}%
 \contentsline {subsection}{\numberline {1.4}Set of objectives}{19}{subsection.1.4}%
 \contentsline {subsubsection}{\numberline {1.4.1}Checkers Game}{19}{subsubsection.1.4.1}%
 \contentsline {subsubsection}{\numberline {1.4.2}Autodifferentiation engine}{20}{subsubsection.1.4.2}%
@@ -76,55 +77,66 @@
 \contentsline {subsection}{\numberline {2.1}File Structure and Project Organisation}{21}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Checkers}{23}{subsection.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.1}Data Structures}{23}{subsubsection.2.2.1}%
-\contentsline {paragraph}{\numberline {2.2.1.1}Console Solution}{23}{paragraph.2.2.1.1}%
-\contentsline {paragraph}{\numberline {2.2.1.2}GUI Add-on}{24}{paragraph.2.2.1.2}%
-\contentsline {subsubsection}{\numberline {2.2.2}Algorithms}{24}{subsubsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.3}User Interface}{26}{subsubsection.2.2.3}%
-\contentsline {paragraph}{\numberline {2.2.3.1}Prototyping}{26}{paragraph.2.2.3.1}%
-\contentsline {paragraph}{\numberline {2.2.3.2}Structure, Hierarchy and Flow}{26}{paragraph.2.2.3.2}%
-\contentsline {subsection}{\numberline {2.3}Autodifferentiation Engine}{27}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {2.3.1}Data Structures}{27}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {2.3.2}Algorithms}{27}{subsubsection.2.3.2}%
-\contentsline {paragraph}{\numberline {2.3.2.1}Unbroadcasting}{27}{paragraph.2.3.2.1}%
-\contentsline {paragraph}{\numberline {2.3.2.2}Cross-Correlation, Convolution and derivatives}{28}{paragraph.2.3.2.2}%
-\contentsline {paragraph}{\numberline {2.3.2.3}Tensor Forward and Backward Pass}{29}{paragraph.2.3.2.3}%
-\contentsline {subsection}{\numberline {2.4}Neural Network Library}{31}{subsection.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.1}Data Structures}{31}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Algorithms}{32}{subsubsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.5}Reinforcement Learning Solution}{33}{subsection.2.5}%
-\contentsline {subsubsection}{\numberline {2.5.1}Data Structures}{33}{subsubsection.2.5.1}%
-\contentsline {paragraph}{\numberline {2.5.1.1}MCTS}{33}{paragraph.2.5.1.1}%
-\contentsline {paragraph}{\numberline {2.5.1.2}Agent}{33}{paragraph.2.5.1.2}%
-\contentsline {subsubsection}{\numberline {2.5.2}Algorithms}{33}{subsubsection.2.5.2}%
-\contentsline {paragraph}{\numberline {2.5.2.1}MCTS}{33}{paragraph.2.5.2.1}%
-\contentsline {subparagraph}{Base Node and MCTS}{33}{section*.46}%
-\contentsline {subparagraph}{Alpha Node and MCTS}{35}{section*.47}%
-\contentsline {paragraph}{\numberline {2.5.2.2}Alpha Network}{36}{paragraph.2.5.2.2}%
-\contentsline {paragraph}{\numberline {2.5.2.3}Agent}{38}{paragraph.2.5.2.3}%
-\contentsline {section}{\numberline {3}Technical Solution}{38}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Checkers}{38}{subsection.3.1}%
-\contentsline {subsubsection}{\numberline {3.1.1}Console Checkers}{38}{subsubsection.3.1.1}%
-\contentsline {paragraph}{\numberline {3.1.1.1}nea.console\_checkers.checkers\_game.py}{38}{paragraph.3.1.1.1}%
-\contentsline {paragraph}{\numberline {3.1.1.2}nea.console\_checkers.jit\_functions.py}{41}{paragraph.3.1.1.2}%
-\contentsline {paragraph}{\numberline {3.1.1.3}nea.console\_checkers.consts.py}{43}{paragraph.3.1.1.3}%
-\contentsline {subsubsection}{\numberline {3.1.2}Checkers GUI}{43}{subsubsection.3.1.2}%
-\contentsline {paragraph}{\numberline {3.1.2.1}nea.checkers\_gui.checkers\_gui.py}{43}{paragraph.3.1.2.1}%
-\contentsline {paragraph}{\numberline {3.1.2.2}nea.checkers\_gui.helpers.py}{47}{paragraph.3.1.2.2}%
-\contentsline {paragraph}{\numberline {3.1.2.3}nea.checkers\_gui.consts.py}{48}{paragraph.3.1.2.3}%
-\contentsline {paragraph}{\numberline {3.1.2.4}nea.checkers\_gui.buttons.py}{48}{paragraph.3.1.2.4}%
-\contentsline {subsection}{\numberline {3.2}Autodifferentiation engine}{50}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}nea.ml.autograd.consts.py}{50}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2}nea.ml.autograd.tensor.py}{50}{subsubsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.3}nea.ml.autograd.convolve\_funcs.py}{71}{subsubsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.4}nea.ml.autograd.jit\_functions.py}{75}{subsubsection.3.2.4}%
-\contentsline {section}{\numberline {4}Research Log}{75}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Checkers}{75}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}Rules}{75}{subsubsection.4.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.2}Possible States}{75}{subsubsection.4.1.2}%
-\contentsline {subsection}{\numberline {4.2}Neural Networks}{76}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Vectorization of summations}{76}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}Convolutional Networks}{76}{subsubsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.3}Automatic Differentiation}{76}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}AlphaZero}{76}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Existing Auto differentiation systems}{76}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Reinforcement Learning}{76}{subsection.4.6}%
+\contentsline {paragraph}{\numberline {2.2.1.1}Console Solution}{24}{paragraph.2.2.1.1}%
+\contentsline {paragraph}{\numberline {2.2.1.2}GUI Add-on}{25}{paragraph.2.2.1.2}%
+\contentsline {subsubsection}{\numberline {2.2.2}Algorithms}{25}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}User Interface}{27}{subsubsection.2.2.3}%
+\contentsline {paragraph}{\numberline {2.2.3.1}Prototyping}{27}{paragraph.2.2.3.1}%
+\contentsline {paragraph}{\numberline {2.2.3.2}Structure, Hierarchy and Flow}{27}{paragraph.2.2.3.2}%
+\contentsline {subsection}{\numberline {2.3}Autodifferentiation Engine}{28}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Data Structures}{28}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Algorithms}{28}{subsubsection.2.3.2}%
+\contentsline {paragraph}{\numberline {2.3.2.1}Unbroadcasting}{28}{paragraph.2.3.2.1}%
+\contentsline {paragraph}{\numberline {2.3.2.2}Cross-Correlation, Convolution and derivatives}{29}{paragraph.2.3.2.2}%
+\contentsline {paragraph}{\numberline {2.3.2.3}Tensor Forward and Backward Pass}{30}{paragraph.2.3.2.3}%
+\contentsline {subsection}{\numberline {2.4}Neural Network Library}{32}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Data Structures}{32}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Algorithms}{33}{subsubsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.5}Reinforcement Learning Solution}{34}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Data Structures}{34}{subsubsection.2.5.1}%
+\contentsline {paragraph}{\numberline {2.5.1.1}MCTS}{34}{paragraph.2.5.1.1}%
+\contentsline {paragraph}{\numberline {2.5.1.2}Agent}{34}{paragraph.2.5.1.2}%
+\contentsline {subsubsection}{\numberline {2.5.2}Algorithms}{34}{subsubsection.2.5.2}%
+\contentsline {paragraph}{\numberline {2.5.2.1}MCTS}{34}{paragraph.2.5.2.1}%
+\contentsline {subparagraph}{\relax Base Node and MCTS}{34}{section*.46}%
+\contentsline {subparagraph}{\relax Alpha Node and MCTS}{36}{section*.47}%
+\contentsline {paragraph}{\numberline {2.5.2.2}Alpha Network}{37}{paragraph.2.5.2.2}%
+\contentsline {paragraph}{\numberline {2.5.2.3}Agent}{39}{paragraph.2.5.2.3}%
+\contentsline {section}{\numberline {3}Technical Solution}{39}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Checkers}{40}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Console Checkers}{40}{subsubsection.3.1.1}%
+\contentsline {paragraph}{\numberline {3.1.1.1}CheckersGame and MainMenu}{40}{paragraph.3.1.1.1}%
+\contentsline {paragraph}{\numberline {3.1.1.2}Jit Function}{43}{paragraph.3.1.1.2}%
+\contentsline {paragraph}{\numberline {3.1.1.3}Constants}{44}{paragraph.3.1.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.2}Checkers GUI}{44}{subsubsection.3.1.2}%
+\contentsline {paragraph}{\numberline {3.1.2.1}CheckersGUI}{45}{paragraph.3.1.2.1}%
+\contentsline {paragraph}{\numberline {3.1.2.2}Helper Functions}{49}{paragraph.3.1.2.2}%
+\contentsline {paragraph}{\numberline {3.1.2.3}Constants}{49}{paragraph.3.1.2.3}%
+\contentsline {paragraph}{\numberline {3.1.2.4}Buttons}{50}{paragraph.3.1.2.4}%
+\contentsline {subsection}{\numberline {3.2}Autodifferentiation engine}{52}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Constants}{52}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Tensor and Tensor Operations}{52}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Jit Convolve Specific Functions}{72}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Jit Functions}{76}{subsubsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.3}Neural Network Library}{77}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Modules}{77}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Optimizers}{82}{subsubsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.4}Reinforcement Learning Solution}{83}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Node and MCTS}{84}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}AlphaNode and AlphaMCTS}{87}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Alpha Network}{88}{subsubsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.4}Agent}{92}{subsubsection.3.4.4}%
+\contentsline {paragraph}{\numberline {3.4.4.1}Memory Types}{92}{paragraph.3.4.4.1}%
+\contentsline {paragraph}{\numberline {3.4.4.2}Agent}{92}{paragraph.3.4.4.2}%
+\contentsline {section}{\numberline {4}Testing}{94}{section.4}%
+\contentsline {section}{\numberline {5}Research Log}{94}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Checkers}{94}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Rules}{94}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Possible States}{94}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Neural Networks}{94}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Vectorization of summations}{94}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Convolutional Networks}{94}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Automatic Differentiation}{94}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}AlphaZero}{95}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Existing Auto differentiation systems}{95}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Reinforcement Learning}{95}{subsection.5.6}%

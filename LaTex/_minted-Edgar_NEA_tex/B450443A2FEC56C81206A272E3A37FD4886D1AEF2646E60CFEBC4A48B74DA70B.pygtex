@@ -1,0 +1,91 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{AlphaNode}\PYG{p}{(}\PYG{n}{Node}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{game}\PYG{p}{:} \PYG{n}{CheckersGame}\PYG{p}{,}
+            \PYG{n}{parent}\PYG{p}{:} \PYG{n}{Node} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{terminal}\PYG{p}{:} \PYG{n+nb}{bool} \PYG{o}{=} \PYG{k+kc}{False}\PYG{p}{,}
+            \PYG{n}{action\PYGZus{}taken}\PYG{p}{:} \PYG{n}{ACTION} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{reward}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{prior\PYGZus{}prob}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+                \PYG{n}{game}\PYG{o}{=}\PYG{n}{game}\PYG{p}{,}
+                \PYG{n}{parent}\PYG{o}{=}\PYG{n}{parent}\PYG{p}{,}
+                \PYG{n}{terminal}\PYG{o}{=}\PYG{n}{terminal}\PYG{p}{,}
+                \PYG{n}{action\PYGZus{}taken}\PYG{o}{=}\PYG{n}{action\PYGZus{}taken}\PYG{p}{,}
+                \PYG{n}{reward}\PYG{o}{=}\PYG{n}{reward}\PYG{p}{,}
+                \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{,}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{prior\PYGZus{}prob} \PYG{o}{=} \PYG{n}{prior\PYGZus{}prob}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{expand}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{policy}\PYG{p}{:} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndarray}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{AlphaNode}\PYG{p}{:}
+            \PYG{n}{child} \PYG{o}{=} \PYG{k+kc}{None}
+            \PYG{k}{for} \PYG{n}{action}\PYG{p}{,} \PYG{n}{prob} \PYG{o+ow}{in} \PYG{n}{np}\PYG{o}{.}\PYG{n}{ndenumerate}\PYG{p}{(}\PYG{n}{policy}\PYG{p}{):}
+                \PYG{k}{if} \PYG{n}{prob} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{:} \PYG{c+c1}{\PYGZsh{} for every move where the model thinks it could win}
+                    \PYG{n}{child\PYGZus{}game} \PYG{o}{=} \PYG{n}{deepcopy}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}game}\PYG{p}{)}
+                    \PYG{n}{action} \PYG{o}{=} \PYG{n}{AlphaNode}\PYG{o}{.}\PYG{n}{\PYGZus{}convert\PYGZus{}action\PYGZus{}idx\PYGZus{}to\PYGZus{}action\PYGZus{}game}\PYG{p}{(}\PYG{n}{action}\PYG{p}{)}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}available\PYGZus{}moves\PYGZus{}left}\PYG{o}{.}\PYG{n}{remove}\PYG{p}{(}\PYG{n}{action}\PYG{p}{)}
+                    \PYG{c+c1}{\PYGZsh{} take this move}
+                    \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{\PYGZus{}}\PYG{p}{,} \PYG{n}{terminal}\PYG{p}{,} \PYG{n}{reward} \PYG{o}{=} \PYG{n}{child\PYGZus{}game}\PYG{o}{.}\PYG{n}{step}\PYG{p}{(}\PYG{n}{action}\PYG{p}{)}
+
+                    \PYG{c+c1}{\PYGZsh{} add node to tree after this move was taken}
+                    \PYG{n}{child} \PYG{o}{=} \PYG{n}{AlphaNode}\PYG{p}{(}
+                        \PYG{n}{game}\PYG{o}{=}\PYG{n}{child\PYGZus{}game}\PYG{p}{,}
+                        \PYG{n}{parent}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{p}{,}
+                        \PYG{n}{terminal}\PYG{o}{=}\PYG{n}{terminal}\PYG{p}{,}
+                        \PYG{n}{action\PYGZus{}taken}\PYG{o}{=}\PYG{n}{action}\PYG{p}{,}
+                        \PYG{n}{reward}\PYG{o}{=}\PYG{n}{reward}\PYG{p}{,}
+                        \PYG{n}{prior\PYGZus{}prob}\PYG{o}{=}\PYG{n}{prob}\PYG{p}{,}
+                        \PYG{o}{**}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs}\PYG{p}{,}
+                    \PYG{p}{)}
+
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{children}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{child}\PYG{p}{)}
+
+            \PYG{k}{return} \PYG{n}{child}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{AlphaMCTS}\PYG{p}{(}\PYG{n}{MCTS}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{model}\PYG{p}{:} \PYG{n}{AlphaModel}\PYG{p}{,} \PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{o}{**}\PYG{n}{kwargs}\PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model} \PYG{o}{=} \PYG{n}{model}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{alpha\PYGZus{}build\PYGZus{}tree}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{root}\PYG{p}{:} \PYG{n}{CheckersGame}\PYG{p}{,} \PYG{n}{prior\PYGZus{}states}\PYG{p}{:} \PYG{n}{deque}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}\PYGZus{}summary\PYGZus{}}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                root (CheckersGame): \PYGZus{}description\PYGZus{}}
+\PYG{l+s+sd}{                prior\PYGZus{}states (list[np.ndarray]): \PYGZus{}description\PYGZus{}}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{k}{if} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{prior\PYGZus{}states}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{l+m+mi}{5}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{build\PYGZus{}tree}\PYG{p}{(}\PYG{n}{root}\PYG{p}{)}
+                \PYG{k}{return}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}root} \PYG{o}{=} \PYG{n}{AlphaNode}\PYG{p}{(}\PYG{n}{root}\PYG{p}{,} \PYG{n}{eec}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}eec\PYGZdq{}}\PYG{p}{])}
+
+            \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kwargs}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}searches\PYGZdq{}}\PYG{p}{])):}
+                \PYG{n}{prior\PYGZus{}states\PYGZus{}temp} \PYG{o}{=} \PYG{n}{deepcopy}\PYG{p}{(}\PYG{n}{prior\PYGZus{}states}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} make a copy of original}
+                \PYG{n}{node} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}root}
+                \PYG{n}{policy}\PYG{p}{,} \PYG{n}{value} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,} \PYG{k+kc}{None}
+
+                \PYG{k}{while} \PYG{n}{node}\PYG{o}{.}\PYG{n}{n\PYGZus{}available\PYGZus{}moves\PYGZus{}left} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{o+ow}{and} \PYG{n}{node}\PYG{o}{.}\PYG{n}{children}\PYG{p}{:}
+                    \PYG{n}{node} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{select\PYGZus{}child}\PYG{p}{()}
+                    \PYG{n}{prior\PYGZus{}states\PYGZus{}temp}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n}{\PYGZus{}state}\PYG{p}{)}
+                    \PYG{c+c1}{\PYGZsh{} states is deque so automatically enforces maxlen}
+
+                \PYG{k}{if} \PYG{o+ow}{not} \PYG{n}{node}\PYG{o}{.}\PYG{n}{terminal}\PYG{p}{:}
+                    \PYG{n}{input\PYGZus{}tensor} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}create\PYGZus{}input\PYGZus{}tensor}\PYG{p}{(}\PYG{n}{prior\PYGZus{}states\PYGZus{}temp}\PYG{p}{)}
+                    \PYG{k}{with} \PYG{n}{no\PYGZus{}grad}\PYG{p}{():}
+                        \PYG{n}{policy}\PYG{p}{,} \PYG{n}{value} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{model}\PYG{p}{(}\PYG{n}{input\PYGZus{}tensor}\PYG{p}{)} \PYG{c+c1}{\PYGZsh{} get policy and value}
+                    \PYG{n}{policy} \PYG{o}{*=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}get\PYGZus{}valid\PYGZus{}moves\PYGZus{}as\PYGZus{}action\PYGZus{}tensor}\PYG{p}{(}\PYG{n}{node}\PYG{o}{=}\PYG{n}{node}\PYG{p}{)}
+                    \PYG{n}{policy} \PYG{o}{/=} \PYG{n}{policy}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{()}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{()}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{()}
+
+                    \PYG{n}{node}\PYG{o}{.}\PYG{n}{expand}\PYG{p}{(}\PYG{n}{policy}\PYG{o}{.}\PYG{n}{data}\PYG{p}{)}
+
+                    \PYG{n}{value} \PYG{o}{=} \PYG{n}{value}\PYG{o}{.}\PYG{n}{data}
+                \PYG{k}{else}\PYG{p}{:}
+                    \PYG{n}{value} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n}{reward}
+
+                \PYG{n}{node}\PYG{o}{.}\PYG{n}{backprop}\PYG{p}{(}\PYG{n}{value}\PYG{p}{)}
+\end{Verbatim}

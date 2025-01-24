@@ -3,6 +3,8 @@
 \usepackage{breqn}
 \usepackage{amssymb}
 \usepackage{dirtree}
+\usepackage{etoc}
+\usepackage{minitoc}
 
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
@@ -26,6 +28,8 @@
 
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{2}
+\setcounter{secttocdepth}{4}
+
 
 \usepackage{xcolor,soul,lipsum}
 
@@ -40,6 +44,8 @@
 \usepackage{minted}
 
 \begin{document}
+\dosecttoc
+
 \begin{titlepage}
     \begin{center}
         \vspace*{1cm}
@@ -441,9 +447,6 @@
     To improve this process, AlphaZero uses a neural network to help prune some branches of the tree which can be assumed to lead to a losing state. This allows the MCTS to search only more effective
     lines of play. The exact algorithm for this can be found in \myhy{sec:IDoA}{Identification of Algorithms}
     
-
-
-    
     \subsubsection{Similar Systems}
     \begin{wrapfigure}[14]{r}{0.5\linewidth}
         \centering
@@ -505,7 +508,7 @@
         \end{tabular}
     \end{center}
 
-    
+
     \subsection{Modelling of the problem}
 
     \subsubsection{Identification of Objects}
@@ -965,6 +968,7 @@
     \end{enumerate}
 
     \section{Design}
+    \secttoc
 
     \subsection{File Structure and Project Organisation} \label{File-Structure}
     \dirtree{%
@@ -1391,7 +1395,7 @@
     \end{figure}
 
     \pagebreak
-    \subsection{Neural Network Library}
+    \subsection{Neural Network Library} \label{NNLibDesignStage}
 
     The neural network library is also based manily around one class, in this case it is the 'Module' Class. 
 
@@ -1493,7 +1497,7 @@
 
     \pagebreak
     \vspace*{7mm}
-    \subsection{Reinforcement Learning Solution}
+    \subsection{Reinforcement Learning Solution} \label{RLSDesignStage}
     The reinforcement learning section is the most complex of all the parts. It uses all the previously defined classes and ones that will be defined in this section,
     to build the learning agent. The final product is a model that can play checkers at a higher level with the same or less time, than a tree search.
     \subsubsection{Data Structures}
@@ -1753,14 +1757,15 @@
     \begin{figure}
         \centering
         \includegraphics[scale=0.45]{NetworkPassThrough.drawio.png}
-        \caption{A representation of the AlphaModel}
+        \caption{A representation of the AlphaModel} 
+        \label{fig:28}
     \end{figure}
 
     \pagebreak
     \subsubsubsection{Agent}
 
     The AlphaZero agent class has high levels of abstraction, and draws from all of the previously defined modules.
-    It has one main training algorithm (for training), psuedocode of which can be seen in the original analysis (\myhy{AgentTrainingAlg}{here}). 
+    It has one main training algorithm (for training), psuedocode of which can be seen in the original analysis - (\myhy{AgentTrainingAlg}{here}). 
 
     The only other essential algorithm if the agent is that which converts the SAP dataclass to the SPV - both of which were mentioned
     in the agent section of the data structures part above. Psuedocode for this short algorithm can be seen below.
@@ -1782,11 +1787,12 @@
         \end{algorithmic}
     \end{algorithm}
 
-
     \section{Technical Solution}
+    \secttoc
+
 
     In the technical analysis I will show the code that implements any data structures and algorithms that I have described
-    in the design section.
+    in the design section and any code that implements features outlined in the objectives.
 
     \subsection{Checkers}
 
@@ -1796,7 +1802,7 @@
 
     \textbf{Note: }despite these code snippets having titles of the file names, it does not contain all
     the code in the file. This can be found in the \myhy{}{appendix}. 
-    \subsubsubsection{nea.console\_checkers.checkers\_game.py}
+    \subsubsubsection{CheckersGame and MainMenu}
     \begin{minted}{python}
     from nea.console_checkers.consts import (
         BLACK,
@@ -1960,7 +1966,7 @@
     
     \end{minted}
 
-    \subsubsubsection{nea.console\_checkers.jit\_functions.py}
+    \subsubsubsection{Jit Function}
     \begin{minted}{python}
     from numba import jit
     import numpy as np
@@ -2045,7 +2051,7 @@
         return valid_moves
     \end{minted}
 
-    \subsubsubsection{nea.console\_checkers.consts.py}
+    \subsubsubsection{Constants}
     \begin{minted}{python}
     SIZE = 8
 
@@ -2062,7 +2068,7 @@
     The next set of sections will now contain code for the data structures and algorithms
     mentioned in the \myhy{CheckersGUIDesignStage}{design stage} of the checkers user interface / GUI add-on.
 
-    \subsubsubsection{nea.checkers\_gui.checkers\_gui.py}
+    \subsubsubsection{CheckersGUI}
     \begin{minted}{python}
     import pygame
     import numpy as np
@@ -2300,7 +2306,7 @@
             return params
     \end{minted}
 
-    \subsubsubsection{nea.checkers\_gui.helpers.py}
+    \subsubsubsection{Helper Functions}
     \begin{minted}{python}
         from nea.checkers_gui.consts import DISPLAY
 
@@ -2311,7 +2317,7 @@
             return int(mouse_x / DISPLAY.SQUARE_SIZE)
     \end{minted}
 
-    \subsubsubsection{nea.checkers\_gui.consts.py}
+    \subsubsubsection{Constants}
     \begin{minted}{python}
     class DISPLAY:
         SCREEN_SIZE = 720
@@ -2362,7 +2368,7 @@
         ]
     \end{minted}
 
-    \subsubsubsection{nea.checkers\_gui.buttons.py}
+    \subsubsubsection{Buttons}
     \begin{minted}{python}
     import pygame
     from abc import ABC
@@ -2444,12 +2450,11 @@
                 self.f(*args, **kwargs)
     \end{minted}
 
-
     \subsection{Autodifferentiation engine}
     Please see \myhy{AutodifferentiationDesignStage}{here} for the design stage related to this following
     area. Additionally, I will include code which helps to achieve the \myhy{AutodifferentiationObjectives}{autodifferentiation engine objectives}
 
-    \subsubsection{nea.ml.autograd.consts.py}
+    \subsubsection{Constants}
     \begin{minted}{python}
     from typing import Union
     from numpy import ndarray
@@ -2457,7 +2462,7 @@
     Tensorable = Union[ndarray, list, tuple, float, int]
     \end{minted}
 
-    \subsubsection{nea.ml.autograd.tensor.py}
+    \subsubsection{Tensor and Tensor Operations}
     \begin{minted}{python}
     from __future__ import annotations
     from abc import ABC
@@ -2528,34 +2533,6 @@
 
         def __repr__(self) -> str:
             return f"Tensor({self._data}, shape = {self.shape})"
-
-        @staticmethod
-        def zeros(shape: tuple[int], requires_grad: bool = False) -> Tensor:
-            """Returns a tensor of 1s
-
-            Args:
-                shape (tuple[int]): desired shape of tensor
-                requires_grad (bool, optional): if the tensors requires_grad property should be false.
-                Defaults to False.
-
-            Returns:
-                Tensor: tensor of 1s
-            """
-            return Tensor(np.zeros(shape), requires_grad=requires_grad)
-
-        @staticmethod
-        def ones(shape: tuple[int], requries_grad: bool = False) -> Tensor:
-            """Returns a tensor of 0s
-
-            Args:
-                shape (tuple[int]): desired shape of tensor
-                requires_grad (bool, optional): if the tensors requires_grad property should be false.
-                Defaults to False.
-
-            Returns:
-                Tensor: tensor of 0s
-            """
-            return Tensor(np.ones(shape), requires_grad=requries_grad)
 
         def backward(self, dy=None, y=None) -> None:
             """Reverse searches the computational graph, computing and updating parent
@@ -3591,7 +3568,7 @@
                 a.backward(da, y)
     \end{minted}
 
-    \subsubsection{nea.ml.autograd.convolve\_funcs.py}
+    \subsubsection{Jit Convolve Specific Functions}
     \begin{minted}{python}
     import numpy as np
     from numba import jit
@@ -3619,7 +3596,6 @@
                 output[i] = _jit_cpu_valid_cross_correlate2d(x[j], k[i, j])
 
         return output
-
 
     @jit(nopython=True, cache=True)
     def cpu_x_and_k_backward_convolve2d(
@@ -3656,7 +3632,6 @@
 
         return x_output, k_output
 
-
     @jit(nopython=True, cache=True)
     def cpu_k_backward_convolve2d(
         output: np.ndarray, x: np.ndarray, dy: np.ndarray, n_kernels: int
@@ -3678,7 +3653,6 @@
                 output[i, j] = _jit_cpu_valid_cross_correlate2d(x[j], dy[i])
 
         return output
-
 
     @jit(nopython=True, cache=True)
     def cpu_x_backward_convolve2d(
@@ -3702,7 +3676,6 @@
 
         return output
 
-
     @jit(nopython=True, cache=True)
     def _jit_cpu_convolve2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
         """Returns the 2d convolution of two matrices
@@ -3718,7 +3691,6 @@
         """
         return _jit_cpu_full_cross_correlate2d(a, _jit_rotate_180(b))
 
-
     @jit(nopython=True, cache=True)
     def _jit_rotate_180(b: np.ndarray) -> np.ndarray:
         """Rotates a given matrix by 180 degrees
@@ -3731,7 +3703,6 @@
         """
         rot90 = np.rot90(b)
         return np.rot90(rot90)
-
 
     @jit(nopython=True, cache=True)
     def _jit_cpu_full_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
@@ -3773,7 +3744,6 @@
 
         return out
 
-
     @jit(nopython=True, cache=True)
     def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray:
         """Performs VALID cross correlation between two numpy arrays
@@ -3813,19 +3783,975 @@
                 out[m, n] = s  # add to output array
 
         return out
-
     \end{minted}
 
-    \subsubsection{nea.ml.autograd.jit\_functions.py}
+    \subsubsection{Jit Functions}
     \begin{minted}{python}
-        
+    from numba import jit
+    import numpy as np
+
+    @jit(nopython=True, cache=True)
+    def fill_padded_array(
+        array_to_fill: np.ndarray, array_fill_with: np.ndarray, padding: int
+    ) -> np.ndarray:
+        samples, _, _ = array_fill_with.shape
+        for sample in range(samples):
+            array_to_fill[sample, padding:-padding, padding:-padding] = array_fill_with[
+                sample
+            ]
+
+        return array_to_fill
     \end{minted}
 
+    \subsection{Neural Network Library}
+
+    Again, the code below will show the implementation of any classes, data structures and algorithms
+    mentioned and described in the \myhy{NNLibDesignStage}{design stage} as well as any code regarding
+    the \myhy{}{neural network library objectives}.
+
+    \subsubsection{Modules}
+    \begin{minted}{python}
+    from abc import ABC
+    import collections
+    import numpy as np
+    import pickle
+
+    from nea.ml.autograd import Tensor, to_tensor, TensorFunction, tensor_exp, tensor_sum
+    from nea.ml.autograd.consts import Tensorable
 
 
+    class Parameter(Tensor):
+        """
+        Represents a parameter
+        """
+
+        def __init__(
+            self,
+            shape: tuple[int] = None,
+            requires_grad: bool = True,
+            operation: TensorFunction = None,
+        ) -> None:
+            if shape is not None:
+                data = np.random.randn(*shape)
+                super().__init__(data, requires_grad=requires_grad, operation=operation)
+            else:
+                raise ValueError("shape must be specified and cannot be left as None")
 
 
+    class Module(ABC):
+        """Basis of all layers"""
 
+        def __call__(self, x: Tensorable) -> Tensor:
+            return self.forward(to_tensor(x))
+
+        def forward(self, x: Tensorable) -> Tensor:
+            """Forward propogation of module
+
+            Args:
+                x (Tensorable): Input data
+
+            Returns:
+                Tensor:
+            """
+            raise NotImplementedError("Cannot call forward on raw module")
+
+        @property
+        def params(self) -> list[Parameter | Tensor]:
+            """Gets all parameters inside a modules from the self.__dict__
+            Also gets any tensors with requires_grad = True,
+            and the parameters from any other module
+
+            Returns:
+                list[Parameter | Tensor]:
+            """
+
+            params = []
+
+            #get all params associated with the module
+            for param in self.__dict__.values():
+                if isinstance(param, Module):
+                    params += param.params
+                elif isinstance(param, ModuleList):
+                    params += param.params
+                elif isinstance(param, Parameter):
+                    params.append(param)
+                elif isinstance(param, Tensor):
+                    if param.requires_grad:
+                        params.append(param)
+
+            return params
+
+        def save(self, file_path: str) -> None:
+            with open(file_path, "wb") as fh:
+                pickle.dump(self, fh)
+
+        @staticmethod
+        def load(self, file_path: str) -> None:
+            with open(file_path, "rb") as fh:
+                return pickle.load(fh)
+
+    # allows multiple modules to be stored in a list (useful for the residual layers)
+    class ModuleList(Module, collections.abc.Sequence):
+        def __init__(self, modules: list[Module]) -> None:
+            super().__init__()
+            self.modules = modules
+
+        @property
+        def params(self) -> list[Parameter | Tensor]:
+            params = []
+
+            for module in self.modules:
+                for param in module.__dict__.values():
+                    if isinstance(param, Module):
+                        params += param.params
+                    elif isinstance(param, ModuleList):
+                        params += param.params
+                    elif isinstance(param, Parameter):
+                        params.append(param)
+                    elif isinstance(param, Tensor):
+                        if param.requires_grad:
+                            params.append(param)
+
+                return params
+
+        def __getitem__(self, index: int) -> Module:
+            return self.modules[index]
+
+        def __len__(self) -> int:
+            return len(self.modules)
+
+
+    class Dense(Module):
+        """Fully connected layer
+
+        Args:
+            Module (_type_):
+        """
+
+        def __init__(self, n_inputs: int, n_outputs: int, bias: bool = True) -> None:
+            """Instantiates a new dense layer
+
+            Args:
+                n_inputs (int): number of inputs to layer
+                n_outputs (int): desired number of output neurons
+                bias (bool, optional): whether to add a bias layer or not. 
+                Defaults to True.
+            """
+            super().__init__()
+            self.weights = Parameter((n_inputs, n_outputs))
+            if bias:
+                self.bias = Parameter((n_outputs,))
+
+        def forward(self, x: Tensorable) -> Tensor:
+            """Propogates input data through dense layer
+
+            Args:
+                x (Tensorable): input data
+
+            Returns:
+                Tensor:
+            """
+            y = x @ self.weights
+            if self.bias:
+                y = y + self.bias
+
+            return y
+
+
+    class Conv2D(Module):
+        """A Convolutional layer
+
+        Args:
+            Module (_type_):
+        """
+
+        def __init__(
+            self,
+            x_shape: tuple[int, int, int],
+            kernel_size: int,
+            n_kernels: int,
+            bias: bool = False,
+            padding: int = None,
+            padding_value: float = None,
+        ) -> None:
+            assert len(x_shape) == 3, "Input must be of shape (n_samples, *, *)"
+            if padding_value:
+                assert padding, """Must define amount of padding 
+                if padding value is not None"""
+
+            self.n_kernels = n_kernels
+            self.x_shape = x_shape
+
+            x_samples, x_width, x_height = self.x_shape
+
+            self.padding = padding
+            self.padding_value = padding_value
+            if self.padding:
+                self.x_shape = (
+                    x_samples,
+                    x_width + 2 * self.padding,
+                    x_height + 2 * self.padding,
+                )
+                x_samples, x_width, x_height = self.x_shape
+
+            self.output_shape = (
+                self.n_kernels,
+                x_width - kernel_size + 1,
+                x_height - kernel_size + 1,
+            )
+            self.kernels_shape = (n_kernels, x_samples, kernel_size, kernel_size)
+
+            self.kernels = Parameter(self.kernels_shape)
+
+            self.bias = bias
+            self.biases = None
+            if self.bias:
+                self.biases = Parameter(self.output_shape)
+
+        def forward(self, x: Tensor) -> Tensor:
+            if self.padding:
+                x = x.pad2D(padding=self.padding, value=self.padding_value)
+            return x.convolve2d(k=self.kernels, b=self.biases)
+
+
+    class Reshape(Module):
+        def __init__(self, desired_shape: tuple[int]) -> None:
+            self.desired_shape = desired_shape
+
+        def forward(self, x: Tensor) -> Tensor:
+            return x.reshape(self.desired_shape)
+
+
+    # ==========================
+    #        Activations
+    # ==========================
+
+
+    class Tanh(Module):
+        """Tanh activation layer
+
+        Args:
+            Module (_type_):
+        """
+
+        def __init___(self) -> None:
+            super().__init__()
+
+        def forward(self, x: Tensor) -> Tensor:
+            output = (
+                (tensor_exp(x) - tensor_exp(-x)) 
+                / (tensor_exp(x) + tensor_exp(-x))
+            )
+            return output
+
+
+    class Sigmoid(Module):
+        """Sigmoid activation layer
+
+        Args:
+            Module (_type_):
+        """
+
+        def __init__(self) -> None:
+            super().__init__()
+
+        def forward(self, x: Tensor) -> Tensor:
+            output = 1 / (1 + tensor_exp(-x))
+            return output
+
+
+    class Softmax(Module):
+        def __init__(self) -> None:
+            super().__init__()
+
+        def forward(self, x: Tensor, dim: int = -1) -> Tensor:
+            z = tensor_exp(x)
+            output = z / tensor_sum(z, dim=dim, keepdims=True)
+            return output
+
+
+    class ReLU(Module):
+        def __init__(self) -> None:
+            super().__init__()
+
+        def forward(self, x: Tensor) -> Tensor:
+            return x.relu()
+
+
+    # ==========================
+    #          Losses
+    # ==========================
+
+
+    class MSE(Module):
+        def __init__(self) -> None:
+            super().__init__()
+
+        def __call__(self, predicted: Tensor, true: Tensorable) -> Tensor:
+            return self.forward(predicted=predicted, true=true)
+
+        def forward(self, predicted: Tensor, true: Tensorable) -> Tensor:
+            loss: Tensor = predicted - true
+            loss = (1 / true.shape[0]) * (loss.T() @ loss)
+            return loss
+
+
+    class AlphaLoss(Module):
+        def __init__(self) -> None:
+            super().__init__()
+
+        def __call__(
+            self,
+            true_value: Tensor,
+            predicted_value: Tensor,
+            mcts_pol: Tensor,
+            net_pol: Tensor,
+        ) -> Tensor:
+            return self.forward(
+                true_value=true_value,
+                predicted_value=predicted_value,
+                mcts_pol=mcts_pol,
+                net_pol=net_pol,
+            )
+
+        def forward(
+            self,
+            true_value: Tensor,
+            predicted_value: Tensor,
+            mcts_pol: Tensor,
+            net_pol: Tensor,
+        ) -> Tensor:
+            val_sqe = (true_value - predicted_value) ** 2 # MSE half
+            pol_bcel = mcts_pol.T() @ net_pol.log() # BCEL half
+            return val_sqe - pol_bcel
+    \end{minted}
+
+    \subsubsection{Optimizers}
+    \begin{minted}{python}
+    from abc import ABC
+
+    from nea.ml.autograd import Tensor
+    from nea.ml.nn import Parameter
+
+
+    class Optimizer(ABC):
+        def __init__(
+            self,
+            params: list[Tensor | Parameter],
+            lr: float = 0.001,
+            regulization: float = 0,
+        ) -> None:
+            self.params = params
+            self.lr = lr
+            self.regulization = regulization
+
+        def step(self) -> None:
+            """
+            Updates each parameters value depending on gradients
+            """
+            raise NotImplementedError("Cannot call step on base 'Optimizer' class")
+
+        def zero_grad(self) -> None:
+            """
+            Resets the gradient of each parameter
+            """
+            for param in self.params:
+                param.zero_grad()
+
+
+    class SGD(Optimizer):
+        def __init__(
+            self,
+            params: list[Tensor | Parameter],
+            lr: float = 0.0001,
+            regulization: float = 0.0001,
+        ) -> None:
+            super().__init__(params, lr, regulization)
+
+        def step(self) -> None:
+            for param in self.params:
+                # update parameter with regularization to prevent overfitting
+                param._data = (
+                    param._data
+                    - (self.lr * param.grad)
+                    - (self.lr * self.regulization * (param._data ** 2))
+                )
+    \end{minted}
+
+    \subsection{Reinforcement Learning Solution}
+    The same as previous sections, a link to the design stage can be found \myhy{RLSDesignStage}{here}, and
+    related objectives can also be found \myhy{RLS Objs}{here}.
+
+    \subsubsection{Node and MCTS}
+    \begin{minted}{python}
+    from __future__ import annotations
+    from copy import deepcopy
+    from collections import deque
+
+    import numpy as np
+
+    from nea.console_checkers import CheckersGame
+    from nea.mcts.consts import ACTION, ACTION_TO_IDX, IDX_TO_ACTION
+
+
+    class Node:
+        """Creates a new Node object"""
+
+        def __init__(
+            self,
+            game: CheckersGame,
+            parent: Node = None,
+            terminal: bool = False,
+            action_taken: ACTION = None,
+            reward: float = None,
+            **kwargs,
+        ) -> None:
+            self._game = game
+            self.colour = self._game.player
+
+            self._state = self._game.board
+            self._parent = parent
+            self.children: list["Node"] = []
+            self._action_taken = action_taken
+            self.reward = reward
+            self._available_moves_left = self._init_available_moves()
+            self.terminal = terminal
+
+            self.visit_count, self.value_count = 0, 0
+
+            self.kwargs = kwargs
+
+        def select_child(self) -> Node:
+            """Selects the best child from a fully expanded node using UCB
+
+            Returns:
+                Node: Best child
+            """
+            best_child = None
+            best_ucb = -np.inf
+
+            for child in self.children:
+                ucb = self._calculate_ucb(child)
+                if ucb > best_ucb:
+                    best_child = child
+                    best_ucb = ucb
+
+            return best_child
+
+        def expand(self) -> Node:
+            """Random expansion of a node
+
+            Returns:
+                Node: New child
+            """
+            if self.n_available_moves_left == 0 and self.children:
+                return self.select_child()
+
+            # get a random action
+            random_move_idx = np.random.choice(self.n_available_moves_left)
+            random_action = self._available_moves_left[random_move_idx]
+
+            self._available_moves_left.remove(random_action)
+
+            child_game = deepcopy(self._game)
+            # complete the action
+            _, _, terminal, reward = child_game.step(random_action)
+
+            # create new node for tree after this action
+            child = Node(
+                child_game,
+                parent=self,
+                terminal=terminal,
+                action_taken=random_action,
+                reward=reward,
+                eec=self.kwargs["eec"],
+            )
+            self.children.append(child)
+
+            return child
+
+        def backprop(self, reward: int) -> None:
+            """Backpropgates through graph, updating value count, visit count.
+
+            Args:
+                reward (int): reward of terminal state
+            """
+            self.visit_count += 1
+            self.value_count += reward
+
+            if self._parent is not None:
+                if self._parent.colour != self.colour:
+                    reward *= -1
+                self._parent.backprop(reward)
+
+
+    class MCTS:
+        """
+        Monte Carlo Tree Search class used to search for lines until termination in a given state
+        """
+
+        def __init__(self, **kwargs) -> None:
+            """Creates a new MCTS object
+
+            Keyword Args:
+                eec: exploration constant -> Higher EEC = more exploration
+                n_searches: number of searches
+            """
+
+            self.kwargs = kwargs
+            self._root: Node = None
+
+        def build_tree(self, root: CheckersGame) -> None:
+            """Builds a new tree
+
+            Args:
+                root (CheckersGame): New state to root the tree from
+            """
+            self._root = Node(root, eec=self.kwargs["eec"])
+
+            for _ in range(int(self.kwargs["n_searches"])):
+                node = self._root
+
+                if node.n_available_moves_left == 0 and node.children:
+                    node = node.select_child()
+
+                while not node.terminal:
+                    node = node.expand()
+
+                node.backprop(node.reward)
+
+        def get_action_probs(self) -> np.ndarray:
+            """Gets array of probabilities of action based on tree
+
+            Returns:
+                np.ndarray: Array of probabilities
+            """
+            p = np.zeros(
+                (8, 8, 8)
+            )  # (8x8) shows where to take piece from. Final 8 shows what direc e.g.
+            # idx 0 = row+1,col+1, idx 1 = row+1, col-1 etc.
+            for child in self._root.children:
+                piece_moved, moved_to = child.action_taken
+                row_change = moved_to[0] - piece_moved[0]
+                col_change = moved_to[1] - piece_moved[1]
+                direc_idx = ACTION_TO_IDX[(row_change, col_change)]
+                p[direc_idx, piece_moved[0], piece_moved[1]] = child.visit_count
+
+            p /= np.sum(p)
+            return p
+    \end{minted}
+
+    \pagebreak
+    
+    \subsubsection{AlphaNode and AlphaMCTS}
+    
+    \begin{minted}{python}
+    class AlphaNode(Node):
+        def __init__(
+            self,
+            game: CheckersGame,
+            parent: Node = None,
+            terminal: bool = False,
+            action_taken: ACTION = None,
+            reward: float = None,
+            prior_prob: float = None,
+            **kwargs,
+        ) -> None:
+            super().__init__(
+                game=game,
+                parent=parent,
+                terminal=terminal,
+                action_taken=action_taken,
+                reward=reward,
+                **kwargs,
+            )
+            self.prior_prob = prior_prob
+
+        def expand(self, policy: np.ndarray) -> AlphaNode:
+            child = None
+            for action, prob in np.ndenumerate(policy):
+                if prob > 0: # for every move where the model thinks it could win
+                    child_game = deepcopy(self._game)
+                    action = AlphaNode._convert_action_idx_to_action_game(action)
+                    self._available_moves_left.remove(action)
+                    # take this move
+                    _, _, terminal, reward = child_game.step(action)
+
+                    # add node to tree after this move was taken
+                    child = AlphaNode(
+                        game=child_game,
+                        parent=self,
+                        terminal=terminal,
+                        action_taken=action,
+                        reward=reward,
+                        prior_prob=prob,
+                        **self.kwargs,
+                    )
+
+                    self.children.append(child)
+
+            return child
+
+
+    class AlphaMCTS(MCTS):
+        def __init__(self, model: AlphaModel, **kwargs) -> None:
+            super().__init__(**kwargs)
+            self.model = model
+
+        def alpha_build_tree(self, root: CheckersGame, prior_states: deque) -> None:
+            """_summary_
+
+            Args:
+                root (CheckersGame): _description_
+                prior_states (list[np.ndarray]): _description_
+            """
+            if len(prior_states) < 5:
+                self.build_tree(root)
+                return
+
+            self._root = AlphaNode(root, eec=self.kwargs["eec"])
+
+            for _ in range(int(self.kwargs["n_searches"])):
+                prior_states_temp = deepcopy(prior_states) # make a copy of original 
+                node = self._root
+                policy, value = None, None
+
+                while node.n_available_moves_left == 0 and node.children:
+                    node = node.select_child()
+                    prior_states_temp.append(node._state) 
+                    # states is deque so automatically enforces maxlen
+
+                if not node.terminal:
+                    input_tensor = self._create_input_tensor(prior_states_temp)
+                    with no_grad():
+                        policy, value = self.model(input_tensor) # get policy and value
+                    policy *= self._get_valid_moves_as_action_tensor(node=node)
+                    policy /= policy.sum().sum().sum()
+
+                    node.expand(policy.data)
+
+                    value = value.data
+                else:
+                    value = node.reward
+
+                node.backprop(value)
+    \end{minted}
+
+    \subsubsection{Alpha Network}
+    The code in this section specifically implements the model shown in \hyperlink{page.38}{\underline{Figure 28}}.
+    \begin{minted}{python}
+    import numpy as np
+
+    from nea.ml import nn
+    from nea.ml.autograd import Tensor, Tensorable
+    
+    # num hidden conv can be changed to preference
+    class ResidualLayer(nn.Module):
+        def __init__(self, num_hidden_conv: int) -> None:
+            super().__init__()
+            # create components that will be used in forward
+            self.Conv1 = nn.Conv2D(
+                (num_hidden_conv, 8, 8),
+                kernel_size=3,
+                n_kernels=num_hidden_conv,
+                padding=1,
+                padding_value=0,
+            )
+            self.ReLU1 = nn.ReLU()
+            self.Conv2 = nn.Conv2D(
+                (num_hidden_conv, 8, 8),
+                kernel_size=3,
+                n_kernels=num_hidden_conv,
+                padding=1,
+                padding_value=0,
+            )
+            self.ReLU2 = nn.ReLU()
+
+        def forward(self, x: Tensorable) -> Tensor:
+            """Input Shape of (128, 8, 8)
+
+            Output Shape of (128, 8, 8)
+
+            Args:
+                x (Tensorable): input tensor
+
+            Returns:
+                Tensor:
+            """
+            original_input = x.data
+            x = self.Conv1(x)
+            x = self.ReLU1(x)
+            x = self.Conv2(x)
+            x += original_input
+            x = self.ReLU2(x)
+            # normalisation
+            x /= np.max(x.data)
+            return x
+
+
+    class ConvolutionalLayer(nn.Module):
+        """This is only used as the starting block
+
+        Args:
+            nn (_type_):
+        """
+
+        def __init__(self, num_hidden_conv: int) -> None:
+            super().__init__()
+            # create components that will be used in forward
+            self.Conv1 = nn.Conv2D(
+                (5, 8, 8),
+                n_kernels=num_hidden_conv,
+                kernel_size=3,
+                padding=1,
+                padding_value=0,
+            )
+            self.ReLU = nn.ReLU()
+
+        def forward(self, x: Tensor) -> Tensor:
+            """Input shape of (5, 8, 8)
+
+            Output shape of (128, 8, 8)
+
+            Args:
+                x (Tensor): input tensor
+
+            Returns:
+                Tensor:
+            """
+            x = self.Conv1(x)
+            x = self.ReLU(x)
+            return x
+
+
+    class PolicyHead(nn.Module):
+        def __init__(self, num_hidden_conv: int) -> None:
+            super().__init__()
+            # create components that will be used in forward
+            self.Conv1 = nn.Conv2D((num_hidden_conv, 8, 8), kernel_size=1, n_kernels=8)
+            self.ReLU1 = nn.ReLU()
+            self.Softmax = nn.Softmax()
+
+        def forward(self, x: Tensor) -> Tensor:
+            """Input shape of (128, 8, 8)
+
+            Output shape of (8, 8, 8)
+
+            Args:
+                x (Tensor): input tensor
+
+            Returns:
+                Tensor:
+            """
+            x = self.Conv1(x)
+            x = self.ReLU1(x)
+            x = self.Softmax(x)
+            return x
+
+
+    class ValueHead(nn.Module):
+        def __init__(self, num_hidden_conv: int) -> None:
+            super().__init__()
+            # create components that will be used in forward
+            self.Conv1 = nn.Conv2D((num_hidden_conv, 8, 8), kernel_size=1, n_kernels=8)
+            self.ReLU1 = nn.ReLU()
+            self.Reshape = nn.Reshape((1, 8 * 8 * 8))
+            self.Dense1 = nn.Dense(8 * 8 * 8, 256)
+            self.ReLU2 = nn.ReLU()
+            self.Dense2 = nn.Dense(256, 1)
+            self.Tanh = nn.Tanh()
+
+        def forward(self, x: Tensor) -> Tensor:
+            """Input shape of (128, 8, 8)
+
+            Output is scalar [-1, 1]
+
+            Args:
+                x (Tensor): input tensor
+
+            Returns:
+                Tensor:
+            """
+            x = self.Conv1(x)
+            x = self.ReLU1(x)
+            x = self.Reshape(x)
+            x = self.Dense1(x)
+            x = self.ReLU2(x)
+            x = self.Dense2(x)
+            x = self.Tanh(x)
+            return x
+
+
+    class AlphaModel(nn.Module):
+        def __init__(self, n_res_layers: int = 5, num_hidden_conv: int = 32) -> None:
+            super().__init__()
+            # combine previously defined modules to form new more complex network
+            self.first_layer = ConvolutionalLayer(num_hidden_conv=num_hidden_conv)
+            self.res_layers = nn.ModuleList(
+                [
+                    ResidualLayer(num_hidden_conv=num_hidden_conv)
+                    for r in range(n_res_layers)
+                ]
+            )
+            # define two output heads
+            self.policy_head = PolicyHead(num_hidden_conv=num_hidden_conv)
+            self.value_head = ValueHead(num_hidden_conv=num_hidden_conv)
+
+        def forward(self, x: Tensor) -> tuple[Tensor, Tensor]:
+            """Input shape (5, 8, 8)
+
+            Output of tuple (policy, value)
+
+            Policy has shape (8, 8, 8)
+
+            Value is scalar
+
+            Args:
+                x (Tensor): input tensor
+
+            Returns:
+                tuple[Tensor, Tensor]: (policy, value)
+            """
+            x = self.first_layer(x)
+            for res in self.res_layers:
+                x = res(x)
+            pol = self.policy_head(x)
+            val = self.value_head(x)
+            return pol, val
+    \end{minted}
+
+    \subsubsection{Agent}
+
+    \subsubsubsection{Memory Types}
+    \begin{minted}{python}
+    from dataclasses import dataclass
+
+
+    @dataclass
+    class SAP:
+        state: np.ndarray
+        mcts_action_probs: np.ndarray
+        player: str
+
+
+    @dataclass
+    class SPV:
+        state: np.ndarray
+        mcts_action_probs: np.ndarray
+        true_value: float
+    \end{minted}
+
+    \subsubsubsection{Agent}
+    \begin{minted}{python}
+    from collections import deque
+    import gc
+    import itertools
+    import random
+    import math
+
+    from nea.ml.nn import Optimizer, SGD, AlphaLoss
+    from nea.ml.autograd import Tensor
+    from nea.mcts import AlphaMCTS, AlphaNode
+    from nea.network import AlphaModel
+    from nea.console_checkers import CheckersGame
+    from nea.agent.memory_types import SAP, SPV
+    from nea.agent.consts import ACTION_SPACE
+
+
+    class AlphaZero:
+        def __init__(
+            self,
+            optimizer: Optimizer = None,
+            mcts_epochs: int = 50,
+            n_example_games: int = 10,
+            max_training_examples: int = 500,
+            nn_epochs: int = 10,
+            batch_size: int = 32,
+            n_compare_games: int = 10,
+            eec: float = 1.41,
+            n_mcts_searches: int = 100,
+            replace_win_pct_threshold: int = 60,
+            save: bool = False,
+        ) -> None:
+            self.prev_model = None
+            self.new_model = None
+            if optimizer is None:
+                optimizer = SGD
+            self.optimizer = optimizer
+            self.hyperparams = {
+                "mcts_epochs": mcts_epochs,
+                "n_example_games": n_example_games,
+                "nn_epochs": nn_epochs,
+                "batch_size": batch_size,
+                "n_compare_games": n_compare_games,
+                "eec": eec,
+                "n_mcts_searches": n_mcts_searches,
+                "replace_win_pct_threshold": replace_win_pct_threshold,
+            }
+
+            self.loss = AlphaLoss()
+            self.save = save
+
+        def train(self, initial_model: AlphaModel) -> None:
+            self.prev_model = initial_model
+            if self.new_model is None:
+                self.new_model = initial_model
+
+            for mcts_epoch in range(self.hyperparams["mcts_epochs"]): # number of generations
+                training_examples = deque()
+
+                gc.collect()
+
+                print(f"MCTS EPOCH: {mcts_epoch + 1}")
+                print("GETTING EXAMPLE GAMES")
+                for example_game in tqdm(range(self.hyperparams["n_example_games"])):
+                    game_saps, reward, player = self._get_example_saps() # play games against self
+                    game_spvs = self._convert_saps_to_spvs(game_saps, player, reward)
+
+                    for item in game_spvs:
+                        training_examples.append(item) # add to training dataset
+
+                print(f"BEGINNING NN TRAINING ON {len(training_examples)} EXAMPLES")
+                for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
+                    gc.collect()
+                    self._train_nn(training_examples)
+
+                print("PLAYING COMPARISON GAMES")
+                if self._play_compare_games():
+                    self.prev_model = self.new_model
+
+                    if self.save:
+                        file_path = (
+                            f"{self.hyperparams["n_mcts_searches"]}ns-"
+                            + f"{self.hyperparams["eec"]}ec-"
+                            + f"{self.hyperparams["n_example_games"]}te-"
+                            + f"{self.hyperparams["n_compare_games"]}cg-"
+                            + f"{self.hyperparams["replace_win_pct_threshold"]}rt"
+                        )
+                        self.new_model.save(file_path=file_path)
+
+                        print(f"Model saved to file {file_path}.pkl")
+                gc.collect()
+
+            return self.prev_model
+
+        def _convert_saps_to_spvs(
+            self, game_saps: deque[SAP], player: str, reward: float
+        ) -> deque[SPV]:
+            """
+            Converts SAPs to SPVs
+            """
+            len_game_saps = len(game_saps)
+            game_spvs = deque(maxlen=len_game_saps)
+
+            for item in game_saps:
+                value = reward if item.player == player else reward * -1
+                game_spvs.append(SPV(item.state, item.mcts_action_probs, value))
+
+            return game_spvs
+    \end{minted}
+
+    \section{Testing}
 
 
     \section{Research Log}

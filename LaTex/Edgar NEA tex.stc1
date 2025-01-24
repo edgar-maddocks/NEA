@@ -1,0 +1,73 @@
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {1.1}Background}{\reset@font\stcSSfont 1}{subsection.1.1}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {1.2}Evidence of Analysis}{\reset@font\stcSSfont 2}{subsection.1.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.2.1}Current systems}{\reset@font\stcSSSfont 2}{subsubsection.1.2.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.2.1.1}Checkers}{\reset@font\stcPfont 2}{paragraph.1.2.1.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.2.1.2}Neural Networks}{\reset@font\stcPfont 3}{paragraph.1.2.1.2}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax What is a neural Network}{\reset@font\stcSPfont 3}{section*.2}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Linear Regression Unit}{\reset@font\stcSPfont 3}{section*.3}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Vectorization of processes}{\reset@font\stcSPfont 3}{section*.4}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward Pass of Dense Layer}{\reset@font\stcSPfont 4}{section*.5}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward Pass of a Convolutional Layer}{\reset@font\stcSPfont 4}{section*.6}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Gradient Descent}{\reset@font\stcSPfont 5}{section*.7}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.2.1.3}Automatic Differentiation}{\reset@font\stcPfont 6}{paragraph.1.2.1.3}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.2.1.4}Reinforcement Learning (RL)}{\reset@font\stcPfont 7}{paragraph.1.2.1.4}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.2.1.5}AlphaZero}{\reset@font\stcPfont 8}{paragraph.1.2.1.5}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.2.2}Similar Systems}{\reset@font\stcSSSfont 9}{subsubsection.1.2.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.2.3}Interview with third party}{\reset@font\stcSSSfont 9}{subsubsection.1.2.3}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {1.3}Modelling of the problem}{\reset@font\stcSSfont 10}{subsection.1.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.3.1}Identification of Objects}{\reset@font\stcSSSfont 10}{subsubsection.1.3.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.1.1}Checkers}{\reset@font\stcPfont 10}{paragraph.1.3.1.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.1.2}Automatic Differentiation Engine}{\reset@font\stcPfont 11}{paragraph.1.3.1.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.1.3}Neural Network Library}{\reset@font\stcPfont 11}{paragraph.1.3.1.3}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.1.4}Reinforcement Learning Solution}{\reset@font\stcPfont 12}{paragraph.1.3.1.4}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.3.2}Identification of algorithms}{\reset@font\stcSSSfont 13}{subsubsection.1.3.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.2.1}Automatic Differentiation Engine}{\reset@font\stcPfont 13}{paragraph.1.3.2.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.2.2}Neural Network Library}{\reset@font\stcPfont 13}{paragraph.1.3.2.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.2.3}Reinforcement Learning Solution}{\reset@font\stcPfont 14}{paragraph.1.3.2.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.3.3}Mathematical Formulae}{\reset@font\stcSSSfont 16}{subsubsection.1.3.3}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.3.1}Automatic Differentiation Engine}{\reset@font\stcPfont 16}{paragraph.1.3.3.1}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Addition}{\reset@font\stcSPfont 16}{section*.8}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 16}{section*.9}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 16}{section*.10}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Negation}{\reset@font\stcSPfont 16}{section*.11}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 16}{section*.12}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 16}{section*.13}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Multiplication}{\reset@font\stcSPfont 16}{section*.14}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 16}{section*.15}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 16}{section*.16}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Division}{\reset@font\stcSPfont 16}{section*.17}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 16}{section*.18}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 16}{section*.19}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Matrix multiplication}{\reset@font\stcSPfont 17}{section*.20}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 17}{section*.21}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 17}{section*.22}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Powers}{\reset@font\stcSPfont 17}{section*.23}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 17}{section*.24}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 17}{section*.25}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Mean}{\reset@font\stcSPfont 17}{section*.26}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 17}{section*.27}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 17}{section*.28}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Sum}{\reset@font\stcSPfont 17}{section*.29}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 17}{section*.30}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 17}{section*.31}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Natural Log}{\reset@font\stcSPfont 17}{section*.32}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 17}{section*.33}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 18}{section*.34}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Exponentation}{\reset@font\stcSPfont 18}{section*.35}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 18}{section*.36}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 18}{section*.37}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Conv2D}{\reset@font\stcSPfont 18}{section*.38}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Forward}{\reset@font\stcSPfont 18}{section*.39}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Backward}{\reset@font\stcSPfont 18}{section*.40}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.3.2}Neural Network Library}{\reset@font\stcPfont 19}{paragraph.1.3.3.2}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Activation Layers}{\reset@font\stcSPfont 19}{section*.41}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Tanh}{\reset@font\stcSPfont 19}{section*.42}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Sigmoid}{\reset@font\stcSPfont 19}{section*.43}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax Softmax}{\reset@font\stcSPfont 19}{section*.44}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {1.3.3.3}Reinforcement Learning Solution}{\reset@font\stcPfont 19}{paragraph.1.3.3.3}}
+{\reset@font\stcSPfont\mtc@string\contentsline{subparagraph}{\noexpand \leavevmode \relax UCB Formula}{\reset@font\stcSPfont 19}{section*.45}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {1.4}Set of objectives}{\reset@font\stcSSfont 19}{subsection.1.4}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.4.1}Checkers Game}{\reset@font\stcSSSfont 19}{subsubsection.1.4.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.4.2}Autodifferentiation engine}{\reset@font\stcSSSfont 20}{subsubsection.1.4.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.4.3}Neural Network Library}{\reset@font\stcSSSfont 20}{subsubsection.1.4.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {1.4.4}Reinforcement Learning Solution}{\reset@font\stcSSSfont 20}{subsubsection.1.4.4}}

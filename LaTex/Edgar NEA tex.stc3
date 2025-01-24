@@ -1,0 +1,25 @@
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.1}Checkers}{\reset@font\stcSSfont 40}{subsection.3.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.1.1}Console Checkers}{\reset@font\stcSSSfont 40}{subsubsection.3.1.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.1.1.1}CheckersGame and MainMenu}{\reset@font\stcPfont 40}{paragraph.3.1.1.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.1.1.2}Jit Function}{\reset@font\stcPfont 43}{paragraph.3.1.1.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.1.1.3}Constants}{\reset@font\stcPfont 44}{paragraph.3.1.1.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.1.2}Checkers GUI}{\reset@font\stcSSSfont 44}{subsubsection.3.1.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.1.2.1}CheckersGUI}{\reset@font\stcPfont 45}{paragraph.3.1.2.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.1.2.2}Helper Functions}{\reset@font\stcPfont 49}{paragraph.3.1.2.2}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.1.2.3}Constants}{\reset@font\stcPfont 49}{paragraph.3.1.2.3}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.1.2.4}Buttons}{\reset@font\stcPfont 50}{paragraph.3.1.2.4}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.2}Autodifferentiation engine}{\reset@font\stcSSfont 52}{subsection.3.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.1}Constants}{\reset@font\stcSSSfont 52}{subsubsection.3.2.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2}Tensor and Tensor Operations}{\reset@font\stcSSSfont 52}{subsubsection.3.2.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.3}Jit Convolve Specific Functions}{\reset@font\stcSSSfont 72}{subsubsection.3.2.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.4}Jit Functions}{\reset@font\stcSSSfont 76}{subsubsection.3.2.4}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.3}Neural Network Library}{\reset@font\stcSSfont 77}{subsection.3.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.1}Modules}{\reset@font\stcSSSfont 77}{subsubsection.3.3.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2}Optimizers}{\reset@font\stcSSSfont 82}{subsubsection.3.3.2}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.4}Reinforcement Learning Solution}{\reset@font\stcSSfont 83}{subsection.3.4}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.4.1}Node and MCTS}{\reset@font\stcSSSfont 84}{subsubsection.3.4.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.4.2}AlphaNode and AlphaMCTS}{\reset@font\stcSSSfont 87}{subsubsection.3.4.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.4.3}Alpha Network}{\reset@font\stcSSSfont 88}{subsubsection.3.4.3}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.4.4}Agent}{\reset@font\stcSSSfont 92}{subsubsection.3.4.4}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.4.4.1}Memory Types}{\reset@font\stcPfont 92}{paragraph.3.4.4.1}}
+{\reset@font\stcPfont\mtc@string\contentsline{paragraph}{\noexpand \leavevmode \numberline {3.4.4.2}Agent}{\reset@font\stcPfont 92}{paragraph.3.4.4.2}}
