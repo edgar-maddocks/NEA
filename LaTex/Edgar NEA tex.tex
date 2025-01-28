@@ -557,6 +557,8 @@
     the learning rate as well as any parameters the optimizer is related to. It will also have virtual methods - which will be overriden by the specific optimizer classes - of
     a step (which updates all parameters), a function to zero the gradient of all parameters and finally a function to add parameters.
 
+    \pagebreak
+    \vspace*{7mm}
     Below is an inheritance diagram for the Neural Network Library, without any attributes and methods.
 
     \begin{figure}[h]
@@ -565,8 +567,6 @@
         \caption{Inheritance diagram for Neural Network Library}
     \end{figure}
 
-
-    \pagebreak
     \subsubsubsection{Reinforcement Learning Solution}
     The final solution will also require a large set of classes including: a network class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
     a search of available actions to train the network towards - composed of a node class to make up this tree - and finally an agent class which abstracts the processes of the previous classes. \\
@@ -576,8 +576,6 @@
         \includegraphics[scale=0.5]{RLSolutionUML.png}
         \caption{Reinforcement Learning Solution UML}
     \end{figure}
-    
-
 
     \pagebreak
     \subsubsection{Identification of algorithms} \label{Analysis-IoA}
@@ -2057,7 +2055,12 @@
 
     BLACK = "black"
     WHITE = "white"
-
+    
+    EMPTY = 0
+    BLACK_R = 1
+    BLACK_K = 2
+    WHITE_R = 3
+    WHITE_K = 4
     BLACKS = [1, 2]
     WHITES = [3, 4]
 
@@ -4752,7 +4755,15 @@
     \end{minted}
 
     \section{Testing}
+    \secttoc
 
+    \subsection{Checkers Game}
+
+    \subsection{Autodifferentiation engine}
+
+    \subsection{Neural Network Library}
+
+    \subsection{Reinforcement Learning Solution}
 
     \section{Research Log}
 

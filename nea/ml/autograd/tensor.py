@@ -753,8 +753,6 @@ class Mean(TensorFunction):
     def forward(self, a: Tensor) -> Tensor:
         """Computes the mean of a 1D tensor
 
-        #TODO: Implement mean for tensors with dims higher than 1
-
         Args:
             a (Tensor):
 
