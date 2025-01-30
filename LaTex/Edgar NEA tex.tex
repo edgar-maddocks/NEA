@@ -44,38 +44,35 @@
 \usepackage{minted}
 
 \begin{document}
-\dosecttoc
+    \dosecttoc
 
-\begin{titlepage}
-    \begin{center}
-        \vspace*{1cm}
-            
-        \Huge
-        \textbf{Playing checkers using reinforcement learning}
-            
-        \vspace{0.5cm}
-        \LARGE
-        An investigation into playing checkers using a reinforcement learning via a neural network library, with an implementation of
-        automatic differentiation, built from scratch.
-
-        TODO: 2.5.2.2 ONWARDS
-            
-        \vspace{1.5cm}
-            
-        \textbf{Edgar Maddocks}            
-        \vfill
-            
-        \vspace{0.8cm}
-                        
-        \Large
-        Bedford School\\
-        03/05/2024\\
-            
-    \end{center}
-\end{titlepage}
+    \begin{titlepage}
+        \begin{center}
+            \vspace*{1cm}
+                
+            \Huge
+            \textbf{Playing checkers using reinforcement learning}
+                
+            \vspace{0.5cm}
+            \LARGE
+            An investigation into playing checkers using a reinforcement learning via a neural network library, with an implementation of
+            automatic differentiation, built from scratch.
+                
+            \vspace{1.5cm}
+                
+            \textbf{Edgar Maddocks}            
+            \vfill
+                
+            \vspace{0.8cm}
+                            
+            \Large
+            Bedford School\\
+            03/05/2024\\
+                
+        \end{center}
+    \end{titlepage}
 
     \pagebreak
-
     \tableofcontents
 
     \section{Analysis}
@@ -89,6 +86,7 @@
     complex functions (such as cross-correlation and its derivative) will also be built from scratch.
 
     \pagebreak
+    
     \subsection{Evidence of Analysis}
 
     \subsubsection{Current systems}
@@ -508,7 +506,6 @@
         \end{tabular}
     \end{center}
 
-
     \subsection{Modelling of the problem}
 
     \subsubsection{Identification of Objects}
@@ -897,13 +894,12 @@
             \item A small text tutorial on the rules of checkers
             \item A visual representation of the checkers board
             \item A method of displaying all legal available moves in a selected position
-            \item Informative error messages if an illegal move is attempted
+            \item Error messages if an illegal move is attempted
         \end{enumerate}
         \item Implementation of various decision-making agents for users to play against
         \begin{enumerate}
             \item Option for the user to choose which agent to play against (MCTS, Full Agent)
             \item Ability to adjust hyperparameters of the agents from the checkers game interface (see \myhy{RLS Objs}{RLS Objectives a-e})
-            \item Information printed to the user pertaining to the agent's decision-making progress
         \end{enumerate}
     \end{enumerate}
     \subsubsection{Autodifferentiation engine} \label{AutodifferentiationObjectives}
@@ -1787,7 +1783,6 @@
 
     \section{Technical Solution}
     \secttoc
-
 
     In the technical analysis I will show the code that implements any data structures and algorithms that I have described
     in the design section and any code that implements features outlined in the objectives.
@@ -4759,11 +4754,141 @@
 
     \subsection{Checkers Game}
 
+    TODO: MAKE A VIDEO
+
+    VIDEO 1
+    Show text tutorial
+    Show console error message for invalid move
+    Show moving (outline that it shows available moves)
+    taking, double taking, crowning, and winning (speed video up for the winning)
+    
+    VIDEO 2
+    Show ability to play against just MCTS
+    Show ability to play Full agent
+    Show ability to change hyperparameters for both
+
     \subsection{Autodifferentiation engine}
 
+    To test the autodifferentiation module I decided to write some unit tests by computating some example
+    derivatives for each operation by hand and then checking the module produces these values inside of a function.
+    To improve upon this process, I used pytest. A unit-testing python library which allowed me to run all of my tests
+    at once, raised flags on any tests that failed and allowed me to debug these failed tests individually.
+
+    Below I will put some example testing functions (ranging in difficulty of derivative calculation) and there will
+    also be an image displaying the final result of my testing for this module.
+
+    \subsubsection{Example tests}
+
+    \begin{minted}{python}
+        def test_subtraction_funcs():
+        a = Tensor(1, requires_grad=True)
+        b = Tensor(2, requires_grad=True)
+
+        y = b - a
+        assert y == 1
+
+        y.backward()
+        assert a.grad == -1
+
+        b -= 1
+        b.zero_grad()
+        b.backward()
+        assert b.grad == 1
+
+    def test_multiplication_funcs():
+        a = Tensor(1, requires_grad=True)
+        b = Tensor(2, requires_grad=True)
+
+        y = a * b
+        assert y == 2
+
+        y.backward()
+        assert a.grad == 2
+        assert b.grad == 1
+
+    def test_matmul_funcs():
+        a = Tensor([[1, 2], [2, 1]], requires_grad=True)
+        b = Tensor([[2, 1], [1, 2]], requires_grad=True)
+
+        y = a @ b
+
+        assert y.shape == (2, 1) or (2,)
+        assert np.array_equal(y.data, np.array([[4, 5], [5, 4]]))
+
+        y.backward()
+
+        assert np.array_equal(y.grad, np.array([[1, 1], [1, 1]]))
+        assert np.array_equal(a.grad, np.array([[3, 3], [3, 3]]))
+
+    def test_pad2d_funcs():
+        a = Tensor([1], requires_grad=True)
+        a = a.reshape((1, 1, 1))
+        b = a.pad2D(1, 0)
+
+        assert (b.data == [[0, 0, 0], [0, 1, 0], [0, 0, 0]]).all()
+
+        b.backward()
+
+        assert b.grad.shape == (1, 3, 3)
+        assert a.grad.shape == (1, 1, 1)
+
+    def test_convolve2d_backward_funcs():
+        x = Tensor([[1, 6, 2], [5, 3, 1], [7, 0, 4]], requires_grad=True)
+        k = Tensor([[1, 2], [-1, 0]], requires_grad=True)
+
+        x = x.reshape((1, 3, 3))  # define 1 sample of 3x3
+        k = k.reshape((1, 1, 2, 2))  # define 1 kernel for 1 sample with 2x2 kernel
+
+        y = x.convolve2d(k=k)
+
+        y.backward()
+
+        # calculated by hand
+        assert (x.grad == [[[0, -1, -1], [2, 2, 0], [2, 3, 1]]]).all()
+        assert (k.grad == [[[[15, 12], [15, 8]]]]).all()
+    \end{minted}
+
+    In this final function - during the forward and backward passes, the function makes call to 
+    a jit compiled function (using the numba library). This caused an error when run in
+    the same file as the other tests (due to the VSCode debugger) - and so was moved in to a separate file.
+
+    \subsubsection{Final results}
+
+    Below is a screenshot of the final output from pytest. It lists the name of all the test functions,
+    and their completion status (passed or failed).
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=0.5]{passing_tests.png}
+        \caption{Pytesting results}
+    \end{figure}
+     
     \subsection{Neural Network Library}
 
+    TODO: MAKE A VIDEO
+
+    VIDEO 1
+    Show modularity - create a model with a 2d conv layer + relu - reshape - dense layer + sigmoid.
+    Pass some data through this model and show the output.
+    Save the model
+    Reload the model and pass the same data - should produce same output
+
+    VIDEO 2
+    Explain XOR testing
+    Complete XOR test
+
+    **POSSIBILITY**
+    Complete MNIST
+
+
     \subsection{Reinforcement Learning Solution}
+
+    OBJECTIVES:
+    OVERLAPS WITH CHECKERS VIDEO
+
+    VIDEO 1
+    SHOW TWO MODELS PLAYING AGAINST EACHOTHER
+    1 with X amount of strength other with half X amount of training time
 
     \section{Research Log}
 

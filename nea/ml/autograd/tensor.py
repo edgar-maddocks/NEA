@@ -655,7 +655,8 @@ class MatrixMultiplication(TensorFunction):
         a, b = self._cache
 
         if a.requires_grad:
-            da = dy @ b.data.swapaxes(-1, -2)
+            b_T = b.data.swapaxes(-1, -2)
+            da = dy @ b_T
 
             n_dims_da = len(dy.shape)
             n_dims_a = len(a.shape)
@@ -665,7 +666,8 @@ class MatrixMultiplication(TensorFunction):
             a.backward(da, y)
 
         if b.requires_grad:
-            db = a.data.swapaxes(-1, -2) @ dy
+            a_T = a.data.swapaxes(-1, -2)
+            db = a_T @ dy
 
             n_dims_db = len(dy.shape)
             n_dims_b = len(b.shape)

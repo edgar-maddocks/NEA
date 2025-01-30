@@ -1,0 +1,68 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}subtraction\PYGZus{}funcs}\PYG{p}{():}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+        \PYG{n}{b} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+        \PYG{n}{y} \PYG{o}{=} \PYG{n}{b} \PYG{o}{\PYGZhy{}} \PYG{n}{a}
+        \PYG{k}{assert} \PYG{n}{y} \PYG{o}{==} \PYG{l+m+mi}{1}
+
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+        \PYG{k}{assert} \PYG{n}{a}\PYG{o}{.}\PYG{n}{grad} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+
+        \PYG{n}{b} \PYG{o}{\PYGZhy{}=} \PYG{l+m+mi}{1}
+        \PYG{n}{b}\PYG{o}{.}\PYG{n}{zero\PYGZus{}grad}\PYG{p}{()}
+        \PYG{n}{b}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+        \PYG{k}{assert} \PYG{n}{b}\PYG{o}{.}\PYG{n}{grad} \PYG{o}{==} \PYG{l+m+mi}{1}
+
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}multiplication\PYGZus{}funcs}\PYG{p}{():}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+        \PYG{n}{b} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+        \PYG{n}{y} \PYG{o}{=} \PYG{n}{a} \PYG{o}{*} \PYG{n}{b}
+        \PYG{k}{assert} \PYG{n}{y} \PYG{o}{==} \PYG{l+m+mi}{2}
+
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+        \PYG{k}{assert} \PYG{n}{a}\PYG{o}{.}\PYG{n}{grad} \PYG{o}{==} \PYG{l+m+mi}{2}
+        \PYG{k}{assert} \PYG{n}{b}\PYG{o}{.}\PYG{n}{grad} \PYG{o}{==} \PYG{l+m+mi}{1}
+
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}matmul\PYGZus{}funcs}\PYG{p}{():}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{([[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]],} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+        \PYG{n}{b} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{([[}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{]],} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+        \PYG{n}{y} \PYG{o}{=} \PYG{n}{a} \PYG{o}{@} \PYG{n}{b}
+
+        \PYG{k}{assert} \PYG{n}{y}\PYG{o}{.}\PYG{n}{shape} \PYG{o}{==} \PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o+ow}{or} \PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,)}
+        \PYG{k}{assert} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array\PYGZus{}equal}\PYG{p}{(}\PYG{n}{y}\PYG{o}{.}\PYG{n}{data}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mi}{4}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{]]))}
+
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+
+        \PYG{k}{assert} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array\PYGZus{}equal}\PYG{p}{(}\PYG{n}{y}\PYG{o}{.}\PYG{n}{grad}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]]))}
+        \PYG{k}{assert} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array\PYGZus{}equal}\PYG{p}{(}\PYG{n}{a}\PYG{o}{.}\PYG{n}{grad}\PYG{p}{,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([[}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{]]))}
+
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}pad2d\PYGZus{}funcs}\PYG{p}{():}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{([}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+        \PYG{n}{a} \PYG{o}{=} \PYG{n}{a}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}
+        \PYG{n}{b} \PYG{o}{=} \PYG{n}{a}\PYG{o}{.}\PYG{n}{pad2D}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{)}
+
+        \PYG{k}{assert} \PYG{p}{(}\PYG{n}{b}\PYG{o}{.}\PYG{n}{data} \PYG{o}{==} \PYG{p}{[[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]])}\PYG{o}{.}\PYG{n}{all}\PYG{p}{()}
+
+        \PYG{n}{b}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+
+        \PYG{k}{assert} \PYG{n}{b}\PYG{o}{.}\PYG{n}{grad}\PYG{o}{.}\PYG{n}{shape} \PYG{o}{==} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{)}
+        \PYG{k}{assert} \PYG{n}{a}\PYG{o}{.}\PYG{n}{grad}\PYG{o}{.}\PYG{n}{shape} \PYG{o}{==} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}
+
+    \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{test\PYGZus{}convolve2d\PYGZus{}backward\PYGZus{}funcs}\PYG{p}{():}
+        \PYG{n}{x} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{([[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{6}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{7}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{]],} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+        \PYG{n}{k} \PYG{o}{=} \PYG{n}{Tensor}\PYG{p}{([[}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{],} \PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{]],} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+
+        \PYG{n}{x} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{))}  \PYG{c+c1}{\PYGZsh{} define 1 sample of 3x3}
+        \PYG{n}{k} \PYG{o}{=} \PYG{n}{k}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{))}  \PYG{c+c1}{\PYGZsh{} define 1 kernel for 1 sample with 2x2 kernel}
+
+        \PYG{n}{y} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{convolve2d}\PYG{p}{(}\PYG{n}{k}\PYG{o}{=}\PYG{n}{k}\PYG{p}{)}
+
+        \PYG{n}{y}\PYG{o}{.}\PYG{n}{backward}\PYG{p}{()}
+
+        \PYG{c+c1}{\PYGZsh{} calculated by hand}
+        \PYG{k}{assert} \PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{grad} \PYG{o}{==} \PYG{p}{[[[}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{]]])}\PYG{o}{.}\PYG{n}{all}\PYG{p}{()}
+        \PYG{k}{assert} \PYG{p}{(}\PYG{n}{k}\PYG{o}{.}\PYG{n}{grad} \PYG{o}{==} \PYG{p}{[[[[}\PYG{l+m+mi}{15}\PYG{p}{,} \PYG{l+m+mi}{12}\PYG{p}{],} \PYG{p}{[}\PYG{l+m+mi}{15}\PYG{p}{,} \PYG{l+m+mi}{8}\PYG{p}{]]]])}\PYG{o}{.}\PYG{n}{all}\PYG{p}{()}
+\end{Verbatim}
