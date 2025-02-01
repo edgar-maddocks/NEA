@@ -189,7 +189,7 @@ class CheckersGUI(CheckersGame):
             ACTION: action user wants to take - if None then a piece has been selected to move
                                               - if not None then a move of the selected piece has been made
         """
-        mouse_x, mouse_y = mouse_pos 
+        mouse_x, mouse_y = mouse_pos
         # convert mouse click to row and column click
         row, col = get_row_selected(mouse_y=mouse_y), get_col_selected(mouse_x=mouse_x)
         action: ACTION = None
@@ -200,9 +200,12 @@ class CheckersGUI(CheckersGame):
                 valid_moves["takes"]
                 if len(valid_moves["takes"]) > 0
                 else valid_moves["simple"]
-            ) # get the set of valid moves 
+            )  # get the set of valid moves
             valid_selections = [x[0] for x in valid_moves]
-            if (row, col) in valid_selections: # check piece selected is a valid piece to move
+            if (
+                row,
+                col,
+            ) in valid_selections:  # check piece selected is a valid piece to move
                 # check user has selected their own piece
                 if self.player == WHITE:
                     if self.board[row, col] in WHITES:
@@ -241,7 +244,7 @@ class MainMenu:
         )
         self.font = lambda font_size: pygame.font.SysFont(
             pygame.font.get_default_font(), font_size
-        ) # set default font
+        )  # set default font
 
     def display(self) -> None:
         buttons: dict[Button] = {}
@@ -548,16 +551,18 @@ class MainMenu:
                     if (
                         not params["(UvsM, UvsA) MCTS Searches"]
                         or not params["(UvsM, UvsA)                     EEC"]
-                    ): # check the needed params have been set
+                    ):  # check the needed params have been set
                         continue
                     button.click_fn(
                         n_searches=params["(UvsM, UvsA) MCTS Searches"],
                         eec=params["(UvsM, UvsA)                     EEC"],
                         player_colour=WHITE if p > 0.5 else BLACK,
-                    ) # run the game
+                    )  # run the game
                 elif key == "User vs Agent":
                     p = np.random.rand()
-                    if any(params.values()) is None: # check needed params have been set
+                    if (
+                        any(params.values()) is None
+                    ):  # check needed params have been set
                         continue
                     button.click_fn(
                         n_searches=params["(UvsM, UvsA) MCTS Searches"],
@@ -574,7 +579,7 @@ class MainMenu:
 
                     params[DICTS.param_placeholders[parameter]] = (
                         int(value) if parameter != "ec" else float(value)
-                    ) # set parameter to selected value
+                    )  # set parameter to selected value
 
                     for k in buttons.keys():
                         if k[-2:] == parameter:
@@ -864,10 +869,14 @@ def _show_game_over(screen: pygame.Surface, winner: str, game_type: int, **kwarg
                 m.display()
             else:
                 font = pygame.font.SysFont(pygame.font.get_default_font(), 70)
-                game_over_text = font.render(
-                    f"GAME OVER - {winner.upper()} WON", False, COLOURS.WHITE
-                )
-                _, game_over_text_height = game_over_text.get_size()
+                if winner is not None:
+                    game_over_text = font.render(
+                        f"GAME OVER - {winner.upper()} WON", False, COLOURS.WHITE
+                    )
+                else:
+                    game_over_text = font.render(
+                        "GAME OVER - DRAW", False, COLOURS.WHITE
+                    )
 
                 game_over_text_rect = game_over_text.get_rect(
                     center=(

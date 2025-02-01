@@ -24,6 +24,8 @@ class ResidualLayer(nn.Module):
         )
         self.ReLU2 = nn.ReLU()
 
+        self.MinMaxNorm = nn.MinMaxNormalization()
+
     def forward(self, x: Tensorable) -> Tensor:
         """Input Shape of (128, 8, 8)
 
@@ -41,7 +43,7 @@ class ResidualLayer(nn.Module):
         x = self.Conv2(x)
         x += original_input
         x = self.ReLU2(x)
-        x /= np.max(x.data)
+        x = self.MinMaxNorm(x)
         return x
 
 

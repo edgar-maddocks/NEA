@@ -120,29 +120,29 @@
 \contentsline {subsubsection}{\numberline {3.2.4}Jit Functions}{76}{subsubsection.3.2.4}%
 \contentsline {subsection}{\numberline {3.3}Neural Network Library}{77}{subsection.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.1}Modules}{77}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}Optimizers}{82}{subsubsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.4}Reinforcement Learning Solution}{83}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.2}Optimizers}{83}{subsubsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.4}Reinforcement Learning Solution}{84}{subsection.3.4}%
 \contentsline {subsubsection}{\numberline {3.4.1}Node and MCTS}{84}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {3.4.2}AlphaNode and AlphaMCTS}{87}{subsubsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {3.4.3}Alpha Network}{88}{subsubsection.3.4.3}%
-\contentsline {subsubsection}{\numberline {3.4.4}Agent}{92}{subsubsection.3.4.4}%
-\contentsline {paragraph}{\numberline {3.4.4.1}Memory Types}{92}{paragraph.3.4.4.1}%
-\contentsline {paragraph}{\numberline {3.4.4.2}Agent}{92}{paragraph.3.4.4.2}%
-\contentsline {section}{\numberline {4}Testing}{94}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Checkers Game}{94}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Autodifferentiation engine}{94}{subsection.4.2}%
-\contentsline {subsubsection}{\numberline {4.2.1}Example tests}{95}{subsubsection.4.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2}Final results}{96}{subsubsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.3}Neural Network Library}{96}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Reinforcement Learning Solution}{97}{subsection.4.4}%
-\contentsline {section}{\numberline {5}Research Log}{97}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Checkers}{97}{subsection.5.1}%
-\contentsline {subsubsection}{\numberline {5.1.1}Rules}{97}{subsubsection.5.1.1}%
-\contentsline {subsubsection}{\numberline {5.1.2}Possible States}{97}{subsubsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.2}Neural Networks}{97}{subsection.5.2}%
-\contentsline {subsubsection}{\numberline {5.2.1}Vectorization of summations}{97}{subsubsection.5.2.1}%
-\contentsline {subsubsection}{\numberline {5.2.2}Convolutional Networks}{97}{subsubsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.3}Automatic Differentiation}{97}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}AlphaZero}{97}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}Existing Auto differentiation systems}{97}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}Reinforcement Learning}{97}{subsection.5.6}%
+\contentsline {subsubsection}{\numberline {3.4.2}AlphaNode and AlphaMCTS}{88}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.3}Alpha Network}{89}{subsubsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.4}Agent}{93}{subsubsection.3.4.4}%
+\contentsline {paragraph}{\numberline {3.4.4.1}Memory Types}{93}{paragraph.3.4.4.1}%
+\contentsline {paragraph}{\numberline {3.4.4.2}Agent}{93}{paragraph.3.4.4.2}%
+\contentsline {section}{\numberline {4}Testing}{95}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Checkers Game}{95}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Autodifferentiation engine}{95}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Example tests}{96}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Final results}{97}{subsubsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.3}Neural Network Library}{97}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Reinforcement Learning Solution}{98}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Research Log}{98}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Checkers}{98}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Rules}{98}{subsubsection.5.1.1}%
+\contentsline {subsubsection}{\numberline {5.1.2}Possible States}{98}{subsubsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.2}Neural Networks}{98}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Vectorization of summations}{98}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Convolutional Networks}{98}{subsubsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.3}Automatic Differentiation}{98}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}AlphaZero}{98}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Existing Auto differentiation systems}{98}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Reinforcement Learning}{98}{subsection.5.6}%

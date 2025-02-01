@@ -218,5 +218,3 @@ def _jit_cpu_valid_cross_correlate2d(a: np.ndarray, b: np.ndarray) -> np.ndarray
             out[m, n] = s  # add to output array
 
     return out
-
-

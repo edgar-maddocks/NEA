@@ -309,7 +309,10 @@
             \PYG{n}{mcts\PYGZus{}pol}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
             \PYG{n}{net\PYGZus{}pol}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
         \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
-            \PYG{n}{val\PYGZus{}sqe} \PYG{o}{=} \PYG{p}{(}\PYG{n}{true\PYGZus{}value} \PYG{o}{\PYGZhy{}} \PYG{n}{predicted\PYGZus{}value}\PYG{p}{)} \PYG{o}{**} \PYG{l+m+mi}{2} \PYG{c+c1}{\PYGZsh{} MSE half}
-            \PYG{n}{pol\PYGZus{}bcel} \PYG{o}{=} \PYG{n}{mcts\PYGZus{}pol}\PYG{o}{.}\PYG{n}{T}\PYG{p}{()} \PYG{o}{@} \PYG{n}{net\PYGZus{}pol}\PYG{o}{.}\PYG{n}{log}\PYG{p}{()} \PYG{c+c1}{\PYGZsh{} BCEL half}
+            \PYG{n}{val\PYGZus{}sqe} \PYG{o}{=} \PYG{p}{(}\PYG{n}{true\PYGZus{}value} \PYG{o}{\PYGZhy{}} \PYG{n}{predicted\PYGZus{}value}\PYG{p}{)} \PYG{o}{**} \PYG{l+m+mi}{2}
+            \PYG{n}{mcts\PYGZus{}pol\PYGZus{}t} \PYG{o}{=} \PYG{n}{mcts\PYGZus{}pol}\PYG{o}{.}\PYG{n}{T}\PYG{p}{()}
+            \PYG{n}{net\PYGZus{}pol\PYGZus{}log} \PYG{o}{=} \PYG{n}{net\PYGZus{}pol}\PYG{o}{.}\PYG{n}{log}\PYG{p}{()}
+            \PYG{n}{pol\PYGZus{}bcel} \PYG{o}{=} \PYG{n}{mcts\PYGZus{}pol\PYGZus{}t} \PYG{o}{@} \PYG{n}{net\PYGZus{}pol\PYGZus{}log}
             \PYG{k}{return} \PYG{n}{val\PYGZus{}sqe} \PYG{o}{\PYGZhy{}} \PYG{n}{pol\PYGZus{}bcel}
+
 \end{Verbatim}

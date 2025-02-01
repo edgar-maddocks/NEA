@@ -2611,6 +2611,10 @@
             div_op = Division()
             return div_op.forward(self, to_tensor(other))
 
+        def __rtruediv__(self, other: Tensorable) -> Tensor:
+            div_op = Division()
+            return div_op.forward(to_tensor(other), self)
+
         def __matmul__(self, other: Tensorable) -> Tensor:
             matmul_op = MatrixMultiplication()
             return matmul_op.forward(self, to_tensor(other))
@@ -3067,7 +3071,8 @@
             a, b = self._cache
 
             if a.requires_grad:
-                da = dy @ b.data.swapaxes(-1, -2)
+                b_T = b.data.swapaxes(-1, -2)
+                da = dy @ b_T
 
                 n_dims_da = len(dy.shape)
                 n_dims_a = len(a.shape)
@@ -3077,7 +3082,8 @@
                 a.backward(da, y)
 
             if b.requires_grad:
-                db = a.data.swapaxes(-1, -2) @ dy
+                a_T = a..data.swapaxes(-1, -2)
+                db = a_T @ dy
 
                 n_dims_db = len(dy.shape)
                 n_dims_b = len(b.shape)
@@ -4119,9 +4125,12 @@
             mcts_pol: Tensor,
             net_pol: Tensor,
         ) -> Tensor:
-            val_sqe = (true_value - predicted_value) ** 2 # MSE half
-            pol_bcel = mcts_pol.T() @ net_pol.log() # BCEL half
+            val_sqe = (true_value - predicted_value) ** 2
+            mcts_pol_t = mcts_pol.T()
+            net_pol_log = net_pol.log()
+            pol_bcel = mcts_pol_t @ net_pol_log
             return val_sqe - pol_bcel
+
     \end{minted}
 
     \subsubsection{Optimizers}

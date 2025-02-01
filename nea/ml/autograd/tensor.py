@@ -199,6 +199,10 @@ class Tensor:
         div_op = Division()
         return div_op.forward(self, to_tensor(other))
 
+    def __rtruediv__(self, other: Tensorable) -> Tensor:
+        div_op = Division()
+        return div_op.forward(to_tensor(other), self)
+
     def __matmul__(self, other: Tensorable) -> Tensor:
         matmul_op = MatrixMultiplication()
         return matmul_op.forward(self, to_tensor(other))

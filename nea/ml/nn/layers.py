@@ -167,6 +167,7 @@ class Conv2D(Module):
         padding: int = None,
         padding_value: float = None,
     ) -> None:
+        super().__init__()
         assert len(x_shape) == 3, "Input must be of shape (n_samples, *, *)"
         if padding_value:
             assert padding, "Must define amount of padding if padding value is not None"
@@ -208,10 +209,22 @@ class Conv2D(Module):
 
 class Reshape(Module):
     def __init__(self, desired_shape: tuple[int]) -> None:
+        super().__init__()
         self.desired_shape = desired_shape
 
     def forward(self, x: Tensor) -> Tensor:
         return x.reshape(self.desired_shape)
+
+
+class MinMaxNormalization(Module):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def forward(self, x: Tensor) -> Tensor:
+        x_max = np.max(x.data)
+        x_min = np.min(x.data)
+
+        return (x - x_min) / ((x_max - x_min) + 10**-100)
 
 
 # ==========================
@@ -245,7 +258,7 @@ class Sigmoid(Module):
         super().__init__()
 
     def forward(self, x: Tensor) -> Tensor:
-        output = 1 / (1 + tensor_exp(-x))
+        output = 1.0 / (1.0 + tensor_exp(-x))
         return output
 
 
@@ -283,6 +296,17 @@ class MSE(Module):
         loss: Tensor = predicted - true
         loss = (1 / true.shape[0]) * (loss.T() @ loss)
         return loss
+
+
+class CrossEntropy(Module):
+    def __init__(self) -> None:
+        super().__init__()
+
+    def __call__(self, predicted: Tensor, true: Tensorable) -> Tensor:
+        return self.forward(predicted=predicted, true=true)
+
+    def forward(self, predicted: Tensor, true: Tensorable) -> Tensor:
+        return -((true * predicted.log()).sum())
 
 
 class AlphaLoss(Module):
