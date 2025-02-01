@@ -29,11 +29,11 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 (X_train, y_train), (X_test, y_test) = keras.datasets.mnist.load_data()
 
-train_filter = np.where((y_train == 0) | (y_train == 4))
+"""train_filter = np.where((y_train == 0) | (y_train == 4))
 test_filter = np.where((y_test == 0) | (y_test == 4))
 
 X_train, y_train = X_train[train_filter], y_train[train_filter]
-X_test, y_test = X_test[test_filter], y_test[test_filter]
+X_test, y_test = X_test[test_filter], y_test[test_filter]"""
 
 y_train = keras.utils.to_categorical(y_train)
 y_test = keras.utils.to_categorical(y_test)
@@ -58,7 +58,7 @@ class MNISTER(Module):
         self.sigmoid_2 = Sigmoid()
         self.dense_2 = Dense(784, 256)
         self.sigmoid_3 = Sigmoid()
-        self.dense_3 = Dense(256, 5)
+        self.dense_3 = Dense(256, 10)
         self.softmax = Softmax()
 
     def forward(self, x_sample: Tensor) -> Tensor:
@@ -81,15 +81,15 @@ model = MNISTER()
 optim = SGD(model.params, lr=0.01, regulization=0)
 loss_func = CrossEntropy()
 
-epochs = 100
+epochs = 5
 
 for epoch in range(epochs):
     print(f"---------EPOCH: {epoch + 1}------------")
 
-    skipped = 0
-    for sample in tqdm(range(0, X_train.shape[0])):
+    loss = Tensor(0, requires_grad=True)
+    for sample in tqdm(range(0, X_train[:20000].shape[0])):
         pred = model(X_train[sample])
-        loss = loss_func(pred.reshape((5, 1)), Tensor(y_train[sample].reshape(5, 1)))
+        loss = loss_func(pred.reshape((10, 1)), Tensor(y_train[sample].reshape(10, 1)))
         loss.backward()
         optim.step()
         optim.zero_grad()
@@ -100,7 +100,9 @@ for epoch in range(epochs):
         loss = 0
         for sample in tqdm(range(0, X_test.shape[0])):
             pred = model(X_test[sample])
-            loss += loss_func(pred.reshape((5, 1)), y_test[sample].reshape(5, 1))
+            loss += loss_func(
+                pred.reshape((10, 1)), Tensor(y_test[sample].reshape(10, 1))
+            )
 
         loss /= X_test.shape[0]
 
