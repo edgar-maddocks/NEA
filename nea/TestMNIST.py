@@ -89,7 +89,7 @@ for epoch in range(epochs):
     skipped = 0
     for sample in tqdm(range(0, X_train.shape[0])):
         pred = model(X_train[sample])
-        loss = loss_func(pred.reshape((5, 1)), y_train[sample].reshape(5, 1))
+        loss = loss_func(pred.reshape((5, 1)), Tensor(y_train[sample].reshape(5, 1)))
         loss.backward()
         optim.step()
         optim.zero_grad()
@@ -101,6 +101,8 @@ for epoch in range(epochs):
         for sample in tqdm(range(0, X_test.shape[0])):
             pred = model(X_test[sample])
             loss += loss_func(pred.reshape((5, 1)), y_test[sample].reshape(5, 1))
+
+        loss /= X_test.shape[0]
 
         print(f"TEST LOSS: {loss}")
 

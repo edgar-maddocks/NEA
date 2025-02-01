@@ -306,7 +306,8 @@ class CrossEntropy(Module):
         return self.forward(predicted=predicted, true=true)
 
     def forward(self, predicted: Tensor, true: Tensorable) -> Tensor:
-        return -((true * predicted.log()).sum())
+        prod = true * predicted.log()
+        return -(prod.sum(dim=0))
 
 
 class AlphaLoss(Module):
