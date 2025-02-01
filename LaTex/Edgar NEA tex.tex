@@ -3978,6 +3978,7 @@
             padding: int = None,
             padding_value: float = None,
         ) -> None:
+            super().__init__()
             assert len(x_shape) == 3, "Input must be of shape (n_samples, *, *)"
             if padding_value:
                 assert padding, """Must define amount of padding 
@@ -4020,11 +4021,22 @@
 
     class Reshape(Module):
         def __init__(self, desired_shape: tuple[int]) -> None:
+            super().__init__()
             self.desired_shape = desired_shape
 
         def forward(self, x: Tensor) -> Tensor:
             return x.reshape(self.desired_shape)
 
+
+    class MinMaxNormalization(Module):
+        def __init__(self) -> None:
+            super().__init__()
+
+        def forward(self, x: Tensor) -> Tensor:
+            x_max = np.max(x.data)
+            x_min = np.min(x.data)
+
+            return (x - x_min) / ((x_max - x_min) + 10**-100)
 
     # ==========================
     #        Activations
@@ -4060,7 +4072,7 @@
             super().__init__()
 
         def forward(self, x: Tensor) -> Tensor:
-            output = 1 / (1 + tensor_exp(-x))
+            output = 1. / (1. + tensor_exp(-x))
             return output
 
 
@@ -4098,6 +4110,17 @@
             loss: Tensor = predicted - true
             loss = (1 / true.shape[0]) * (loss.T() @ loss)
             return loss
+
+
+    class CrossEntropy(Module):
+        def __init__(self) -> None:
+            super().__init__()
+
+        def __call__(self, predicted: Tensor, true: Tensorable) -> Tensor:
+            return self.forward(predicted=predicted, true=true)
+
+        def forward(self, predicted: Tensor, true: Tensorable) -> Tensor:
+            return -((true * predicted.log()).sum())
 
 
     class AlphaLoss(Module):
@@ -4474,6 +4497,8 @@
             )
             self.ReLU2 = nn.ReLU()
 
+            self.MinMaxNorm = nn.MinMaxNormalisation()
+
         def forward(self, x: Tensorable) -> Tensor:
             """Input Shape of (128, 8, 8)
 
@@ -4492,7 +4517,7 @@
             x += original_input
             x = self.ReLU2(x)
             # normalisation
-            x /= np.max(x.data)
+            x = self.MinMaxNorm(x)            
             return x
 
 

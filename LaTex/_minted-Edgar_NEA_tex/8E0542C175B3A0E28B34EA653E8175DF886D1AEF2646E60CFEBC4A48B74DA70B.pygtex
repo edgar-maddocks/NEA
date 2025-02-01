@@ -162,6 +162,7 @@
             \PYG{n}{padding}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
             \PYG{n}{padding\PYGZus{}value}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
         \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
             \PYG{k}{assert} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{x\PYGZus{}shape}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Input must be of shape (n\PYGZus{}samples, *, *)\PYGZdq{}}
             \PYG{k}{if} \PYG{n}{padding\PYGZus{}value}\PYG{p}{:}
                 \PYG{k}{assert} \PYG{n}{padding}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Must define amount of padding}
@@ -204,11 +205,22 @@
 
     \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Reshape}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
         \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{desired\PYGZus{}shape}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
             \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{desired\PYGZus{}shape} \PYG{o}{=} \PYG{n}{desired\PYGZus{}shape}
 
         \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
             \PYG{k}{return} \PYG{n}{x}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{desired\PYGZus{}shape}\PYG{p}{)}
 
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MinMaxNormalization}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{x\PYGZus{}max} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{data}\PYG{p}{)}
+            \PYG{n}{x\PYGZus{}min} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{min}\PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{data}\PYG{p}{)}
+
+            \PYG{k}{return} \PYG{p}{(}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n}{x\PYGZus{}min}\PYG{p}{)} \PYG{o}{/} \PYG{p}{((}\PYG{n}{x\PYGZus{}max} \PYG{o}{\PYGZhy{}} \PYG{n}{x\PYGZus{}min}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{10}\PYG{o}{**\PYGZhy{}}\PYG{l+m+mi}{100}\PYG{p}{)}
 
     \PYG{c+c1}{\PYGZsh{} ==========================}
     \PYG{c+c1}{\PYGZsh{}        Activations}
@@ -244,7 +256,7 @@
             \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
 
         \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
-            \PYG{n}{output} \PYG{o}{=} \PYG{l+m+mi}{1} \PYG{o}{/} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{+} \PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{))}
+            \PYG{n}{output} \PYG{o}{=} \PYG{l+m+mf}{1.} \PYG{o}{/} \PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{))}
             \PYG{k}{return} \PYG{n}{output}
 
 
@@ -282,6 +294,17 @@
             \PYG{n}{loss}\PYG{p}{:} \PYG{n}{Tensor} \PYG{o}{=} \PYG{n}{predicted} \PYG{o}{\PYGZhy{}} \PYG{n}{true}
             \PYG{n}{loss} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{/} \PYG{n}{true}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])} \PYG{o}{*} \PYG{p}{(}\PYG{n}{loss}\PYG{o}{.}\PYG{n}{T}\PYG{p}{()} \PYG{o}{@} \PYG{n}{loss}\PYG{p}{)}
             \PYG{k}{return} \PYG{n}{loss}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{CrossEntropy}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{predicted}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{true}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{forward}\PYG{p}{(}\PYG{n}{predicted}\PYG{o}{=}\PYG{n}{predicted}\PYG{p}{,} \PYG{n}{true}\PYG{o}{=}\PYG{n}{true}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{predicted}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{true}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{o}{\PYGZhy{}}\PYG{p}{((}\PYG{n}{true} \PYG{o}{*} \PYG{n}{predicted}\PYG{o}{.}\PYG{n}{log}\PYG{p}{())}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{())}
 
 
     \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{AlphaLoss}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}

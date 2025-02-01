@@ -44,7 +44,7 @@
             \PYG{n}{x} \PYG{o}{+=} \PYG{n}{original\PYGZus{}input}
             \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{ReLU2}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
             \PYG{c+c1}{\PYGZsh{} normalisation}
-            \PYG{n}{x} \PYG{o}{/=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{data}\PYG{p}{)}
+            \PYG{n}{x} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{MinMaxNorm}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
             \PYG{k}{return} \PYG{n}{x}
 
 
