@@ -92,7 +92,7 @@
     \subsubsection{Current systems}
 
     \subsubsubsection{Checkers} \label{checkers}
-    checkers is an English board game played on an 8x8 checkered board, identical to a chessboard.
+    Checkers is an English board game played on an 8x8 checkered board, identical to a chessboard.
     Each player begins a game with 12 pieces, usually flat round discs.
     The pieces and board are usually black and white, and will be referred to as such.
     The board is first placed between the two players such that the bottom right-hand corner is a white square,
@@ -236,7 +236,7 @@
     With $W$ and $X$ having the same definition as most recently defined.
 
     \subsubsubsubsection{Forward Pass of a Convolutional Layer}
-    The main function of a convolutional layer is to extract key features and they are often used in image recognition and classification solutions.
+    The main function of a convolutional layer is to extract key features, and they are often used in image recognition and classification solutions.
 
     \begin{wrapfigure}[15]{r}{0.5\linewidth}
         \centering
@@ -244,11 +244,11 @@
         \caption{Visualization of a Convolutional layer}
     \end{wrapfigure}
 
-    A convolutional layer takes in a 3 dimensional block of data. This can be imagined as the first 2 dimensions being a grid of pixels, and the third dimension
+    A convolutional layer takes in a 3-dimensional block of data. This can be imagined as the first 2 dimensions being a grid of pixels, and the third dimension
     being the colour channels for each grid. The trainable parameters in a convolutional network are the kernels/filters and the biases. The kernels can be of any size
     but must have the same depth as the input data. Each kernel also has a bias matrix, which has the same shape as the output.
 
-    After the forward pass, the output will also be 3 dimensional, but here the depth is equal to the number of kernels, and the size is equal to
+    After the forward pass, the output will also be 3-dimensional, but here the depth is equal to the number of kernels, and the size is equal to
 
     \begin{align}
         I - K + 1
@@ -363,7 +363,7 @@
     Now, when we want to take the derivative with respect to one of these inputs, we can simply reverse through the graph, taking the gradient of each intermediate
     variable, and using the chain rule to give us our final derivative.
 
-    This process would looks as follows: \begin{align}
+    This process would look as follows: \begin{align}
         \frac{\partial y}{\partial x_1} = \frac{\partial y}{\partial v_4} \cdot \frac{\partial v_4}{\partial v_3} \cdot \frac{\partial v_3}{\partial v_1} \cdot \frac{\partial v_1}{\partial x_1}
     \end{align}
 
@@ -417,7 +417,7 @@
     \end{wrapfigure}
     Q-learning can be represented as a tabular learning method, and works by learning the value of a function - usually $Q(s, a)$ - which represents how successful an action was at
     a certain state. Each of these values is stored in the 'table' and when the model next observes a given state it consolidates the table and chooses the action which was most
-    successful in its past experience.
+    successful in its past experiences.
 
     For model-based solutions, the models 'know' the rules of the games and learn from planning and construct a functional representation of the environment. This is different to non-model
     based which aims to learn by trial-and-error and experience. AlphaZero for example would be defined as a model-based agent. To better define this, if the agent is able to forecast the reward
@@ -471,7 +471,7 @@
     This shows the power of reinforcement learning as a tool for board games and its possibility to be used for checkers.
 
     For automatic differentiation, some of the most popular systems include PyTorch's autograd, as well as autodiff by JAX. PyTorch has a very
-    well developed library for deep-learning alongside it's autograd, as well as extensive documentation. Additionally, autograd is more similar
+    well-developed library for deep-learning alongside it's autograd, as well as extensive documentation. Additionally, autograd is more similar
     to regular python than JAX and may be easier to use when first delving into the area. However, JAX builds on top of autograd and accelerates
     the linear algebra using an XLA backend. This backend optimizes operations for CPU's GPU's and TPU's as well as using a just-in-time compiler
     to decrease runtimes.
@@ -511,7 +511,7 @@
     \subsubsection{Identification of Objects}
 
     \subsubsubsection{Checkers}
-    For checkers, we will need two classes, a checkers board/environment and a checkers game. The environment will be used for training the agent and It will require methods that
+    For checkers, we will need two classes, a checkers board/environment and a checkers game. The environment will be used for training the agent, and It will require methods that
     execute an action in the environment, as well as functions to compute the available moves and check for a win. An example of UML for this environment can be seen below. 
 
     \begin{figure}[h]
@@ -548,7 +548,7 @@
 
     Secondly, their will be classes for each different type of layer (dense and activations). The dense layer will have attributes which store the parameters required
     for computation as well as a method to complete the forward pass through the layer. Activation functions will compute the forward pass, as well as store the gradient function
-    for any tensors which require it. The activation layers will not need any attributes as the have no parameters.
+    for any tensors which require it. The activation layers will not need any attributes as they have no parameters.
 
     The optimizer class is the base class for any optimizers such as stochastic gradient descent or momentum-based gradient descent. This class will have attributes which store
     the learning rate as well as any parameters the optimizer is related to. It will also have virtual methods - which will be overriden by the specific optimizer classes - of
@@ -565,7 +565,7 @@
     \end{figure}
 
     \subsubsubsection{Reinforcement Learning Solution}
-    The final solution will also require a large set of classes including: a network class - to output the model policy and predicted value; a monte carlo tree searach (MCTS) class to compute
+    The final solution will also require a large set of classes including: a network class - to output the model policy and predicted value; a Monte Carlo tree searach (MCTS) class to compute
     a search of available actions to train the network towards - composed of a node class to make up this tree - and finally an agent class which abstracts the processes of the previous classes. \\
 
     \begin{figure}[h]
@@ -972,7 +972,7 @@
     }
     At the very top level of my file structure I have a poetry.lock and a pyproject.toml file. These files are automatically generated by
     a python package called poetry. This package provides exceptionally easy dependency and virtual environment management. Allowing me to
-    setup machines other than my own - to train the model - more easily. 
+    set up machines other than my own - to train the model - more easily. 
     The final file inside of this directory actually represents a collection of files - with each * denoting a different value that each of the 
     parameters for the final model can take (with the two letters allowing me to identify said parameter). These files are created using python's built in pickle object serialization library.
     \dirtree{%
@@ -986,7 +986,7 @@
         .2 TestNNXOR.py.
         .2 TrainAgent.py.
     }
-    At one level inside of my main code-storing file I have files that run main operations in my code. This includes specific game loops, such as getting the user to play 
+    At one level inside my main code-storing file I have files that run main operations in my code. This includes specific game loops, such as getting the user to play 
     vs MCTS - as well as processes such as beginning agent training and testing of the Neural Network Library using a simple problem such as XOR.
     \dirtree{%
         .1 nea-code.
@@ -1026,7 +1026,7 @@
         .3 utils.py.
         .3 __init__.py.
     }
-    Inside of the next module (console\_checkers) we have again an init, consts and main defintion file. On the other hand, instead of a helpers.py file there is a utils.py. The difference here is that
+    Inside the next module (console\_checkers) we have again an init, consts and main defintion file. On the other hand, instead of a helpers.py file there is a utils.py. The difference here is that
     utils.py contains utility functions not strictly relevant to the module. For example, this utils.py contains a funtion which clears the console (a process which would not be limited to the console\_checkers module).
     Another difference is the presence of the jit_functions.py file. Inside of this module there are lots of functions which run only using primitive types, and have a polynomial time complexity. To reduce the impact this 
     has on performance I use a python package called numba, which contains a just-in-time compiler (jit) to speed up these functions.
@@ -1056,7 +1056,7 @@
         .4 __init__.py.
     }
     In the above snippet I have defined a module named ml (for machine learning), which contains two submodules of autograd and nn - which contain the autodifferentiation engine and neural
-    network library respectively. The nn submodule has a similar contents as the modules talked about previously, with layers.py defining the main classes, and optimizers.py then defining classes
+    network library respectively. The nn submodule has a similar content as the modules talked about previously, with layers.py defining the main classes, and optimizers.py then defining classes
     of optimizers to be used alongside the defined layers. The autograd submodule however has a few differences. It also has a jit_functions and helpers file but additionally contains a convolve_funcs.py and
     test_autograd.py file. These files are unique to the autograd module. The convolve_funcs has definitions for complex matrix operations such as convvolution and cross-correlation, and the test_autograd file
     contains unit tests (run using pytest) to evaluate and ensure the accuracy of the autodifferentiation engine.
@@ -1073,7 +1073,7 @@
     an additonal class built ontop of this console solution which provides a GUI.
 
     \subsubsection{Data Structures}
-    When defining data structures such as tuples, a comma followed by an ellipses indicates another item which is of the same type as most recently defined item
+    When defining data structures such as tuples, a comma followed by an ellipse indicates another item which is of the same type as most recently defined item
     in the tuple. e.g. tuple[int,...] = tuple[int, int]
     \subsubsubsection{Console Solution}
     \begin{center}
@@ -1105,7 +1105,7 @@
     \end{align}
     Is the number of ways to play $b$ black pieces, given $w$ white pieces already occupy a square.
     And for each piece, it can be a king or a regular piece, so we multiply by a factor of $2^{w+b}$.
-    Finally to find the number of legal configurations for all $w$ and $b$:
+    Finally, to find the number of legal configurations for all $w$ and $b$:
     \begin{align}
         \sum_{b=0}^{12}\sum_{w=0}^{12} {{32}\choose{w}} {{32-w}\choose{b}} 2^{w+b} \approx 2.3\times10^{21}
     \end{align}
@@ -1134,7 +1134,7 @@
             \hline
                 Button & Class & Provides a simpler to use and understand interface between pygame surfaces and user interactions. \\
             \hline
-                Constants & Class[T] & Stored in classes named relevant to the constant. These classes contain constant attributes of whatever type that constant is defined as (e.g to get the rgb code for red would require COLOURS.RED and would return (255, 0, 0)) \\
+                Constants & Class[T] & Stored in classes named relevant to the constant. These classes contain constant attributes of whatever type that constant is defined as (e.g. to get the rgb code for red would require COLOURS.RED and would return (255, 0, 0)) \\
             \hline
         \end{tabular}
     \end{center}
@@ -1243,7 +1243,7 @@
     The main menu will provide a starting place for all game loops to begin from - see \myhy{2.2.3.2}{2.2.3.2} for a visualization. This should allow users to begin a game loop
     only when the needed parameters for that loop have been selected. For 'User vs User play' therefore this would not require any parameters to be selected. For
     'User vs MCTS' play only the 'EEC' and 'MCTS searches' parameters would require values to be selected, but for 'User vs Agent' play it would require a value to be selected
-    for all of the listed parameters on the main menu page. Additionally, it should contain functionality so that it is obvious which parameters have been selected. However, this page does not include all the parameters that are needed for each model.Therefore this information 
+    for all of the listed parameters on the main menu page. Additionally, it should contain functionality so that it is obvious which parameters have been selected. However, this page does not include all the parameters that are needed for each model.Therefore, this information 
     could be found inside of the 'All Params' button - with a list of each parameter name, and a description of what it dictates.
 
     \subsubsubsection{Structure, Hierarchy and Flow} \label{2.2.3.2}
@@ -1255,8 +1255,8 @@
 
     When the user interface is first shown, it displays the main menu. As seen in the most recent section, the main menu will allow
     users to select various hyperparameters for both the MCTS and complete agent models and then allow the user to begin playing a game of checkers against
-    the desired model. For MCTS, the model will be instantiated inside of the program, and a tree build will be run on each turn of the MCTS. For the agent objects,
-    its instantiation will be stored inside of a respectively named pickle file - see \myhy{File-Structure}{2.1} - and then loaded into the program.
+    the desired model. For MCTS, the model will be instantiated inside the program, and a tree build will be run on each turn of the MCTS. For the agent objects,
+    its instantiation will be stored inside a respectively named pickle file - see \myhy{File-Structure}{2.1} - and then loaded into the program.
     
     \subsection{Autodifferentiation Engine} \label{AutodifferentiationDesignStage}
 
@@ -1324,7 +1324,7 @@
         \end{algorithmic}
     \end{algorithm}
 
-    Note here that we pass in the axis we want to sum across and we set 'keepdims' equal to true. Since we have removed the added dimensions using the previous
+    Note here that we pass in the axis we want to sum across, and we set 'keepdims' equal to true. Since we have removed the added dimensions using the previous
     algorithm, we now want to keep the number of dimensions the same. 'keepdims' does this by making the summed axis reduce to 1. So after both
     of these algorithms $da$ would have the same shape as $a$ - which is exactly what we want!
     
@@ -1350,7 +1350,7 @@
         \caption{Initial Steps of a Full Cross-Correlation Visualization}
     \end{figure}
     
-    To then complete whats known as a convolution, you would complete the cross-correlation but rotate the kernel 180 degrees. This works for both version of cross-correlation i.e.
+    To then complete what's known as a convolution, you would complete the cross-correlation but rotate the kernel 180 degrees. This works for both version of cross-correlation i.e.
     a full convolution is the same as a full cross-correlation with a rotated kernel and a valid convolution is the same as a valid cross-correlation with a rotated kernel. 
 
     \subsubsubsection{Tensor Forward and Backward Pass}
@@ -1593,7 +1593,7 @@
         \end{algorithmic}
     \end{algorithm}
 
-    Now moving onto the two key algorithms inside of the MCTS class, we have the tree building algorithm and
+    Now moving onto the two key algorithms inside the MCTS class, we have the tree building algorithm and
     the probability generating algorithm. The tree building algorithm is fairly self-explanatory, it uses the
     Node's expand function to create child nodes, constructing the tree by selecting random actions until a terminal
     state is reached, at which point it completes the backpropogation through that branch.
@@ -1626,7 +1626,7 @@
     converts the value and visit counts into a distribution of available actions represented by an 8$\times$8$\times$8
     array - with the first dimension representing the dimensions a piece moved, and the second two dimensions representing
     the row and column the piece was moved from respectively. The position $\left(x,y,z\right)$ which has the highest value
-    inside of the distribution is the 'most winning' position.
+    inside the distribution is the 'most winning' position.
 
     \begin{algorithm} 
         \caption{Action Probability Generating Function}
@@ -1650,7 +1650,7 @@
     
     The key difference between the Alpha and base classes in this module is the use of a AlphaModel to
     generate a policy and value, which are used in the Node expansion and backpropogation functions. Since
-    these values are originally computed inside of the modified tree building function, this variation of the
+    these values are originally computed inside the modified tree building function, this variation of the
     algorithm will be seen first, then followed by the node expansion and backpropogation functions - as opposed
     to the order used in the base class section.
 
@@ -1659,7 +1659,7 @@
         \begin{algorithmic}
         \Function{AlphaBuildTree}{AlphaMCTS self, CheckersGame root, Deque priorStates}
             \If {len(priorStates) < 5}
-                \State self.BuildTree(root) \Comment{AlphaMCTS inherits from MCTS so this uses the base build tree function}
+                \State self.BuildTree(root) \Comment{AlphaMCTS inherits from MCTS, so this uses the base build tree function}
                 \State \Return
             \EndIf
 
@@ -1758,7 +1758,7 @@
     \pagebreak
     \subsubsubsection{Agent}
 
-    The AlphaZero agent class has high levels of abstraction, and draws from all of the previously defined modules.
+    The AlphaZero agent class has high levels of abstraction, and draws from all the previously defined modules.
     It has one main training algorithm (for training), psuedocode of which can be seen in the original analysis - (\myhy{AgentTrainingAlg}{here}). 
 
     The only other essential algorithm if the agent is that which converts the SAP dataclass to the SPV - both of which were mentioned
@@ -4805,7 +4805,7 @@
     \subsection{Autodifferentiation engine}
 
     To test the autodifferentiation module I decided to write some unit tests by computating some example
-    derivatives for each operation by hand and then checking the module produces these values inside of a function.
+    derivatives for each operation by hand and then checking the module produces these values inside a function.
     To improve upon this process, I used pytest. A unit-testing python library which allowed me to run all of my tests
     at once, raised flags on any tests that failed and allowed me to debug these failed tests individually.
 
@@ -4903,18 +4903,13 @@
     TODO: MAKE A VIDEO
 
     VIDEO 1
-    Show modularity - create a model with a 2d conv layer + relu - reshape - dense layer + sigmoid.
-    Pass some data through this model and show the output.
-    Save the model
-    Reload the model and pass the same data - should produce same output
-
-    VIDEO 2
     Explain XOR testing
     Complete XOR test
 
-    **POSSIBILITY**
+    VIDEO 2
     Complete MNIST
-
+    Save the model
+    Reload the model and pass the same data - should produce same output
 
     \subsection{Reinforcement Learning Solution}
 
