@@ -7,7 +7,7 @@ if __name__ == "__main__":
         optimizer=SGD,
         mcts_epochs=10,
         n_example_games=100,
-        nn_epochs=10,
+        nn_epochs=3,
         batch_size=32,
         n_compare_games=5,
         eec=0.75,

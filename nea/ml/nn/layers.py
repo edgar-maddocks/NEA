@@ -80,7 +80,7 @@ class Module(ABC):
             pickle.dump(self, fh)
 
     @staticmethod
-    def load(self, file_path: str) -> None:
+    def load(file_path: str) -> None:
         with open(file_path, "rb") as fh:
             return pickle.load(fh)
 
