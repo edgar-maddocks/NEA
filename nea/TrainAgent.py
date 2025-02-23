@@ -5,10 +5,9 @@ from nea.ml.nn import SGD
 if __name__ == "__main__":
     a = AlphaZero(
         optimizer=SGD,
-        mcts_epochs=10,
-        n_example_games=100,
+        mcts_epochs=3,
+        n_example_games=500,
         nn_epochs=3,
-        batch_size=32,
         n_compare_games=5,
         eec=0.75,
         n_mcts_searches=50,

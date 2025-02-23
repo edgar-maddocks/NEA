@@ -796,7 +796,7 @@ def user_vs_agent_game_loop(
         + f"{replacement_threshold}rt"
     )
     net = None
-    with open(agent_file_path, "rb") as fh:
+    with open(f"nea/{agent_file_path}", "rb") as fh:
         net = pickle.load(fh)
 
     agent = AlphaMCTS(net, eec=eec, n_searches=n_searches)

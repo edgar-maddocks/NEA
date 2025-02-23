@@ -339,4 +339,5 @@ class AlphaLoss(Module):
         mcts_pol_t = mcts_pol.T()
         net_pol_log = net_pol.log()
         pol_bcel = mcts_pol_t @ net_pol_log
+        pol_bcel = pol_bcel.sum().sum().sum()
         return val_sqe - pol_bcel

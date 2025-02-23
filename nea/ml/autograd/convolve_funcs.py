@@ -1,6 +1,5 @@
 import numpy as np
 from numba import jit
-import time as t
 
 
 @jit(nopython=True, cache=True)

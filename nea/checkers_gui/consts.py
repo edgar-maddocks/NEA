@@ -75,6 +75,4 @@ class TEXTS:
         "   may be updated.",
         "NN Epochs (defaulted to 10): The number of iterations the neural network trains for on each",
         "   batch of training examples.",
-        "Batch Size (defaulted to 32): The size of processing batches which the network takes the mean of",
-        "   for the loss.",
     ]

@@ -19,12 +19,10 @@ from nea.agent.consts import ACTION_SPACE
 class AlphaZero:
     def __init__(
         self,
-        optimizer: Optimizer = None,
+        optimizer: Optimizer = SGD,
         mcts_epochs: int = 50,
         n_example_games: int = 10,
-        max_training_examples: int = 500,
         nn_epochs: int = 10,
-        batch_size: int = 32,
         n_compare_games: int = 10,
         eec: float = 1.41,
         n_mcts_searches: int = 100,
@@ -33,14 +31,11 @@ class AlphaZero:
     ) -> None:
         self.prev_model = None
         self.new_model = None
-        if optimizer is None:
-            optimizer = SGD
         self.optimizer = optimizer
         self.hyperparams = {
             "mcts_epochs": mcts_epochs,
             "n_example_games": n_example_games,
             "nn_epochs": nn_epochs,
-            "batch_size": batch_size,
             "n_compare_games": n_compare_games,
             "eec": eec,
             "n_mcts_searches": n_mcts_searches,
@@ -70,7 +65,7 @@ class AlphaZero:
                     training_examples.append(item)
 
             print(f"BEGINNING NN TRAINING ON {len(training_examples)} EXAMPLES")
-            for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
+            for epoch in range(int(self.hyperparams["nn_epochs"])):
                 gc.collect()
                 self._train_nn(training_examples)
 
@@ -142,41 +137,41 @@ class AlphaZero:
         return game_spvs
 
     def _train_nn(self, example_games: deque[SPV]) -> deque[SPV]:
-        random.shuffle(example_games)
         len_example_games = len(example_games)
         optimizer = self.optimizer(self.new_model.params)
 
-        for batch_idx in range(0, len_example_games, self.hyperparams["batch_size"]):
-            end_idx = min(
-                len_example_games - 1, batch_idx + self.hyperparams["batch_size"]
-            )
-            batch = list(itertools.islice(example_games, batch_idx, end_idx))
+        past_states = []
+        loss = 0
+        for i in tqdm(range(0, len_example_games)):
+            spv = example_games[i]
+            past_states.append(spv.state)
 
-            past_states = []
-            loss = 0
-            for i in range(0, len(batch)):
-                spv = batch[i]
-                past_states.append(spv.state)
+            if len(past_states) > 5:
+                past_states.pop(0)
 
-                if len(past_states) > 5:
-                    past_states.pop(0)
+            if i >= 5:
+                state, mcts_probs, true_value = (
+                    Tensor(past_states, requires_grad=True),
+                    Tensor(spv.mcts_action_probs),
+                    Tensor(spv.true_value),
+                )
 
-                if i >= 5:
-                    state, mcts_probs, true_value = (
-                        Tensor(past_states, requires_grad=True),
-                        Tensor(spv.mcts_action_probs),
-                        Tensor(spv.true_value),
-                    )
+                nn_policy, nn_value = self.new_model(state)
 
-                    nn_policy, nn_value = self.new_model(state)
+                loss = self.loss(true_value, nn_value, mcts_probs, nn_policy)
 
-                    loss += self.loss(true_value, nn_value, mcts_probs, nn_policy)
-
-            if isinstance(loss, Tensor):
-                loss = loss.mean()
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
+
+            if i == 0:
+                print("START LOSS: ", loss)
+            elif i == int(len_example_games / 3):
+                print("1/3 LOSS: ", loss)
+            elif i == int(2 * (len_example_games / 3)):
+                print("2/3 LOSS: ", loss)
+            elif i == (len_example_games - 1):
+                print("FINAL LOSS: ", loss)
 
     def _play_compare_games(self) -> bool:
         new_nn_wins = 0
