@@ -4892,20 +4892,107 @@
 
     Please see the 'Reinforcement Learning Testing' video.
 
+    
+    \pagebreak
     \section{Evaluation}
 
     \subsection{Checkers Game}
+    \subsubsection{Objective Achievement}
+    Below is a copy of the objectives for easy referencing.
+    \begin{enumerate}
+        \item An easy-to-use and intuitive graphical interface for the checkers game
+        \begin{enumerate}
+            \item A working version of checkers - obeying all rules stated in \myhy{checkers}{1.2.1.1}
+            \item A small text tutorial on the rules of checkers
+            \item A visual representation of the checkers board
+            \item A method of displaying all legal available moves in a selected position
+            \item Error messages if an illegal move is attempted
+        \end{enumerate}
+        \item Implementation of various decision-making agents for users to play against
+        \begin{enumerate}
+            \item Option for the user to choose which agent to play against (MCTS, Full Agent)
+            \item Ability to adjust hyperparameters of the agents from the checkers game interface (see \myhy{RLS Objs}{RLS Objectives a-e})
+        \end{enumerate}
+    \end{enumerate}
+
+    \subsubsection{Solution Improvements}
+
 
 
     \subsection{Auto-differentiation engine}
+    \subsubsection{Objective Achievement}
+    \begin{enumerate}
+        \item A unit-tested autograd engine capable of calculating derivatives on a variety of functions inlcuding:
+        \begin{enumerate}
+            \item Addition
+            \item Negation
+            \item Multiplication
+            \item Division
+            \item Matrix Multiplication
+            \item Powers
+            \item Mean
+            \item Sum
+            \item Natural Log
+            \item Exponentiation
+            \item Transpose
+            \item Padding
+            \item 2D Convolution
+        \end{enumerate}
+    \end{enumerate}
+    
+    \subsubsection{Solution Improvements}
+
 
 
     \subsection{Neural Network Library}
+    \subsubsection{Objective Achievement}
+    \begin{enumerate} 
+        \item A modular machine learning library including:
+        \begin{enumerate}
+            \item The ability to save a model
+            \item Support for storing a collection of layers/modules
+            \item Dense/Fully Connected Layer
+            \item 2D Convolution Layer
+            \item Reshape Layer
+            \item Activation Layers:
+            \begin{enumerate}
+                \item ReLU
+                \item Softmax
+                \item Sigmoid
+                \item Tanh
+            \end{enumerate} 
+            \item Gradient descent optimization
+            \item Loss Functions:
+            \begin{enumerate}
+                \item Mean Squared error
+                \item AlphaZero's Loss Function
+            \end{enumerate}
+        \end{enumerate}
+    \end{enumerate}
 
+    \subsubsection{Solution Improvements}
 
     \subsection{Reinforcement Learning Solution}
+    \subsubsection{Objective Achievement}
+    \begin{enumerate}
+        \item A training algorithm with hyperparameters of:
+        \begin{enumerate}
+            \item Number of example games to be played
+            \item Number of comparison games to be played
+            \item Number of searches the MCTS completes
+            \item The exploration exploitation coefficient for UCB in MCTS
+            \item The percentage of comparison games the new network must win to replace the previous
+            \item The number of epochs for neural network training
+            \item The number of iterations where a new network is trained
+        \end{enumerate}
+        \item The functionality to load a saved agent and play against it
+    \end{enumerate}
+
+    \subsubsection{Solution Improvements}
 
 
+
+    \subsection{Third Party Reflection}
 
 
 
