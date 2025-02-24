@@ -43,7 +43,7 @@
             \PYG{l+s+s2}{\PYGZdq{}... rest ca be seen in appendix\PYGZdq{}}\PYG{p}{,}
         \PYG{p}{]}
         \PYG{n}{defaulted\PYGZus{}params} \PYG{o}{=} \PYG{p}{[}
-            \PYG{l+s+s2}{\PYGZdq{}MCTS Epochs (defaulted to 10): The number of iterations where the network \PYGZdq{}}\PYG{p}{,}
+            \PYG{l+s+s2}{\PYGZdq{}MCTS Epochs (defaulted to 3): The number of iterations where the network \PYGZdq{}}\PYG{p}{,}
             \PYG{l+s+s2}{\PYGZdq{}... rest can be seen in appendix\PYGZdq{}}\PYG{p}{,}
         \PYG{p}{]}
 \end{Verbatim}

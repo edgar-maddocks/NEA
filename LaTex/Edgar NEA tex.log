@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  24 FEB 2025 10:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  24 FEB 2025 10:35
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1142,7 +1142,7 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
  (./_minted-Edgar_NEA_tex/355B2A56727DBD617E4739CFF6933D22886D1AEF2646E60CFEBC4A48B74DA70B.pygtex)
 \openout4 = `Edgar_NEA_tex.pyg'.
 
- (./_minted-Edgar_NEA_tex/6B589AF2B078D6DFE0A67CE9E9E4158D886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [49])
+ (./_minted-Edgar_NEA_tex/1CADE014AF4E39ECCD30D2577EC3F54C886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [49])
 \openout4 = `Edgar_NEA_tex.pyg'.
 
  (./_minted-Edgar_NEA_tex/BA724F1869FA65E9F39F6EF7F0C3F6BD886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [50] [51])
@@ -1283,7 +1283,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  72i,16n,86p,533b,854s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on "Edgar NEA tex.pdf" (100 pages, 4845119 bytes).
+Output written on "Edgar NEA tex.pdf" (100 pages, 4845121 bytes).
 PDF statistics:
  1226 PDF objects out of 1440 (max. 8388607)
  1019 compressed objects within 11 object streams
