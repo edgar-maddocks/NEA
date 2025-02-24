@@ -1,0 +1,343 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{abc}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ABC}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{collections}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{pickle}
+
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.ml.autograd}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{to\PYGZus{}tensor}\PYG{p}{,} \PYG{n}{TensorFunction}\PYG{p}{,} \PYG{n}{tensor\PYGZus{}exp}\PYG{p}{,} \PYG{n}{tensor\PYGZus{}sum}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.ml.autograd.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Tensorable}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Parameter}\PYG{p}{(}\PYG{n}{Tensor}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{        Represents a parameter}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{shape}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{]} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{requires\PYGZus{}grad}\PYG{p}{:} \PYG{n+nb}{bool} \PYG{o}{=} \PYG{k+kc}{True}\PYG{p}{,}
+            \PYG{n}{operation}\PYG{p}{:} \PYG{n}{TensorFunction} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n}{shape} \PYG{o+ow}{is} \PYG{o+ow}{not} \PYG{k+kc}{None}\PYG{p}{:}
+                \PYG{n}{data} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{random}\PYG{o}{.}\PYG{n}{randn}\PYG{p}{(}\PYG{o}{*}\PYG{n}{shape}\PYG{p}{)}
+                \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n}{data}\PYG{p}{,} \PYG{n}{requires\PYGZus{}grad}\PYG{o}{=}\PYG{n}{requires\PYGZus{}grad}\PYG{p}{,} \PYG{n}{operation}\PYG{o}{=}\PYG{n}{operation}\PYG{p}{)}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{k}{raise} \PYG{n+ne}{ValueError}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}shape must be specified and cannot be left as None\PYGZdq{}}\PYG{p}{)}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Module}\PYG{p}{(}\PYG{n}{ABC}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Basis of all layers\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{forward}\PYG{p}{(}\PYG{n}{to\PYGZus{}tensor}\PYG{p}{(}\PYG{n}{x}\PYG{p}{))}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Forward propogation of module}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                x (Tensorable): Input data}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Tensor:}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{k}{raise} \PYG{n+ne}{NotImplementedError}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Cannot call forward on raw module\PYGZdq{}}\PYG{p}{)}
+
+        \PYG{n+nd}{@property}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{params}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{list}\PYG{p}{[}\PYG{n}{Parameter} \PYG{o}{|} \PYG{n}{Tensor}\PYG{p}{]:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Gets all parameters inside a modules from the self.\PYGZus{}\PYGZus{}dict\PYGZus{}\PYGZus{}}
+\PYG{l+s+sd}{            Also gets any tensors with requires\PYGZus{}grad = True,}
+\PYG{l+s+sd}{            and the parameters from any other module}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                list[Parameter | Tensor]:}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+            \PYG{n}{params} \PYG{o}{=} \PYG{p}{[]}
+
+            \PYG{c+c1}{\PYGZsh{}get all params associated with the module}
+            \PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}dict\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{values}\PYG{p}{():}
+                \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{Module}\PYG{p}{):}
+                    \PYG{n}{params} \PYG{o}{+=} \PYG{n}{param}\PYG{o}{.}\PYG{n}{params}
+                \PYG{k}{elif} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{ModuleList}\PYG{p}{):}
+                    \PYG{n}{params} \PYG{o}{+=} \PYG{n}{param}\PYG{o}{.}\PYG{n}{params}
+                \PYG{k}{elif} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{Parameter}\PYG{p}{):}
+                    \PYG{n}{params}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+                \PYG{k}{elif} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{Tensor}\PYG{p}{):}
+                    \PYG{k}{if} \PYG{n}{param}\PYG{o}{.}\PYG{n}{requires\PYGZus{}grad}\PYG{p}{:}
+                        \PYG{n}{params}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+
+            \PYG{k}{return} \PYG{n}{params}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{save}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{file\PYGZus{}path}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{file\PYGZus{}path}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}wb\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{fh}\PYG{p}{:}
+                \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{fh}\PYG{p}{)}
+
+        \PYG{n+nd}{@staticmethod}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{load}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{file\PYGZus{}path}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{file\PYGZus{}path}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}rb\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{fh}\PYG{p}{:}
+                \PYG{k}{return} \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n}{fh}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} allows multiple modules to be stored in a list (useful for the residual layers)}
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{ModuleList}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{,} \PYG{n}{collections}\PYG{o}{.}\PYG{n}{abc}\PYG{o}{.}\PYG{n}{Sequence}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{modules}\PYG{p}{:} \PYG{n+nb}{list}\PYG{p}{[}\PYG{n}{Module}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{modules} \PYG{o}{=} \PYG{n}{modules}
+
+        \PYG{n+nd}{@property}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{params}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{list}\PYG{p}{[}\PYG{n}{Parameter} \PYG{o}{|} \PYG{n}{Tensor}\PYG{p}{]:}
+            \PYG{n}{params} \PYG{o}{=} \PYG{p}{[]}
+
+            \PYG{k}{for} \PYG{n}{module} \PYG{o+ow}{in} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{modules}\PYG{p}{:}
+                \PYG{k}{for} \PYG{n}{param} \PYG{o+ow}{in} \PYG{n}{module}\PYG{o}{.}\PYG{n+nv+vm}{\PYGZus{}\PYGZus{}dict\PYGZus{}\PYGZus{}}\PYG{o}{.}\PYG{n}{values}\PYG{p}{():}
+                    \PYG{k}{if} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{Module}\PYG{p}{):}
+                        \PYG{n}{params} \PYG{o}{+=} \PYG{n}{param}\PYG{o}{.}\PYG{n}{params}
+                    \PYG{k}{elif} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{ModuleList}\PYG{p}{):}
+                        \PYG{n}{params} \PYG{o}{+=} \PYG{n}{param}\PYG{o}{.}\PYG{n}{params}
+                    \PYG{k}{elif} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{Parameter}\PYG{p}{):}
+                        \PYG{n}{params}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+                    \PYG{k}{elif} \PYG{n+nb}{isinstance}\PYG{p}{(}\PYG{n}{param}\PYG{p}{,} \PYG{n}{Tensor}\PYG{p}{):}
+                        \PYG{k}{if} \PYG{n}{param}\PYG{o}{.}\PYG{n}{requires\PYGZus{}grad}\PYG{p}{:}
+                            \PYG{n}{params}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{param}\PYG{p}{)}
+
+                \PYG{k}{return} \PYG{n}{params}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}getitem\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{index}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Module}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{modules}\PYG{p}{[}\PYG{n}{index}\PYG{p}{]}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}len\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n+nb}{int}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{modules}\PYG{p}{)}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Dense}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Fully connected layer}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            Module (\PYGZus{}type\PYGZus{}):}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{n\PYGZus{}inputs}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{n\PYGZus{}outputs}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,} \PYG{n}{bias}\PYG{p}{:} \PYG{n+nb}{bool} \PYG{o}{=} \PYG{k+kc}{True}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Instantiates a new dense layer}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                n\PYGZus{}inputs (int): number of inputs to layer}
+\PYG{l+s+sd}{                n\PYGZus{}outputs (int): desired number of output neurons}
+\PYG{l+s+sd}{                bias (bool, optional): whether to add a bias layer or not.}
+\PYG{l+s+sd}{                Defaults to True.}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weights} \PYG{o}{=} \PYG{n}{Parameter}\PYG{p}{((}\PYG{n}{n\PYGZus{}inputs}\PYG{p}{,} \PYG{n}{n\PYGZus{}outputs}\PYG{p}{))}
+            \PYG{k}{if} \PYG{n}{bias}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias} \PYG{o}{=} \PYG{n}{Parameter}\PYG{p}{((}\PYG{n}{n\PYGZus{}outputs}\PYG{p}{,))}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Propogates input data through dense layer}
+
+\PYG{l+s+sd}{            Args:}
+\PYG{l+s+sd}{                x (Tensorable): input data}
+
+\PYG{l+s+sd}{            Returns:}
+\PYG{l+s+sd}{                Tensor:}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{y} \PYG{o}{=} \PYG{n}{x} \PYG{o}{@} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{weights}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias}\PYG{p}{:}
+                \PYG{n}{y} \PYG{o}{=} \PYG{n}{y} \PYG{o}{+} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias}
+
+            \PYG{k}{return} \PYG{n}{y}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Conv2D}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}A Convolutional layer}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            Module (\PYGZus{}type\PYGZus{}):}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{x\PYGZus{}shape}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{,} \PYG{n+nb}{int}\PYG{p}{],}
+            \PYG{n}{kernel\PYGZus{}size}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,}
+            \PYG{n}{n\PYGZus{}kernels}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{,}
+            \PYG{n}{bias}\PYG{p}{:} \PYG{n+nb}{bool} \PYG{o}{=} \PYG{k+kc}{False}\PYG{p}{,}
+            \PYG{n}{padding}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+            \PYG{n}{padding\PYGZus{}value}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{k+kc}{None}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{k}{assert} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{x\PYGZus{}shape}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Input must be of shape (n\PYGZus{}samples, *, *)\PYGZdq{}}
+            \PYG{k}{if} \PYG{n}{padding\PYGZus{}value}\PYG{p}{:}
+                \PYG{k}{assert} \PYG{n}{padding}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Must define amount of padding}
+\PYG{l+s+s2}{                if padding value is not None\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}kernels} \PYG{o}{=} \PYG{n}{n\PYGZus{}kernels}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x\PYGZus{}shape} \PYG{o}{=} \PYG{n}{x\PYGZus{}shape}
+
+            \PYG{n}{x\PYGZus{}samples}\PYG{p}{,} \PYG{n}{x\PYGZus{}width}\PYG{p}{,} \PYG{n}{x\PYGZus{}height} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x\PYGZus{}shape}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding} \PYG{o}{=} \PYG{n}{padding}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding\PYGZus{}value} \PYG{o}{=} \PYG{n}{padding\PYGZus{}value}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x\PYGZus{}shape} \PYG{o}{=} \PYG{p}{(}
+                    \PYG{n}{x\PYGZus{}samples}\PYG{p}{,}
+                    \PYG{n}{x\PYGZus{}width} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding}\PYG{p}{,}
+                    \PYG{n}{x\PYGZus{}height} \PYG{o}{+} \PYG{l+m+mi}{2} \PYG{o}{*} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding}\PYG{p}{,}
+                \PYG{p}{)}
+                \PYG{n}{x\PYGZus{}samples}\PYG{p}{,} \PYG{n}{x\PYGZus{}width}\PYG{p}{,} \PYG{n}{x\PYGZus{}height} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{x\PYGZus{}shape}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}shape} \PYG{o}{=} \PYG{p}{(}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}kernels}\PYG{p}{,}
+                \PYG{n}{x\PYGZus{}width} \PYG{o}{\PYGZhy{}} \PYG{n}{kernel\PYGZus{}size} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{,}
+                \PYG{n}{x\PYGZus{}height} \PYG{o}{\PYGZhy{}} \PYG{n}{kernel\PYGZus{}size} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{p}{,}
+            \PYG{p}{)}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kernels\PYGZus{}shape} \PYG{o}{=} \PYG{p}{(}\PYG{n}{n\PYGZus{}kernels}\PYG{p}{,} \PYG{n}{x\PYGZus{}samples}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{p}{,} \PYG{n}{kernel\PYGZus{}size}\PYG{p}{)}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kernels} \PYG{o}{=} \PYG{n}{Parameter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kernels\PYGZus{}shape}\PYG{p}{)}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias} \PYG{o}{=} \PYG{n}{bias}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{biases} \PYG{o}{=} \PYG{k+kc}{None}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{bias}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{biases} \PYG{o}{=} \PYG{n}{Parameter}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{output\PYGZus{}shape}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding}\PYG{p}{:}
+                \PYG{n}{x} \PYG{o}{=} \PYG{n}{x}\PYG{o}{.}\PYG{n}{pad2D}\PYG{p}{(}\PYG{n}{padding}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding}\PYG{p}{,} \PYG{n}{value}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{padding\PYGZus{}value}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{x}\PYG{o}{.}\PYG{n}{convolve2d}\PYG{p}{(}\PYG{n}{k}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{kernels}\PYG{p}{,} \PYG{n}{b}\PYG{o}{=}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{biases}\PYG{p}{)}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Reshape}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{desired\PYGZus{}shape}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{desired\PYGZus{}shape} \PYG{o}{=} \PYG{n}{desired\PYGZus{}shape}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n}{x}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{desired\PYGZus{}shape}\PYG{p}{)}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MinMaxNormalization}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{x\PYGZus{}max} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{max}\PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{data}\PYG{p}{)}
+            \PYG{n}{x\PYGZus{}min} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{min}\PYG{p}{(}\PYG{n}{x}\PYG{o}{.}\PYG{n}{data}\PYG{p}{)}
+
+            \PYG{k}{return} \PYG{p}{(}\PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n}{x\PYGZus{}min}\PYG{p}{)} \PYG{o}{/} \PYG{p}{((}\PYG{n}{x\PYGZus{}max} \PYG{o}{\PYGZhy{}} \PYG{n}{x\PYGZus{}min}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{10}\PYG{o}{**\PYGZhy{}}\PYG{l+m+mi}{100}\PYG{p}{)}
+
+    \PYG{c+c1}{\PYGZsh{} ==========================}
+    \PYG{c+c1}{\PYGZsh{}        Activations}
+    \PYG{c+c1}{\PYGZsh{} ==========================}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Tanh}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Tanh activation layer}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            Module (\PYGZus{}type\PYGZus{}):}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{output} \PYG{o}{=} \PYG{p}{(}
+                \PYG{p}{(}\PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{))}
+                \PYG{o}{/} \PYG{p}{(}\PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)} \PYG{o}{+} \PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{))}
+            \PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{output}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Sigmoid}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+\PYG{+w}{        }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}Sigmoid activation layer}
+
+\PYG{l+s+sd}{        Args:}
+\PYG{l+s+sd}{            Module (\PYGZus{}type\PYGZus{}):}
+\PYG{l+s+sd}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{output} \PYG{o}{=} \PYG{l+m+mf}{1.} \PYG{o}{/} \PYG{p}{(}\PYG{l+m+mf}{1.} \PYG{o}{+} \PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{x}\PYG{p}{))}
+            \PYG{k}{return} \PYG{n}{output}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{Softmax}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{dim}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{z} \PYG{o}{=} \PYG{n}{tensor\PYGZus{}exp}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+            \PYG{n}{output} \PYG{o}{=} \PYG{n}{z} \PYG{o}{/} \PYG{n}{tensor\PYGZus{}sum}\PYG{p}{(}\PYG{n}{z}\PYG{p}{,} \PYG{n}{dim}\PYG{o}{=}\PYG{n}{dim}\PYG{p}{,} \PYG{n}{keepdims}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{output}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{ReLU}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{x}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n}{x}\PYG{o}{.}\PYG{n}{relu}\PYG{p}{()}
+
+
+    \PYG{c+c1}{\PYGZsh{} ==========================}
+    \PYG{c+c1}{\PYGZsh{}          Losses}
+    \PYG{c+c1}{\PYGZsh{} ==========================}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{MSE}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{predicted}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{true}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{forward}\PYG{p}{(}\PYG{n}{predicted}\PYG{o}{=}\PYG{n}{predicted}\PYG{p}{,} \PYG{n}{true}\PYG{o}{=}\PYG{n}{true}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{predicted}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{true}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{loss}\PYG{p}{:} \PYG{n}{Tensor} \PYG{o}{=} \PYG{n}{predicted} \PYG{o}{\PYGZhy{}} \PYG{n}{true}
+            \PYG{n}{loss} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{1} \PYG{o}{/} \PYG{n}{true}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{])} \PYG{o}{*} \PYG{p}{(}\PYG{n}{loss}\PYG{o}{.}\PYG{n}{T}\PYG{p}{()} \PYG{o}{@} \PYG{n}{loss}\PYG{p}{)}
+            \PYG{k}{return} \PYG{n}{loss}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{CrossEntropy}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{predicted}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{true}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{forward}\PYG{p}{(}\PYG{n}{predicted}\PYG{o}{=}\PYG{n}{predicted}\PYG{p}{,} \PYG{n}{true}\PYG{o}{=}\PYG{n}{true}\PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{predicted}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,} \PYG{n}{true}\PYG{p}{:} \PYG{n}{Tensorable}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{prod} \PYG{o}{=} \PYG{n}{true} \PYG{o}{*} \PYG{n}{predicted}\PYG{o}{.}\PYG{n}{log}\PYG{p}{()}
+            \PYG{k}{return} \PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{prod}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{dim}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{))}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{AlphaLoss}\PYG{p}{(}\PYG{n}{Module}\PYG{p}{):}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb}{super}\PYG{p}{()}\PYG{o}{.}\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{()}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}call\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{true\PYGZus{}value}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+            \PYG{n}{predicted\PYGZus{}value}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+            \PYG{n}{mcts\PYGZus{}pol}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+            \PYG{n}{net\PYGZus{}pol}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{forward}\PYG{p}{(}
+                \PYG{n}{true\PYGZus{}value}\PYG{o}{=}\PYG{n}{true\PYGZus{}value}\PYG{p}{,}
+                \PYG{n}{predicted\PYGZus{}value}\PYG{o}{=}\PYG{n}{predicted\PYGZus{}value}\PYG{p}{,}
+                \PYG{n}{mcts\PYGZus{}pol}\PYG{o}{=}\PYG{n}{mcts\PYGZus{}pol}\PYG{p}{,}
+                \PYG{n}{net\PYGZus{}pol}\PYG{o}{=}\PYG{n}{net\PYGZus{}pol}\PYG{p}{,}
+            \PYG{p}{)}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{forward}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{true\PYGZus{}value}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+            \PYG{n}{predicted\PYGZus{}value}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+            \PYG{n}{mcts\PYGZus{}pol}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+            \PYG{n}{net\PYGZus{}pol}\PYG{p}{:} \PYG{n}{Tensor}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Tensor}\PYG{p}{:}
+            \PYG{n}{val\PYGZus{}sqe} \PYG{o}{=} \PYG{p}{(}\PYG{n}{true\PYGZus{}value} \PYG{o}{\PYGZhy{}} \PYG{n}{predicted\PYGZus{}value}\PYG{p}{)} \PYG{o}{**} \PYG{l+m+mi}{2}
+            \PYG{n}{mcts\PYGZus{}pol\PYGZus{}t} \PYG{o}{=} \PYG{n}{mcts\PYGZus{}pol}\PYG{o}{.}\PYG{n}{T}\PYG{p}{()}
+            \PYG{n}{net\PYGZus{}pol\PYGZus{}log} \PYG{o}{=} \PYG{n}{net\PYGZus{}pol}\PYG{o}{.}\PYG{n}{log}\PYG{p}{()}
+            \PYG{n}{pol\PYGZus{}bcel} \PYG{o}{=} \PYG{n}{mcts\PYGZus{}pol\PYGZus{}t} \PYG{o}{@} \PYG{n}{net\PYGZus{}pol\PYGZus{}log}
+            \PYG{n}{pol\PYGZus{}bcel} \PYG{o}{=} \PYG{n}{pol\PYGZus{}bcel}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{()}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{()}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{()}
+            \PYG{k}{return} \PYG{n}{val\PYGZus{}sqe} \PYG{o}{\PYGZhy{}} \PYG{n}{pol\PYGZus{}bcel}
+
+\end{Verbatim}

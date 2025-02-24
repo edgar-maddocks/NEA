@@ -4153,6 +4153,7 @@
             mcts_pol_t = mcts_pol.T()
             net_pol_log = net_pol.log()
             pol_bcel = mcts_pol_t @ net_pol_log
+            pol_bcel = pol_bcel.sum().sum().sum()
             return val_sqe - pol_bcel
 
     \end{minted}
@@ -4694,12 +4695,11 @@
     class AlphaZero:
         def __init__(
             self,
-            optimizer: Optimizer = None,
-            mcts_epochs: int = 50,
+            optimizer: Optimizer = SGD,
+            mcts_epochs: int = 3,
             n_example_games: int = 10,
             max_training_examples: int = 500,
-            nn_epochs: int = 10,
-            batch_size: int = 32,
+            nn_epochs: int = 3,
             n_compare_games: int = 10,
             eec: float = 1.41,
             n_mcts_searches: int = 100,
@@ -4708,14 +4708,11 @@
         ) -> None:
             self.prev_model = None
             self.new_model = None
-            if optimizer is None:
-                optimizer = SGD
             self.optimizer = optimizer
             self.hyperparams = {
                 "mcts_epochs": mcts_epochs,
                 "n_example_games": n_example_games,
                 "nn_epochs": nn_epochs,
-                "batch_size": batch_size,
                 "n_compare_games": n_compare_games,
                 "eec": eec,
                 "n_mcts_searches": n_mcts_searches,
@@ -4725,48 +4722,48 @@
             self.loss = AlphaLoss()
             self.save = save
 
-        def train(self, initial_model: AlphaModel) -> None:
-            self.prev_model = initial_model
-            if self.new_model is None:
-                self.new_model = initial_model
+            def train(self, initial_model: AlphaModel) -> None:
+                self.prev_model = initial_model
+                if self.new_model is None:
+                    self.new_model = initial_model
 
-            for mcts_epoch in range(self.hyperparams["mcts_epochs"]): # number of generations
-                training_examples = deque()
+                for mcts_epoch in range(self.hyperparams["mcts_epochs"]):
+                    training_examples = deque()
 
-                gc.collect()
-
-                print(f"MCTS EPOCH: {mcts_epoch + 1}")
-                print("GETTING EXAMPLE GAMES")
-                for example_game in tqdm(range(self.hyperparams["n_example_games"])):
-                    game_saps, reward, player = self._get_example_saps() # play games against self
-                    game_spvs = self._convert_saps_to_spvs(game_saps, player, reward)
-
-                    for item in game_spvs:
-                        training_examples.append(item) # add to training dataset
-
-                print(f"BEGINNING NN TRAINING ON {len(training_examples)} EXAMPLES")
-                for epoch in tqdm(range(int(self.hyperparams["nn_epochs"]))):
                     gc.collect()
-                    self._train_nn(training_examples)
 
-                print("PLAYING COMPARISON GAMES")
-                if self._play_compare_games():
-                    self.prev_model = self.new_model
+                    print(f"MCTS EPOCH: {mcts_epoch + 1}")
+                    print("GETTING EXAMPLE GAMES")
+                    for example_game in tqdm(range(self.hyperparams["n_example_games"])):
+                        game_saps, reward, player = self._get_example_saps()
+                        game_spvs = self._convert_saps_to_spvs(game_saps, player, reward)
 
-                    if self.save:
-                        file_path = (
-                            f"{self.hyperparams["n_mcts_searches"]}ns-"
-                            + f"{self.hyperparams["eec"]}ec-"
-                            + f"{self.hyperparams["n_example_games"]}te-"
-                            + f"{self.hyperparams["n_compare_games"]}cg-"
-                            + f"{self.hyperparams["replace_win_pct_threshold"]}rt"
-                        )
-                        self.new_model.save(file_path=file_path)
+                        for item in game_spvs:
+                            training_examples.append(item)
 
-                        print(f"Model saved to file {file_path}.pkl")
-                gc.collect()
+                    print(f"BEGINNING NN TRAINING ON {len(training_examples)} EXAMPLES")
+                    for epoch in range(int(self.hyperparams["nn_epochs"])):
+                        gc.collect()
+                        self._train_nn(training_examples)
 
-            return self.prev_model
+                    print("PLAYING COMPARISON GAMES")
+                    if self._play_compare_games():
+                        self.prev_model = self.new_model
+
+                        if self.save:
+                            file_path = (
+                                f"{self.hyperparams["n_mcts_searches"]}ns-"
+                                + f"{self.hyperparams["eec"]}ec-"
+                                + f"{self.hyperparams["n_example_games"]}te-"
+                                + f"{self.hyperparams["n_compare_games"]}cg-"
+                                + f"{self.hyperparams["replace_win_pct_threshold"]}rt"
+                            )
+                            self.new_model.save(file_path=file_path)
+
+                            print(f"Model saved to file {file_path}.pkl")
+                    gc.collect()
+
+                return self.prev_model
 
         def _convert_saps_to_spvs(
             self, game_saps: deque[SAP], player: str, reward: float
@@ -4893,12 +4890,24 @@
 
     \subsection{Reinforcement Learning Solution}
 
-    OBJECTIVES:
-    OVERLAPS WITH CHECKERS VIDEO
+    Please see the 'Reinforcement Learning Testing' video.
 
-    VIDEO 1
-    SHOW TWO MODELS PLAYING AGAINST EACHOTHER
-    1 with X amount of strength other with half X amount of training time
+    \section{Evaluation}
+
+    \subsection{Checkers Game}
+
+
+    \subsection{Auto-differentiation engine}
+
+
+    \subsection{Neural Network Library}
+
+
+    \subsection{Reinforcement Learning Solution}
+
+
+
+
 
     \section{Research Log}
 

@@ -1,0 +1,104 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{collections}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{deque}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{gc}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{itertools}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{random}
+    \PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{math}
+
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.ml.nn}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Optimizer}\PYG{p}{,} \PYG{n}{SGD}\PYG{p}{,} \PYG{n}{AlphaLoss}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.ml.autograd}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Tensor}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.mcts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{AlphaMCTS}\PYG{p}{,} \PYG{n}{AlphaNode}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.network}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{AlphaModel}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.console\PYGZus{}checkers}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{CheckersGame}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.agent.memory\PYGZus{}types}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{SAP}\PYG{p}{,} \PYG{n}{SPV}
+    \PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{nea.agent.consts}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{ACTION\PYGZus{}SPACE}
+
+
+    \PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{AlphaZero}\PYG{p}{:}
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf+fm}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,}
+            \PYG{n}{optimizer}\PYG{p}{:} \PYG{n}{Optimizer} \PYG{o}{=} \PYG{n}{SGD}\PYG{p}{,}
+            \PYG{n}{mcts\PYGZus{}epochs}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{3}\PYG{p}{,}
+            \PYG{n}{n\PYGZus{}example\PYGZus{}games}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
+            \PYG{n}{max\PYGZus{}training\PYGZus{}examples}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{500}\PYG{p}{,}
+            \PYG{n}{nn\PYGZus{}epochs}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{3}\PYG{p}{,}
+            \PYG{n}{n\PYGZus{}compare\PYGZus{}games}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{10}\PYG{p}{,}
+            \PYG{n}{eec}\PYG{p}{:} \PYG{n+nb}{float} \PYG{o}{=} \PYG{l+m+mf}{1.41}\PYG{p}{,}
+            \PYG{n}{n\PYGZus{}mcts\PYGZus{}searches}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{,}
+            \PYG{n}{replace\PYGZus{}win\PYGZus{}pct\PYGZus{}threshold}\PYG{p}{:} \PYG{n+nb}{int} \PYG{o}{=} \PYG{l+m+mi}{60}\PYG{p}{,}
+            \PYG{n}{save}\PYG{p}{:} \PYG{n+nb}{bool} \PYG{o}{=} \PYG{k+kc}{False}\PYG{p}{,}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{prev\PYGZus{}model} \PYG{o}{=} \PYG{k+kc}{None}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{new\PYGZus{}model} \PYG{o}{=} \PYG{k+kc}{None}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{optimizer} \PYG{o}{=} \PYG{n}{optimizer}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+                \PYG{l+s+s2}{\PYGZdq{}mcts\PYGZus{}epochs\PYGZdq{}}\PYG{p}{:} \PYG{n}{mcts\PYGZus{}epochs}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}example\PYGZus{}games\PYGZdq{}}\PYG{p}{:} \PYG{n}{n\PYGZus{}example\PYGZus{}games}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}nn\PYGZus{}epochs\PYGZdq{}}\PYG{p}{:} \PYG{n}{nn\PYGZus{}epochs}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}compare\PYGZus{}games\PYGZdq{}}\PYG{p}{:} \PYG{n}{n\PYGZus{}compare\PYGZus{}games}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}eec\PYGZdq{}}\PYG{p}{:} \PYG{n}{eec}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}mcts\PYGZus{}searches\PYGZdq{}}\PYG{p}{:} \PYG{n}{n\PYGZus{}mcts\PYGZus{}searches}\PYG{p}{,}
+                \PYG{l+s+s2}{\PYGZdq{}replace\PYGZus{}win\PYGZus{}pct\PYGZus{}threshold\PYGZdq{}}\PYG{p}{:} \PYG{n}{replace\PYGZus{}win\PYGZus{}pct\PYGZus{}threshold}\PYG{p}{,}
+            \PYG{p}{\PYGZcb{}}
+
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{loss} \PYG{o}{=} \PYG{n}{AlphaLoss}\PYG{p}{()}
+            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{save} \PYG{o}{=} \PYG{n}{save}
+
+            \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{train}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{initial\PYGZus{}model}\PYG{p}{:} \PYG{n}{AlphaModel}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+                \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{prev\PYGZus{}model} \PYG{o}{=} \PYG{n}{initial\PYGZus{}model}
+                \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{new\PYGZus{}model} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+                    \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{new\PYGZus{}model} \PYG{o}{=} \PYG{n}{initial\PYGZus{}model}
+
+                \PYG{k}{for} \PYG{n}{mcts\PYGZus{}epoch} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}mcts\PYGZus{}epochs\PYGZdq{}}\PYG{p}{]):}
+                    \PYG{n}{training\PYGZus{}examples} \PYG{o}{=} \PYG{n}{deque}\PYG{p}{()}
+
+                    \PYG{n}{gc}\PYG{o}{.}\PYG{n}{collect}\PYG{p}{()}
+
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}MCTS EPOCH: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mcts\PYGZus{}epoch}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}GETTING EXAMPLE GAMES\PYGZdq{}}\PYG{p}{)}
+                    \PYG{k}{for} \PYG{n}{example\PYGZus{}game} \PYG{o+ow}{in} \PYG{n}{tqdm}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}example\PYGZus{}games\PYGZdq{}}\PYG{p}{])):}
+                        \PYG{n}{game\PYGZus{}saps}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{,} \PYG{n}{player} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}get\PYGZus{}example\PYGZus{}saps}\PYG{p}{()}
+                        \PYG{n}{game\PYGZus{}spvs} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}convert\PYGZus{}saps\PYGZus{}to\PYGZus{}spvs}\PYG{p}{(}\PYG{n}{game\PYGZus{}saps}\PYG{p}{,} \PYG{n}{player}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{)}
+
+                        \PYG{k}{for} \PYG{n}{item} \PYG{o+ow}{in} \PYG{n}{game\PYGZus{}spvs}\PYG{p}{:}
+                            \PYG{n}{training\PYGZus{}examples}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{item}\PYG{p}{)}
+
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}BEGINNING NN TRAINING ON }\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{training\PYGZus{}examples}\PYG{p}{)}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ EXAMPLES\PYGZdq{}}\PYG{p}{)}
+                    \PYG{k}{for} \PYG{n}{epoch} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n+nb}{int}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}nn\PYGZus{}epochs\PYGZdq{}}\PYG{p}{])):}
+                        \PYG{n}{gc}\PYG{o}{.}\PYG{n}{collect}\PYG{p}{()}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}train\PYGZus{}nn}\PYG{p}{(}\PYG{n}{training\PYGZus{}examples}\PYG{p}{)}
+
+                    \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}PLAYING COMPARISON GAMES\PYGZdq{}}\PYG{p}{)}
+                    \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{\PYGZus{}play\PYGZus{}compare\PYGZus{}games}\PYG{p}{():}
+                        \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{prev\PYGZus{}model} \PYG{o}{=} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{new\PYGZus{}model}
+
+                        \PYG{k}{if} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{save}\PYG{p}{:}
+                            \PYG{n}{file\PYGZus{}path} \PYG{o}{=} \PYG{p}{(}
+                                \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}mcts\PYGZus{}searches\PYGZdq{}}\PYG{p}{]}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ns\PYGZhy{}\PYGZdq{}}
+                                \PYG{o}{+} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}eec\PYGZdq{}}\PYG{p}{]}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{ec\PYGZhy{}\PYGZdq{}}
+                                \PYG{o}{+} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}example\PYGZus{}games\PYGZdq{}}\PYG{p}{]}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{te\PYGZhy{}\PYGZdq{}}
+                                \PYG{o}{+} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}n\PYGZus{}compare\PYGZus{}games\PYGZdq{}}\PYG{p}{]}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{cg\PYGZhy{}\PYGZdq{}}
+                                \PYG{o}{+} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+si}{\PYGZob{}}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{hyperparams}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}replace\PYGZus{}win\PYGZus{}pct\PYGZus{}threshold\PYGZdq{}}\PYG{p}{]}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{rt\PYGZdq{}}
+                            \PYG{p}{)}
+                            \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{new\PYGZus{}model}\PYG{o}{.}\PYG{n}{save}\PYG{p}{(}\PYG{n}{file\PYGZus{}path}\PYG{o}{=}\PYG{n}{file\PYGZus{}path}\PYG{p}{)}
+
+                            \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}Model saved to file }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{file\PYGZus{}path}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{.pkl\PYGZdq{}}\PYG{p}{)}
+                    \PYG{n}{gc}\PYG{o}{.}\PYG{n}{collect}\PYG{p}{()}
+
+                \PYG{k}{return} \PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{prev\PYGZus{}model}
+
+        \PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{\PYGZus{}convert\PYGZus{}saps\PYGZus{}to\PYGZus{}spvs}\PYG{p}{(}
+            \PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{game\PYGZus{}saps}\PYG{p}{:} \PYG{n}{deque}\PYG{p}{[}\PYG{n}{SAP}\PYG{p}{],} \PYG{n}{player}\PYG{p}{:} \PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{reward}\PYG{p}{:} \PYG{n+nb}{float}
+        \PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{deque}\PYG{p}{[}\PYG{n}{SPV}\PYG{p}{]:}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{            Converts SAPs to SPVs}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}
+            \PYG{n}{len\PYGZus{}game\PYGZus{}saps} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{game\PYGZus{}saps}\PYG{p}{)}
+            \PYG{n}{game\PYGZus{}spvs} \PYG{o}{=} \PYG{n}{deque}\PYG{p}{(}\PYG{n}{maxlen}\PYG{o}{=}\PYG{n}{len\PYGZus{}game\PYGZus{}saps}\PYG{p}{)}
+
+            \PYG{k}{for} \PYG{n}{item} \PYG{o+ow}{in} \PYG{n}{game\PYGZus{}saps}\PYG{p}{:}
+                \PYG{n}{value} \PYG{o}{=} \PYG{n}{reward} \PYG{k}{if} \PYG{n}{item}\PYG{o}{.}\PYG{n}{player} \PYG{o}{==} \PYG{n}{player} \PYG{k}{else} \PYG{n}{reward} \PYG{o}{*} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+                \PYG{n}{game\PYGZus{}spvs}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{SPV}\PYG{p}{(}\PYG{n}{item}\PYG{o}{.}\PYG{n}{state}\PYG{p}{,} \PYG{n}{item}\PYG{o}{.}\PYG{n}{mcts\PYGZus{}action\PYGZus{}probs}\PYG{p}{,} \PYG{n}{value}\PYG{p}{))}
+
+            \PYG{k}{return} \PYG{n}{game\PYGZus{}spvs}
+\end{Verbatim}

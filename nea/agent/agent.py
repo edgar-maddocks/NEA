@@ -164,15 +164,6 @@ class AlphaZero:
                 loss.backward()
                 optimizer.step()
 
-            if i == 0:
-                print("START LOSS: ", loss)
-            elif i == int(len_example_games / 3):
-                print("1/3 LOSS: ", loss)
-            elif i == int(2 * (len_example_games / 3)):
-                print("2/3 LOSS: ", loss)
-            elif i == (len_example_games - 1):
-                print("FINAL LOSS: ", loss)
-
     def _play_compare_games(self) -> bool:
         new_nn_wins = 0
         prev_nn_wins = 0
