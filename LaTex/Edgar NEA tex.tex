@@ -4897,8 +4897,7 @@
     \section{Evaluation}
 
     \subsection{Checkers Game}
-    \subsubsection{Objective Achievement}
-    Below is a copy of the objectives for easy referencing.
+    Below is a copy of the objectives for easy referencing. I will keep this format for each section in the evaluation.
     \begin{enumerate}
         \item An easy-to-use and intuitive graphical interface for the checkers game
         \begin{enumerate}
@@ -4915,12 +4914,19 @@
         \end{enumerate}
     \end{enumerate}
 
-    \subsubsection{Solution Improvements}
+    As seen in my testing video, I did create a graphical user interface - which had functionality for all rules including, but not limited to, taking, double taking and crowning.
+    In this GUI I also provided a text tutorial and a view of all the available moves for a selected piece - this could have been improved by highlighting
+    if a certain piece had to be the one that was moved - for example when a take must be made with a certain piece. This would make it easier for the user
+    first identify which pieces are available to move. I also printed error messages to the console if an illegal move was attempted, but this could be improved
+    by letting the user know through the GUI, and also providing more detail on why the move was not allowed.
 
+    For the implementation of different game modes (against MCTS and full agents) I did allow the user to choose which agent to play against,
+    however with limited parameters. To improve I could allow the user to select any number they would like for parameters for the MCTS agent - 
+    and I could also train full agents on a wider range of parameter combinations. This would also allow the user more flexibility to adjust the
+    parameters of agents - in reference to objective 2b.
 
 
     \subsection{Auto-differentiation engine}
-    \subsubsection{Objective Achievement}
     \begin{enumerate}
         \item A unit-tested autograd engine capable of calculating derivatives on a variety of functions inlcuding:
         \begin{enumerate}
@@ -4940,12 +4946,14 @@
         \end{enumerate}
     \end{enumerate}
     
-    \subsubsection{Solution Improvements}
-
+    As seen in my unit-testing with pytest, I implemented and tested all operations mentioned in my objectives. I also included some additional
+    operations such as reshape and ReLU. Implementation of some of the operations is very rigid in regard to the format of inputs (specifically 2D convolution).
+    This prevented large batch processing with this operation - slowing down processing time - and could be improved by either editing the input format to allow 
+    for many samples to be processed at once, or by implementing new operations such as a 'Slice' operator which is used a lot in the forward pass of convolutions,
+    to prevent the need for more hardcoded gradient functions.
 
 
     \subsection{Neural Network Library}
-    \subsubsection{Objective Achievement}
     \begin{enumerate} 
         \item A modular machine learning library including:
         \begin{enumerate}
@@ -4970,10 +4978,13 @@
         \end{enumerate}
     \end{enumerate}
 
-    \subsubsection{Solution Improvements}
+    Shown by my testing video, the neural network library I have created is very modular, with the ability to define your own architecture
+    very easily. This includes many of the modules that are specified in my objectives, and most of those modules which were not used in the video
+    were used in the AlphaNetwork. The library also functions very well, shown by the MNIST testing scores - achieving a solid accuracy after
+    3 epochs of training. To further improve the library it would be beneficial to add another optimizer such as RMSProp or Adam - and similar to
+    the autodifferentiation module an improvement in the 2D convolution to improve processing speeds would be very useful for the library.
 
     \subsection{Reinforcement Learning Solution}
-    \subsubsection{Objective Achievement}
     \begin{enumerate}
         \item A training algorithm with hyperparameters of:
         \begin{enumerate}
@@ -4988,14 +4999,45 @@
         \item The functionality to load a saved agent and play against it
     \end{enumerate}
 
-    \subsubsection{Solution Improvements}
+    Again, basic objective achievement can be seen in my testing video, however the completeness of the reinforcement learning solution is hard to test as
+    there are few definitive outcomes of what it should achieve due to the investigative nature of the project. Despite this, the result that an agent with a 
+    longer training time on more training samples wins more often when playing against an agent with less training time and samples is a strong indicator that 
+    the solution is functioning as intended.
 
+    Most improvements of this solution therefore pertain to speed and processing performance. The training of full agents was quite slow,
+    with most of the time being spent generating training samples. Improvements for this operation include - using multithreading to simulate
+    multiple games at a time and persisting training examples to a storage medium so they do not have to be regenerated during every training run.
 
 
     \subsection{Third Party Reflection}
+    \begin{center}
+        \begin{tabular}{|m{15em}|m{15em}|}
+            \hline 
+            Objective & Reasoning \\
+            \hline
+            Leverage GPU cores for linear algebra computations & Allows parallelization and will increase computation speeds  \\      
+            \hline
+            Wrap the console checkers board in a GUI & Much easier for users to use and understand \\
+            \hline
+            Use a container such as Docker to produce logs & Much better retracing and debugging capabilities \\
+            \hline
+            Evaluate the model against Chinook and human players & Allows for rating of model \\
+            \hline
+        \end{tabular}
+    \end{center}
 
+    Above are some of the extension objectives that were given to me during my third party interview.
+    From previous sections, I have implemented a GUI wrapper for the console checkers and achieved one
+    of these objectives.
 
+    However, I have not fully completed the other 3 of these objectives. Leveraging GPU processing is another
+    solution for improving processing speeds in all 3 of the autodifferentiation, neural network and reinforcement
+    learning modules. Using containerization software such as docker could have been very useful during agent training
+    to monitor if there were any errors that needed immediate attention, on the other hand, docker would also use up more
+    resources on the training machine and this could further hinder training times. Finally, I was unable to map the Chinook
+    bot to my version of console checkers, but users are able play against full agents via the checkers GUI.
 
+    \pagebreak
     \section{Research Log}
 
     \subsection{Checkers}

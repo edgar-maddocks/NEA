@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  24 FEB 2025 11:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.10)  25 FEB 2025 10:58
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -953,4 +953,338 @@ Package pdftex.def Info: ./images/DraughtsUMLdrawio.png  used on input line 519.
 File: ./images/AutoDiffUML.drawio.png Graphic file (type png)
 <use ./images/AutoDiffUML.drawio.png>
 Package pdftex.def Info: ./images/AutoDiffUML.drawio.png  used on input line 529.
-(pdftex.def)        
+(pdftex.def)             Requested size: 221.27321pt x 290.74739pt.
+ [11 <./images/AutoDiffUML.drawio.png>]
+<./images/NNUML (simple).drawio.png, id=332, 706.64pt x 362.35374pt>
+File: ./images/NNUML (simple).drawio.png Graphic file (type png)
+<use ./images/NNUML (simple).drawio.png>
+Package pdftex.def Info: ./images/NNUML (simple).drawio.png  used on input line 563.
+(pdftex.def)             Requested size: 353.31914pt x 181.17642pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 568--570
+
+ []
+
+<./images/RLSolutionUML.png, id=333, 442.65375pt x 322.20375pt>
+File: ./images/RLSolutionUML.png Graphic file (type png)
+<use ./images/RLSolutionUML.png>
+Package pdftex.def Info: ./images/RLSolutionUML.png  used on input line 573.
+(pdftex.def)             Requested size: 221.32632pt x 161.10147pt.
+[12 <./images/NNUML (simple).drawio.png> <./images/RLSolutionUML.png>]
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 585.
+ [13] [14] [15]
+Underfull \hbox (badness 10000) in paragraph at lines 753--754
+
+ []
+
+[16] [17] [18] [19]
+\openout3 = `"Edgar NEA tex.mtc"'.
+
+\openout3 = `"Edgar NEA tex.mtc"'.
+
+ [20] (./Edgar NEA tex.stc2) [21] [22] [23]
+Underfull \hbox (badness 10000) in paragraph at lines 1094--1096
+
+ []
+
+
+Package amsmath Warning: Foreign command \atopwithdelims;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 1101.
+
+
+Underfull \hbox (badness 1418) in paragraph at lines 1135--1136
+[]|\OT1/cmr/m/n/10 Provides a sim-pler to use and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1135--1136
+\OT1/cmr/m/n/10 un-der-stand in-ter-face be-tween
+ []
+
+
+Underfull \hbox (badness 4467) in paragraph at lines 1137--1138
+[]|\OT1/cmr/m/n/10 Stored in classes named rel-e-
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 1137--1138
+\OT1/cmr/m/n/10 vant to the con-stant. These
+ []
+
+
+Underfull \hbox (badness 1057) in paragraph at lines 1137--1138
+\OT1/cmr/m/n/10 of what-ever type that con-stant
+ []
+
+[24] [25]
+
+LaTeX Warning: Hyper reference `analysis section' on page 26 undefined on input line 1180.
+
+[26]
+<./images/MainMenuPrototype.drawio.png, id=605, 1304.875pt x 443.6575pt>
+File: ./images/MainMenuPrototype.drawio.png Graphic file (type png)
+<use ./images/MainMenuPrototype.drawio.png>
+Package pdftex.def Info: ./images/MainMenuPrototype.drawio.png  used on input line 1239.
+(pdftex.def)             Requested size: 456.71309pt x 155.28244pt.
+<./images/MainMenuHierachyChart.drawio.png, id=607, 1027.84pt x 1047.915pt>
+File: ./images/MainMenuHierachyChart.drawio.png Graphic file (type png)
+<use ./images/MainMenuHierachyChart.drawio.png>
+Package pdftex.def Info: ./images/MainMenuHierachyChart.drawio.png  used on input line 1252.
+(pdftex.def)             Requested size: 205.56436pt x 209.57928pt.
+ [27 <./images/MainMenuPrototype.drawio.png> <./images/MainMenuHierachyChart.drawio.png>]
+Underfull \hbox (badness 4859) in paragraph at lines 1276--1277
+\OT1/cmr/m/n/10 ma-trix. Use-ful for it-er-at-ing
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1278--1278
+[]|\OT1/cmr/m/n/10 Tensor Chil-dren +
+ []
+
+
+Underfull \hbox (badness 1087) in paragraph at lines 1278--1279
+\OT1/cmr/m/n/10 ten-sor - which then builds the
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1280--1280
+[]|\OT1/cmr/m/n/10 Tensor Func-tion
+ []
+
+[28]
+<./images/Cross-Correlation-Algorithm.drawio.png, id=625, 628.3475pt x 1208.515pt>
+File: ./images/Cross-Correlation-Algorithm.drawio.png Graphic file (type png)
+<use ./images/Cross-Correlation-Algorithm.drawio.png>
+Package pdftex.def Info: ./images/Cross-Correlation-Algorithm.drawio.png  used on input line 1339.
+(pdftex.def)             Requested size: 172.79129pt x 332.33344pt.
+ [29 <./images/Cross-Correlation-Algorithm.drawio.png>]
+<./images/Full-Cross_Correlation-Algorithm.drawio.png, id=634, 809.0225pt x 1630.09pt>
+File: ./images/Full-Cross_Correlation-Algorithm.drawio.png Graphic file (type png)
+<use ./images/Full-Cross_Correlation-Algorithm.drawio.png>
+Package pdftex.def Info: ./images/Full-Cross_Correlation-Algorithm.drawio.png  used on input line 1349.
+(pdftex.def)             Requested size: 222.47571pt x 448.2637pt.
+ [30 <./images/Full-Cross_Correlation-Algorithm.drawio.png>]
+<./images/Tensor-forward-example.drawio.png, id=642, 1266.7325pt x 666.49pt>
+File: ./images/Tensor-forward-example.drawio.png Graphic file (type png)
+<use ./images/Tensor-forward-example.drawio.png>
+Package pdftex.def Info: ./images/Tensor-forward-example.drawio.png  used on input line 1367.
+(pdftex.def)             Requested size: 253.34201pt x 133.29564pt.
+
+Overfull \hbox (9.0674pt too wide) in paragraph at lines 1367--1368
+ [][] 
+ []
+
+<./images/Tensor-backward1-example.drawio.png, id=645, 1266.7325pt x 664.4825pt>
+File: ./images/Tensor-backward1-example.drawio.png Graphic file (type png)
+<use ./images/Tensor-backward1-example.drawio.png>
+Package pdftex.def Info: ./images/Tensor-backward1-example.drawio.png  used on input line 1379.
+(pdftex.def)             Requested size: 253.34201pt x 132.89413pt.
+<./images/Tensor-backward2-example.drawio.png, id=646, 1266.7325pt x 696.6025pt>
+File: ./images/Tensor-backward2-example.drawio.png Graphic file (type png)
+<use ./images/Tensor-backward2-example.drawio.png>
+Package pdftex.def Info: ./images/Tensor-backward2-example.drawio.png  used on input line 1387.
+(pdftex.def)             Requested size: 253.34201pt x 139.31802pt.
+[31 <./images/Tensor-forward-example.drawio.png> <./images/Tensor-backward1-example.drawio.png> <./images/Tensor-backward2-example.drawio.png>]
+<./images/NNLib-Design-UML.drawio.png, id=657, 1387.1825pt x 1027.84pt>
+File: ./images/NNLib-Design-UML.drawio.png Graphic file (type png)
+<use ./images/NNLib-Design-UML.drawio.png>
+Package pdftex.def Info: ./images/NNLib-Design-UML.drawio.png  used on input line 1407.
+(pdftex.def)             Requested size: 319.04526pt x 236.39822pt.
+<./images/NN-Optimizers-Design-UML.drawio.png, id=658, 383.4325pt x 503.8825pt>
+File: ./images/NN-Optimizers-Design-UML.drawio.png Graphic file (type png)
+<use ./images/NN-Optimizers-Design-UML.drawio.png>
+Package pdftex.def Info: ./images/NN-Optimizers-Design-UML.drawio.png  used on input line 1418.
+(pdftex.def)             Requested size: 84.35541pt x 110.85449pt.
+ [32 <./images/NNLib-Design-UML.drawio.png> <./images/NN-Optimizers-Design-UML.drawio.png>]
+<./images/ModuleTrainingFlow.drawio.png, id=668, 1569.865pt x 519.9425pt>
+File: ./images/ModuleTrainingFlow.drawio.png Graphic file (type png)
+<use ./images/ModuleTrainingFlow.drawio.png>
+Package pdftex.def Info: ./images/ModuleTrainingFlow.drawio.png  used on input line 1480.
+(pdftex.def)             Requested size: 313.96744pt x 103.98665pt.
+ [33 <./images/ModuleTrainingFlow.drawio.png>]
+Underfull \hbox (badness 1062) in paragraph at lines 1521--1522
+\OT1/cmr/m/n/10 prob-a-bil-ity dis-tri-bu-tion and the
+ []
+
+[34] [35] [36]
+<./images/NetworkPassThrough.drawio.png, id=701, 1041.1397pt x 984.67876pt>
+File: ./images/NetworkPassThrough.drawio.png Graphic file (type png)
+<use ./images/NetworkPassThrough.drawio.png>
+Package pdftex.def Info: ./images/NetworkPassThrough.drawio.png  used on input line 1753.
+(pdftex.def)             Requested size: 468.50853pt x 443.10135pt.
+ [37] [38 <./images/NetworkPassThrough.drawio.png>]
+\openout3 = `"Edgar NEA tex.mtc"'.
+
+\openout3 = `"Edgar NEA tex.mtc"'.
+
+ (./Edgar NEA tex.stc3) [39]
+
+LaTeX Warning: Hyper reference `' on page 40 undefined on input line 1797.
+
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+(./_minted-Edgar_NEA_tex/default.pygstyle) (./_minted-Edgar_NEA_tex/D663C7D7A9CBD15D926CFB2629E16142886D1AEF2646E60CFEBC4A48B74DA70B.pygtex
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
+ [40] [41] [42])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/EB6FA942557342BE844A26B443157B40886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [43])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/79F67242C114740820609876F75869E7886D1AEF2646E60CFEBC4A48B74DA70B.pygtex) [44]
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/86EDF817BBB42F4675D28F86B8BAD8E3886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [45] [46] [47] [48])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/355B2A56727DBD617E4739CFF6933D22886D1AEF2646E60CFEBC4A48B74DA70B.pygtex)
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/1CADE014AF4E39ECCD30D2577EC3F54C886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [49])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/BA724F1869FA65E9F39F6EF7F0C3F6BD886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [50] [51])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/012638395EBE3C759B1CA5202E87BC53886D1AEF2646E60CFEBC4A48B74DA70B.pygtex)
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/0FBEA2E743896F02510556B57C54B866886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [52] [53] [54] [55] [56] [57] [58] [59] [60] [61] [62] [63] [64] [65] [66] [67] [68] [69] [70] [71])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/CF0D13482A6586921C3272860A1B413B886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [72] [73] [74] [75])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/00E17651A27F9C2E2DE5A0D173FBFB12886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [76])
+
+LaTeX Warning: Hyper reference `' on page 77 undefined on input line 3814.
+
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+(./_minted-Edgar_NEA_tex/685BD2001911F4512512B72ACEA52456886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [77] [78] [79] [80] [81] [82])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/DF43000DA00AE1C1C635D9CD2AEBC141886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [83])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/E47D89EFFF9265E3E64584F79E4E5EDF886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [84] [85] [86]) [87]
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/B450443A2FEC56C81206A272E3A37FD4886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [88])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/6B5072AC782F228334CFC04ECA47AD44886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [89] [90] [91] [92])
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/713CEC8D9415FAF88286DA93A9B58F40886D1AEF2646E60CFEBC4A48B74DA70B.pygtex)
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/7006C8DB4249C82541D214ED774D5267886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [93] [94])
+\openout3 = `"Edgar NEA tex.mtc"'.
+
+\openout3 = `"Edgar NEA tex.mtc"'.
+
+ (./Edgar NEA tex.stc4)
+\openout4 = `Edgar_NEA_tex.pyg'.
+
+ (./_minted-Edgar_NEA_tex/34C087E2F12D6178BE3C73FC8EAAE4BA886D1AEF2646E60CFEBC4A48B74DA70B.pygtex [95] [96])
+<./images/passing_tests.png, id=1023, 957.5775pt x 395.076pt>
+File: ./images/passing_tests.png Graphic file (type png)
+<use ./images/passing_tests.png>
+Package pdftex.def Info: ./images/passing_tests.png  used on input line 4883.
+(pdftex.def)             Requested size: 478.78758pt x 197.5375pt.
+
+Overfull \hbox (9.03256pt too wide) in paragraph at lines 4883--4884
+ [][] 
+ []
+
+[97 <./images/passing_tests.png>] [98] [99] [100]
+Overfull \hbox (208.73912pt too wide) in paragraph at lines 5047--5048
+[][]$\OT1/cmtt/m/n/10 https : / / math . stackexchange . com / questions / 2240519 / how-[]to-[]find-[]the-[]amount-[]of-[]possible-[]piece-[]configurations-[]in-[]the-[]game-[]of-[]checkers$[][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5056--5057
+
+ []
+
+
+Overfull \hbox (17.46298pt too wide) in paragraph at lines 5062--5066
+[][]$\OT1/cmtt/m/n/10 https : / / ai . stackexchange . com / questions / 13156 / does-[]alphazero-[]use-[]q-[]learning$[][] [][]$https : / / suragnair .
+ []
+
+
+Overfull \hbox (70.24031pt too wide) in paragraph at lines 5071--5073
+[][]$\OT1/cmtt/m/n/10 https : / / medium . com / @utsavstha / jax-[]vs-[]pytorch-[]a-[]comprehensive-[]comparison-[]for-[]deep-[]learning-[]10a84f934e17$[][]
+ []
+
+
+Overfull \hbox (47.7405pt too wide) in paragraph at lines 5075--5079
+[][]$\OT1/cmtt/m/n/10 https : / / smartlabai . medium . com / reinforcement-[]learning-[]algorithms-[]an-[]intuitive-[]overview-[]904e2dff5bbc$[][]
+ []
+
+
+Overfull \hbox (53.49045pt too wide) in paragraph at lines 5075--5079
+[][]$\OT1/cmtt/m/n/10 https : / / medium . com / the-[]official-[]integrate-[]ai-[]blog / understanding-[]reinforcement-[]learning-[]93d4e34e5698$[][]
+ []
+
+
+Overfull \hbox (22.99072pt too wide) in paragraph at lines 5075--5079
+[][]$\OT1/cmtt/m/n/10 https : / / neptune . ai / blog / model-[]based-[]and-[]model-[]free-[]reinforcement-[]learning-[]pytennis-[]case-[]study$[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 5075--5079
+
+ []
+
+Package minitoc Info: I0009
+(minitoc)             Listing minitoc auxiliary files. 
+(minitoc)             Creating the "Edgar NEA tex".maf file.
+\openout3 = `"Edgar NEA tex.maf"'.
+
+Package minitoc(hints) Info: I0053
+(minitoc(hints))             You have loaded the float package; 
+(minitoc(hints))             please be aware that the minitoc package 
+(minitoc(hints))             facilities can not be used for new types 
+(minitoc(hints))             of floats defined by the float package.
+
+Package minitoc(hints) Warning: W0024
+(minitoc(hints))                Some hints have been written 
+(minitoc(hints))                in the "Edgar NEA tex".log file.
+
+[101] (./Edgar NEA tex.aux)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-03-14>
+ ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package rerunfilecheck Info: File `"Edgar NEA tex".out' has not changed.
+(rerunfilecheck)             Checksum: C23E0A1AFB78DB10CAE7B2A217697E44;5348.
+runsystem(del Edgar_NEA_tex.pyg)...executed.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 19738 strings out of 474104
+ 340020 string characters out of 5747502
+ 1945496 words of memory out of 5000000
+ 41297 multiletter control sequences out of 15000+600000
+ 567204 words of font info for 71 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 72i,16n,86p,533b,854s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on "Edgar NEA tex.pdf" (102 pages, 4853902 bytes).
+PDF statistics:
+ 1301 PDF objects out of 1440 (max. 8388607)
+ 1092 compressed objects within 11 object streams
+ 470 named destinations out of 1000 (max. 500000)
+ 418 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -1,10 +1,10 @@
-{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.1}Checkers}{\reset@font\stcSSfont 99}{subsection.6.1}}
-{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.1.1}Rules}{\reset@font\stcSSSfont 99}{subsubsection.6.1.1}}
-{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.1.2}Possible States}{\reset@font\stcSSSfont 99}{subsubsection.6.1.2}}
-{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.2}Neural Networks}{\reset@font\stcSSfont 99}{subsection.6.2}}
-{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.2.1}Vectorization of summations}{\reset@font\stcSSSfont 99}{subsubsection.6.2.1}}
-{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.2.2}Convolutional Networks}{\reset@font\stcSSSfont 100}{subsubsection.6.2.2}}
-{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.3}Automatic Differentiation}{\reset@font\stcSSfont 100}{subsection.6.3}}
-{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.4}AlphaZero}{\reset@font\stcSSfont 100}{subsection.6.4}}
-{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.5}Existing Auto differentiation systems}{\reset@font\stcSSfont 100}{subsection.6.5}}
-{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.6}Reinforcement Learning}{\reset@font\stcSSfont 100}{subsection.6.6}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.1}Checkers}{\reset@font\stcSSfont 101}{subsection.6.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.1.1}Rules}{\reset@font\stcSSSfont 101}{subsubsection.6.1.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.1.2}Possible States}{\reset@font\stcSSSfont 101}{subsubsection.6.1.2}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.2}Neural Networks}{\reset@font\stcSSfont 101}{subsection.6.2}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.2.1}Vectorization of summations}{\reset@font\stcSSSfont 101}{subsubsection.6.2.1}}
+{\reset@font\stcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {6.2.2}Convolutional Networks}{\reset@font\stcSSSfont 101}{subsubsection.6.2.2}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.3}Automatic Differentiation}{\reset@font\stcSSfont 101}{subsection.6.3}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.4}AlphaZero}{\reset@font\stcSSfont 101}{subsection.6.4}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.5}Existing Auto differentiation systems}{\reset@font\stcSSfont 101}{subsection.6.5}}
+{\reset@font\stcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {6.6}Reinforcement Learning}{\reset@font\stcSSfont 101}{subsection.6.6}}
